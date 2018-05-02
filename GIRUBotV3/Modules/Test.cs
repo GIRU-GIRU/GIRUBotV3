@@ -11,33 +11,39 @@ namespace GIRUBotV3.Modules
 {
     public class test : ModuleBase<SocketCommandContext>
     {
-        
 
-        [Command("test")]
+
+        [Command("unusued")]
         public async Task Test()
         {
-            var embed = new EmbedBuilder();
+
+          string testmessage = Helpers.FindEmoji((SocketGuildUser)Context.User, "deusthink");
+            await Context.Channel.SendMessageAsync(testmessage.ToString());
 
 
-            if (!Helpers.IsRole("test", (SocketGuildUser)Context.User))
-            {
-                
-                embed.WithTitle(Context.User.Username + "'s test");
-                embed.WithDescription("test");
-                embed.WithColor(new Color(0, 255, 0));
-                string heNotMod = "asddsada " + await Insults.GetInsult();
-                await Context.Channel.SendMessageAsync("", false, embed);
-                return;
-            }
-
-            string heIsMod = "asddsada " + await Insults.GetInsult();
-
-            embed.WithTitle(Context.User.Username + "'s test");
-            embed.WithDescription("test");
-            embed.WithColor(new Color(0, 255, 0));
-            
-            await Context.Channel.SendMessageAsync("", false, embed);
-            
         }
+        //    var embed = new EmbedBuilder();
+
+
+        //    if (!Helpers.IsRole("test", (SocketGuildUser)Context.User))
+        //    {
+                
+        //        embed.WithTitle(Context.User.Username + "'s test");
+        //        embed.WithDescription("test");
+        //        embed.WithColor(new Color(0, 255, 0));
+        //        string heNotMod = "asddsada " + await Insults.GetInsult();
+        //        await Context.Channel.SendMessageAsync("", false, embed);
+        //        return;
+        //    }
+
+        //    string heIsMod = "asddsada " + await Insults.GetInsult();
+
+        //    embed.WithTitle(Context.User.Username + "'s test");
+        //    embed.WithDescription("test");
+        //    embed.WithColor(new Color(0, 255, 0));
+            
+        //    await Context.Channel.SendMessageAsync("", false, embed);
+            
+        //}
     }
 }

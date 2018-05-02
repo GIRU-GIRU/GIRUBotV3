@@ -20,13 +20,17 @@ namespace GIRUBotV3.Modules
                 await Context.Channel.SendMessageAsync(await Insults.GetNoPerm());
                 return;
             }
-
-                string kickTargetName = user.Username;
-                await user.KickAsync(reason);
+               string kickTargetName = user.Username;
+            if (Helpers.IsRole("test", (SocketGuildUser)user))
+            {
+                await Context.Channel.SendMessageAsync("stop fighting urselves u retards");
+                return;
+            }
+            await user.KickAsync(reason);
 
             var embed = new EmbedBuilder();
-            embed.WithTitle($"{Context.User.Username} _booted_ {kickTargetName}");
-            embed.WithThumbnailUrl("https://yt3.ggpht.com/a-/AJLlDp3QNvGtiRpzGAvxRx0xQLpjOw1I_knKVT9NJA=s900-mo-c-c0xffffffff-rj-k-no");
+            embed.WithTitle($"✅ {Context.User.Username} _booted_ {kickTargetName}");
+            //embed.WithThumbnailUrl("https://yt3.ggpht.com/a-/AJLlDp3QNvGtiRpzGAvxRx0xQLpjOw1I_knKVT9NJA=s900-mo-c-c0xffffffff-rj-k-no");
             embed.WithDescription($"reason: **{reason}**");
             embed.WithColor(new Color(0, 255, 0));
             await Context.Channel.SendMessageAsync("", false, embed);
@@ -45,11 +49,16 @@ namespace GIRUBotV3.Modules
                 return;
             }
 
-            string kickTargetName = user.Username;
+             string kickTargetName = user.Username;
+            if (Helpers.IsRole("test", (SocketGuildUser)user))
+            {
+                await Context.Channel.SendMessageAsync("stop fighting urselves u retards");
+                return;
+            }
             await user.Guild.AddBanAsync(user, 0, reason);
 
             var embed = new EmbedBuilder();
-            embed.WithTitle($"{Context.User.Username} _booted_ {kickTargetName}");
+            embed.WithTitle($"✅ {Context.User.Username} _booted_ {kickTargetName}");
 
             embed.WithDescription($"reason: **{reason}**");
             embed.WithColor(new Color(0, 255, 0));

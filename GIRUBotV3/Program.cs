@@ -59,7 +59,11 @@ namespace GIRUBotV3
         {
             _client.MessageReceived += HandleCommandAsync;
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly());
+            
         }
+
+       
+
 
         private async Task HandleCommandAsync(SocketMessage arg)
         {
@@ -74,9 +78,7 @@ namespace GIRUBotV3
             //    return;
             //}
 
-
             int argPos = 0;
-
             //does the message start with ! ? || is someone tagged in message at start ?
             if (message.HasStringPrefix("!", ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
             {

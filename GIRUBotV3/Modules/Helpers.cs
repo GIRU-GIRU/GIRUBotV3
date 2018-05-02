@@ -27,10 +27,46 @@ namespace GIRUBotV3.Personality
             } else
             {
                 var targetRole = user.Guild.GetRole(roleID);
-                //return user.Roles.Contains(targetRole);
                 return user.Roles.Contains(targetRole);
             }
             
         }
+
+        public static string FindEmoji(SocketGuildUser user, string emojiName)
+        {
+ 
+
+            var result = from r in user.Guild.Emotes
+                         where r.Name == emojiName
+                         select r.Id;
+            ulong emojiID = result.FirstOrDefault();
+            //first or default NEVER returns null
+            if (emojiID == 0)
+            {
+                Console.WriteLine($"Could not find {emojiName} emoji");
+                return "🤔";
+            }
+            else
+            {
+                
+               string finalEmoji = $"<:{emojiName}:{emojiID}>";
+                return finalEmoji;
+            }
+
+        }
     }
 }
+//var result = from r in user.Guild.Emotes
+//             where r.Name == emojiName
+//             select r.Name;
+//var emojiID = result.ToString();
+//first or default NEVER returns null
+//if (emojiID is null)
+//{
+//    Console.WriteLine($"Could not find {emojiName} emoji");
+//    return "🤔";
+//}
+//else
+//{
+//    return emojiID.ToString();
+//}
