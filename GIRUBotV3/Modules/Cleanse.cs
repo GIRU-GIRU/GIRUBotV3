@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using Discord.WebSocket;
 using GIRUBotV3.Personality;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GIRUBotV3.Modules
@@ -13,51 +14,80 @@ namespace GIRUBotV3.Modules
     public class Cleanse : ModuleBase<SocketCommandContext>
     {
         [Command("cleanse")]
+        [RequireUserPermission(GuildPermission.Administrator)]
         [RequireBotPermission(GuildPermission.ManageMessages)]
-        public async Task Clean(int amount)
+        private async Task CleanChat(int amount)
         {
-            if (!Helpers.IsRole("test", (SocketGuildUser)Context.User))
-            {
-                await Context.Channel.SendMessageAsync(await Insults.GetNoPerm());
-                return;
-            } 
-            var deleteMessages = new List<IMessage>(amount);
-            var messages = await Context.Channel.GetMessagesAsync(amount + 1).Flatten();
-            await Context.Channel.DeleteMessagesAsync(messages);
+            var messages = await Context.Channel.GetMessagesAsync(amount + 1).FlattenAsync();
+            var chnl = Context.Channel as ITextChannel;
+            await chnl.DeleteMessagesAsync(messages);
             await Context.Channel.SendMessageAsync("wat ? 😃");
         }
-
 
         [Command("cleanse")]
         [RequireBotPermission(GuildPermission.ManageMessages)]
-        public async Task Clean()
+        [RequireUserPermission(GuildPermission.Administrator)]
+        private async Task CleanChat()
         {
-            if (!Helpers.IsRole("test", (SocketGuildUser)Context.User))
-            {
-                await Context.Channel.SendMessageAsync(await Insults.GetNoPerm());
-                return;
-            }
             int amount = 2;
-            var deleteMessages = new List<IMessage>(amount);
-            var messages = await Context.Channel.GetMessagesAsync(amount).Flatten();
-            await Context.Channel.DeleteMessagesAsync(messages);
+
+            var messages = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
+            var chnl = Context.Channel as ITextChannel;
+            await chnl.DeleteMessagesAsync(messages);
             await Context.Channel.SendMessageAsync("wat ? 😃");
         }
+
+        [Command("cleanse")]
+        [RequireBotPermission(GuildPermission.ManageMessages)]
+        [RequireUserPermission(GuildPermission.Administrator)]
+        private async Task CleanChat(IGuildUser User)
+        {
+            // var messages = await Context.Channel.User.GetMessagesAsync(amount).FlattenAsync();
+            int amount = 99;
+            // var user = await Context.Channel.GetUserAsync(User.Id);
+            var msgsCollection = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
+            var chnl = Context.Channel as ITextChannel;
+            foreach (var item in msgsCollection)
+            {
+                var result = from u in msgsCollection
+                             where u.Author == User
+                             select u.Id;
+                await chnl.DeleteMessagesAsync(result);
+            }
+            await Context.Channel.SendMessageAsync($"stfu {User.Mention}");
+        }
+        [Command("cleanse")]
+        [RequireBotPermission(GuildPermission.ManageMessages)]
+        [RequireUserPermission(GuildPermission.Administrator)]
+        private async Task CleanChat(IGuildUser User, int messagesToDelete)
+        {
+            int amount = 99;// discord api limit for downloads
+            var msgsCollection = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
+            var chnl = Context.Channel as ITextChannel;
+
+            int loopCount = 0;
+            int maxAPICalls = 99;
+
+            while (loopCount <= messagesToDelete || loopCount <= maxAPICalls)
+            {              
+                    var result = from u in msgsCollection
+                                 where u.Author == User
+                                 select u.Id;
+
+                    var resultSingle = result.FirstOrDefault();
+
+                //// delete it
+                    var msgToDelete = await chnl.GetMessageAsync(resultSingle) as IEnumerable<IMessage>;
+                    await chnl.DeleteMessagesAsync(msgToDelete);
+                ///
+                    loopCount++;
+            }
+            await Context.Channel.SendMessageAsync($"stfu {User.Mention}");
+        }
+
     }
-        //    [Command("cleanse")]
-        //    public async Task Cleanse(int amount)
-        //    {
-        //        var messages = new List<IMessage>();
-
-        //        messages.Add(await Context.Channel.GetMessagesAsync(amount + 1).Flatten());
-        //        Context.Channel.DeleteMessagesAsync(amount);
-        //    }
-
-        //    [Command("cleanse")]
-        //    public async Task Cleanse()
-        //    {
-
-        //    }
+}
 
 
-    }
+
+

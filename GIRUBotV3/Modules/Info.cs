@@ -12,51 +12,60 @@ namespace GIRUBotV3.Modules
     public class Info : ModuleBase<SocketCommandContext>
     {
         [Command("info")]
-        public async Task getInfo(IGuildUser user)
+        private async Task GetInfo(IGuildUser user)
         {
             string avatarURL = user.GetAvatarUrl();
             var userSocketGuild = user as SocketGuildUser;
-            string userGame = user.Game.ToString();
+         
+            string userStatus = user.Status.ToString();
 
-            if (userGame == "**")
+            if (userStatus == "")
             {
-                userGame = "Nothing";
+                userStatus = "Somewhere";
             }
+
             var embed = new EmbedBuilder();
             
             embed.WithTitle($"{user.Username}'s info");
-            embed.WithDescription(
-                $"User ID: **{user.Id}**        User Tag: **{user.Discriminator}** \n" +
-                $"Playing: **{userGame}**      Status: **{user.Status}**\n" +
-                $"Account Created: **{user.CreatedAt}** \n" +
-                $"joined at: **{user.JoinedAt}** \n" +
-                $"Roles: **{userSocketGuild.Roles}**" 
-                
-            );
+
+                 embed.AddField("User ID: ", user.Id, true);
+                 embed.AddField("User Tag: ", user.Discriminator, true);
+                 //embed.AddField("Playing: ", userGame, true);
+                 embed.AddField("Status: ", userStatus, true);
+                 embed.AddField("Account Created: ", user.CreatedAt, true);
+                 embed.AddField("Joined at: ", user.JoinedAt, true);
             embed.ThumbnailUrl = avatarURL;
             embed.WithColor(new Color(0, 204, 255));
-            await Context.Channel.SendMessageAsync("", false, embed);     
+            await Context.Channel.SendMessageAsync("", false, embed.Build());     
         }
 
         [Command("info")]
-        public async Task getInfo()
+        private async Task GetInfo()
         {
             string avatarURL = Context.User.GetAvatarUrl();
             var caller = Context.User as IGuildUser;
             var callerSocketGuild = Context.User as SocketGuildUser;
-            var embed = new EmbedBuilder();
+           // string userGame = callerSocketGuild.Game.ToString();
+            string userStatus = callerSocketGuild.Status.ToString();
 
+            if (userStatus == "")
+            {
+                userStatus = "Somewhere";
+            }
+            var embed = new EmbedBuilder();
+            
             embed.WithTitle($"{Context.User.Username}'s info");
-            embed.WithDescription(
-                    $"User ID: **{caller.Id}**    User Tag: **{caller.Discriminator}** \n" +
-                $"Playing: **{caller.Game}**      Status: **{caller.Status}**\n" +
-                $"Account Created: **{caller.CreatedAt}** \n" +
-                $"joined at: **{caller.JoinedAt}** \n" +
-                $"Roles: **{callerSocketGuild.Roles}**"
-            );
-                embed.ThumbnailUrl = avatarURL;
-                embed.WithColor(new Color(0, 204, 255));
-            await Context.Channel.SendMessageAsync("", false, embed);      
+
+                 embed.WithTitle($"{caller.Username}'s info");
+                 embed.AddField("User ID: ", caller.Id, true);
+                 embed.AddField("User Tag: ", caller.Discriminator, true);
+              // embed.AddField("Playing: ", userGame);
+                 embed.AddField("Status: ", userStatus, true);
+                 embed.AddField("Account Created: ", caller.CreatedAt, true);
+                 embed.AddField("Joined at: ", caller.JoinedAt, true);        
+            embed.ThumbnailUrl = avatarURL;
+            embed.WithColor(new Color(0, 204, 255));
+            await Context.Channel.SendMessageAsync("", false, embed.Build());      
         }
 
         

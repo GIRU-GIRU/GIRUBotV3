@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using GIRUBotV3.Modules;
 using GIRUBotV3.Personality;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -33,38 +34,50 @@ namespace GIRUBotV3
 
             _client = new DiscordSocketClient();
             _commands = new CommandService();
-
+            
             _services = new ServiceCollection()
                  .AddSingleton(_client)
                  .AddSingleton(_commands)
                  .BuildServiceProvider();
 
-
+            _client.UserJoined += UserHelp.UserJoined;
+            _client.MessageReceived += MessageContainsAsync;
             _client.Log += Log;
             //register modules and login bot with auth credentials
             await RegisterCommandAsync();
             await _client.LoginAsync(TokenType.Bot, botToken);
             //starting client and continue forever
             await _client.StartAsync();
+            
             await Task.Delay(-1);
         }
 
-        private Task Log(LogMessage arg)
-        {
-            Console.WriteLine(arg);
-            return Task.CompletedTask;
-        }
 
         public async Task RegisterCommandAsync()
         {
             _client.MessageReceived += HandleCommandAsync;
-            await _commands.AddModulesAsync(Assembly.GetEntryAssembly());
-            
+            await _commands.AddModulesAsync(Assembly.GetEntryAssembly());  
         }
 
-       
+        private async Task MessageContainsAsync(SocketMessage arg)
+        {
+            //ignore ourselves, check for null
+            var message = arg as SocketUserMessage;
+            if (message.Author.IsBot) return;
+            var context = new SocketCommandContext(_client, message);
 
+            if (message.Content.Contains("😃"))
+            {
+                await context.Channel.SendMessageAsync("😃");
+            }
+            if (message.Content.Contains(" help "))
+            {               
+                await context.Channel.SendMessageAsync("stop crying for help");
+            }
 
+        }
+
+        //Handle Commands
         private async Task HandleCommandAsync(SocketMessage arg)
         {
             //ignore ourselves, check for null
@@ -74,10 +87,11 @@ namespace GIRUBotV3
             //{
             //    //string noPerm = await Insults.GetNoPerm();
             //   await arg.Channel.SendMessageAsync("asdsad");
-               
+
             //    return;
             //}
-
+           
+            
             int argPos = 0;
             //does the message start with ! ? || is someone tagged in message at start ?
             if (message.HasStringPrefix("!", ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
@@ -87,12 +101,27 @@ namespace GIRUBotV3
                 var result = await _commands.ExecuteAsync(context, argPos, _services);
 
                 //error log
-                if (!result.IsSuccess)
+                switch (result.Error)
                 {
-                    Console.WriteLine(result.ErrorReason);
+                    case CommandError.UnmetPrecondition: 
+                        await context.Channel.SendMessageAsync(await ErrorReturnStrings.GetNoPerm());
+                        break;
+                    default:
+                     //   await context.Channel.SendMessageAsync($"ummmmm, \"{result.ErrorReason}\" <@150764876258607105> fix me");
+                       Console.WriteLine(result.ErrorReason);
+                        break;
                 }
+                
+                
 
             }
+            
         }
+        private Task Log(LogMessage arg)
+        {
+            Console.WriteLine(arg);
+            return Task.CompletedTask;
+        }
+  
     }
 }
