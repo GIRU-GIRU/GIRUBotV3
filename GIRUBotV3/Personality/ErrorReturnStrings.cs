@@ -16,11 +16,11 @@ namespace GIRUBotV3.Personality
            Random rnd = new Random();
            string[] insultsArray = new string[]
            {
-               "1",
-               "2",          
-               "3",
-               "4",
-               "5"
+               "not work",
+               "no cannot",          
+               "me not can do",
+               "sary not able to do",
+               "n"
            };
                int pull = rnd.Next(insultsArray.Length);
                string insult = insultsArray[pull].ToString();
@@ -37,7 +37,8 @@ namespace GIRUBotV3.Personality
                "nah",
                "sry no",
                "sry but no",
-               "mm no"
+               "mm no",
+               "mmm, no"
             };
             int pull = rnd.Next(NoPermArray.Length);
             string noPermString = NoPermArray[pull].ToString();

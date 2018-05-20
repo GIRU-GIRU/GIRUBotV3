@@ -6,7 +6,9 @@ using GIRUBotV3.Personality;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Configuration;
+using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 
@@ -29,7 +31,7 @@ namespace GIRUBotV3
         private IServiceProvider _services;
         public async Task RunBotAsync()
         {
-            string botToken = "";
+            string botToken = "NDQwMjE1NDgzODU4NDE5NzIy.Dcx42Q.YbIWye4Q-5O59hrNZRfVm5Ajq2Y";
             //ConfigurationManager.AppSettings["creds"];
 
             _client = new DiscordSocketClient();
@@ -68,11 +70,33 @@ namespace GIRUBotV3
 
             if (message.Content.Contains("😃"))
             {
-                await context.Channel.SendMessageAsync("😃");
+                var r = new Random();
+                int chance = r.Next(1, 15);
+
+                if (chance <= 15)
+                {
+                    await context.Channel.SendMessageAsync("😃");
+                }                     
             }
             if (message.Content.Contains(" help "))
-            {               
-                await context.Channel.SendMessageAsync("stop crying for help");
+            {
+                var r = new Random();
+                int chance = r.Next(1, 15);
+
+                if (chance <= 15)
+                {
+                    await context.Channel.SendMessageAsync("stop crying for help");
+                }
+
+               Regex nounTest = new Regex("(?s)(.(.*)test)");
+                var nountTestFound = nounTest.Match(message.Content);
+                if (nountTestFound.Success)
+                {
+                   
+                    Task.Run(NounTest)
+                }
+              
+               
             }
 
         }

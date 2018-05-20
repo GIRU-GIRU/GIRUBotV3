@@ -7,6 +7,7 @@ using Discord.WebSocket;
 using GIRUBotV3.Personality;
 using System.Threading.Tasks;
 using GIRUBotV3.Preconditions;
+using Discord.Net;
 
 namespace GIRUBotV3.Modules
 {
@@ -16,17 +17,11 @@ namespace GIRUBotV3.Modules
         [Command("kick")]
         [RequireUserPermission(GuildPermission.Administrator)]
         [RequireBotPermission(GuildPermission.KickMembers)]
-        public async Task KickUser(IGuildUser user, string reason = "cya")
+        private async Task KickUser(IGuildUser user, string reason = "cya")
         {
-            //if (!Helpers.IsRole("test", (SocketGuildUser)Context.User))
-            //{
-            //    await Context.Channel.SendMessageAsync(await Insults.GetNoPerm());
-            //    return;
-            //}
-            
-           
+
                string kickTargetName = user.Username;
-            if (Helpers.IsRole("test", (SocketGuildUser)user))
+            if (Helpers.IsRole("Moderator", (SocketGuildUser)user))
             {
                 await Context.Channel.SendMessageAsync("stop fighting urselves u retards");
                 return;
@@ -34,7 +29,7 @@ namespace GIRUBotV3.Modules
             await user.KickAsync(reason);
 
             var embed = new EmbedBuilder();
-            embed.WithTitle($"✅ {Context.User.Username} _booted_ {kickTargetName}");
+            embed.WithTitle($"✅     {Context.User.Username} _booted_ {kickTargetName}");
             //embed.WithThumbnailUrl("https://yt3.ggpht.com/a-/AJLlDp3QNvGtiRpzGAvxRx0xQLpjOw1I_knKVT9NJA=s900-mo-c-c0xffffffff-rj-k-no");
             embed.WithDescription($"reason: **{reason}**");
             embed.WithColor(new Color(0, 255, 0));
@@ -47,10 +42,10 @@ namespace GIRUBotV3.Modules
         [Command("ban")]
         [RequireUserPermission(GuildPermission.Administrator)]
         [RequireBotPermission(GuildPermission.BanMembers)]
-        public async Task BanUser(IGuildUser user, string reason = "cya")
+        private async Task BanUser(IGuildUser user, string reason = "cya")
         {
              string kickTargetName = user.Username;
-            if (Helpers.IsRole("test", (SocketGuildUser)user))
+            if (Helpers.IsRole("Moderator", (SocketGuildUser)user))
             {
                 await Context.Channel.SendMessageAsync("stop fighting urselves u retards");
                 return;
@@ -58,7 +53,7 @@ namespace GIRUBotV3.Modules
             await user.Guild.AddBanAsync(user, 0, reason);
 
             var embed = new EmbedBuilder();
-            embed.WithTitle($"✅ {Context.User.Username} _booted_ {kickTargetName}");
+            embed.WithTitle($"✅     {Context.User.Username} _booted_ {kickTargetName}");
 
             embed.WithDescription($"reason: **{reason}**");
             embed.WithColor(new Color(0, 255, 0));
@@ -66,15 +61,66 @@ namespace GIRUBotV3.Modules
         }
 
 
+        [Command("warn")]
+        [RequireUserPermission(GuildPermission.Administrator)]
+        private async Task WarnUser(IGuildUser user, string reason)
+        {
+            try
+            {
+
+                await user.SendMessageAsync(reason);
+            }
+            catch (HttpException ex)
+            {
+
+                await Context.Channel.SendMessageAsync(reason);
+            }
+        }
+
+ 
+        [Command("warn")]
+        [RequireUserPermission(GuildPermission.Administrator)]
+        private async Task WarnUser(IGuildUser user)
+        {
+               string warningMessage = await Insults.GetWarning();
+            try
+            {
+                await user.SendMessageAsync(warningMessage);
+                await Context.Channel.SendMessageAsync(warningMessage);
+            }
+            catch (HttpException ex)
+            {
+
+                await Context.Channel.SendMessageAsync(warningMessage);
+            }
+        }
+
+
+
         private IRole currentRoleExclusive;
 
         [Command("assign")]
         [RequireUserPermission(GuildPermission.Administrator)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
-        public async Task Assign(IGuildUser user, string roleSearch)
+        private async Task Assign(IGuildUser user, string roleSearch)
         {
+            // validation, is that role assignable, does the user already have it ?
             List<string> allowed_roles = new List<string>();
-            allowed_roles.AddMany("Viewers", "Puggers", "Roleplayer", "Weeb", "Veterans", "Scotland", "Armenia");
+            allowed_roles.AddMany(
+                "Viewers", 
+                "Puggers", 
+                "Roleplayer", 
+                "Weeb", 
+                "Veterans",
+                "Scotland",
+                "Armenia",
+                "EU", 
+                "NA", 
+                "RU", 
+                "SA", 
+                "Oceania", 
+                "noob"
+                );
 
             
             var userSocket = user as SocketGuildUser;
@@ -87,11 +133,19 @@ namespace GIRUBotV3.Modules
                 return;
             }
 
-            
-            List<string> exclusive_roles = new List<string>();
-            
-            exclusive_roles.AddMany("EU", "NA", "RU", "SA", "Oceania", "noob");
+            for (int i = 0; i < allowed_roles.Count; i++)
+            {
+                var isAllowedRole = Helpers.IsRoleReturn(allowed_roles[i], userSocket);
+                if (roleToAssign != isAllowedRole)
+                {
+                    await Context.Channel.SendMessageAsync("no ur not allowed to give " + roleSearch);
+                    return;
+                }              
+            }
 
+            //user cant have these roles together
+            List<string> exclusive_roles = new List<string>();    
+            exclusive_roles.AddMany("EU", "NA", "RU", "SA", "Oceania", "noob");
 
             for (int i = 0; i < exclusive_roles.Count; i++)
             {
@@ -102,7 +156,7 @@ namespace GIRUBotV3.Modules
             {
 
                 var embedReplace = new EmbedBuilder();
-                embedReplace.WithTitle($"✅ {Context.User.Username} granted {roleSearch} to {user.Username}");
+                embedReplace.WithTitle($"✅   {Context.User.Username} granted {roleSearch} to {user.Username}");
                 embedReplace.WithDescription($"replaced *\"{currentRoleExclusive.Name}\"* role");
                 embedReplace.WithColor(new Color(0, 255, 0));
                 await Context.Channel.SendMessageAsync("", false, embedReplace.Build());
@@ -113,8 +167,7 @@ namespace GIRUBotV3.Modules
             }
            
             var embed = new EmbedBuilder();
-            embed.WithTitle($"✅ {Context.User.Username} granted {roleSearch} to {user.Username}");
-            //embed.WithDescription($"✅ {Context.User.Mention} granted {roleSearch} to {user.Mention}");
+            embed.WithTitle($"✅     {Context.User.Username} granted {roleSearch} to {user.Username}");
             embed.WithColor(new Color(0, 255, 0));
             await Context.Channel.SendMessageAsync("", false, embed.Build());
             await userSocket.AddRoleAsync(roleToAssign);

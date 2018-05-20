@@ -6,13 +6,14 @@ using System.Text;
 using Discord.WebSocket;
 using GIRUBotV3.Personality;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace GIRUBotV3.Modules
 {
     public class RollRandom : ModuleBase<SocketCommandContext>
     {
         [Command("roll")]
-        private async Task EchoAsync([Remainder]string message)
+        private async Task RandomRoll([Remainder]string message)
         {
             Random rnd = new Random();
             int rollVar = rnd.Next(0, 101);
@@ -21,7 +22,7 @@ namespace GIRUBotV3.Modules
         }
 
         [Command("roll")]
-        private async Task EchoAsync()
+        private async Task RandomRoll()
         {
             Random rnd = new Random();
             int rollVar = rnd.Next(0, 101);
@@ -46,13 +47,11 @@ namespace GIRUBotV3.Modules
             int rollVar = rnd.Next(0, 11);
             await Context.Channel.SendMessageAsync($"{deusthinkEmoji} i would rate {Context.User.Mention} a {rollVar}/10");
         }
-        [Command("/^[^ ]+test/")]
-        private async Task Test2()
+ 
+       public async Task NounTest(Match nounTestFound)
         {
-            string deusthinkEmoji = Helpers.FindEmoji((SocketGuildUser)Context.User, "deusthink");
-            Random rnd = new Random();
-            int rollVar = rnd.Next(0, 11);
-            await Context.Channel.SendMessageAsync($"asdsadasdsadas0");
+           
+
         }
     }
 }
