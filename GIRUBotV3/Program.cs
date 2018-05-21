@@ -25,7 +25,7 @@ namespace GIRUBotV3
             // Wait for bot to exit
             bot.Wait();
         }
-   
+
 
         private DiscordSocketClient _client;
         private CommandService _commands;
@@ -37,7 +37,7 @@ namespace GIRUBotV3
 
             _client = new DiscordSocketClient();
             _commands = new CommandService();
-            
+
             _services = new ServiceCollection()
                  .AddSingleton(_client)
                  .AddSingleton(_commands)
@@ -51,7 +51,7 @@ namespace GIRUBotV3
             await _client.LoginAsync(TokenType.Bot, botToken);
             //starting client and continue forever
             await _client.StartAsync();
-            
+
             await Task.Delay(-1);
         }
 
@@ -59,9 +59,10 @@ namespace GIRUBotV3
         public async Task RegisterCommandAsync()
         {
             _client.MessageReceived += HandleCommandAsync;
-            await _commands.AddModulesAsync(Assembly.GetEntryAssembly());  
+            await _commands.AddModulesAsync(Assembly.GetEntryAssembly());
         }
 
+        private Regex regexNounTest = new Regex("(?s)(.(.*)test)");
         private async Task MessageContainsAsync(SocketMessage arg)
         {
             //ignore ourselves, check for null
@@ -72,39 +73,31 @@ namespace GIRUBotV3
             if (message.Content.Contains("😃"))
             {
                 var r = new Random();
-                int chance = r.Next(1, 15);
-
-                if (chance <= 15)
+                if (r.Next(1, 15) <= 2)
                 {
                     await context.Channel.SendMessageAsync("😃");
-                }                     
+                }
             }
             if (message.Content.Contains(" help "))
             {
                 var r = new Random();
-                int chance = r.Next(1, 15);
-
-                if (chance <= 15)
+                if (r.Next(1, 15) >= 2)
                 {
                     await context.Channel.SendMessageAsync("stop crying for help");
                 }
-
-
-               Regex regexNounTest = new Regex("(?s)(.(.*)test)");
-                var nounTestFound = regexNounTest.Match(message.Content);
-                var noun = nounTestFound.Groups[1].ToString();
-
-                if (nounTestFound.Success)
-                {
-
-                    var nounTestTask= new RollRandom();
-                    await nounTestTask.NounTest(noun, message);
-                }
-              
-               
             }
-
+            if (regexNounTest.Match(message.Content).Success)
+            {
+                Console.WriteLine("regex code reached");
+                var noun = regexNounTest.Match(message.Content).Groups[1].ToString();
+                var nounTestTask = new RollRandom();
+                await nounTestTask.NounTest(noun, message);
+            }
         }
+
+          
+
+       
 
         //Handle Commands
         private async Task HandleCommandAsync(SocketMessage arg)

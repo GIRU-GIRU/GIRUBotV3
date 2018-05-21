@@ -6010,23 +6010,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\danie\\.nuget\\packages\\": {},
+    "C:\\Users\\danielyacoubian\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\danie\\OneDrive\\Documents\\GitHub\\GIRUBotV3\\GIRUBotV3\\GIRUBotV3.csproj",
+      "projectUniqueName": "C:\\Users\\danielyacoubian\\Documents\\GitHub\\GIRUBotV3\\GIRUBotV3\\GIRUBotV3.csproj",
       "projectName": "GIRUBotV3",
-      "projectPath": "C:\\Users\\danie\\OneDrive\\Documents\\GitHub\\GIRUBotV3\\GIRUBotV3\\GIRUBotV3.csproj",
-      "packagesPath": "C:\\Users\\danie\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\danie\\OneDrive\\Documents\\GitHub\\GIRUBotV3\\GIRUBotV3\\obj\\",
+      "projectPath": "C:\\Users\\danielyacoubian\\Documents\\GitHub\\GIRUBotV3\\GIRUBotV3\\GIRUBotV3.csproj",
+      "packagesPath": "C:\\Users\\danielyacoubian\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\danielyacoubian\\Documents\\GitHub\\GIRUBotV3\\GIRUBotV3\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\danie\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\danielyacoubian\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -6034,8 +6034,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {},
-        "https://www.myget.org/F/discord-net/api/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp2.0": {

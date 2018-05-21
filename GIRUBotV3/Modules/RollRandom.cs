@@ -50,8 +50,29 @@ namespace GIRUBotV3.Modules
  
        public async Task NounTest(string noun, SocketUserMessage messageContent)
         {
-           messageContent.MentionedUsers
+            Random rnd = new Random();
+            int rollVar = rnd.Next(0, 101);
 
+            var target = messageContent.MentionedUsers as IGuildUser;
+            Regex regexNounTest = new Regex("(?s)(.(.*)test)");
+            var NounTestToRemove = regexNounTest.Match(messageContent.Content).ToString();
+
+            var messageToSend = messageContent.Content.Remove(0, n);
+
+            if (target != null)
+            {
+                await messageContent.Channel.SendMessageAsync($"{target.Mention} is {rollVar}% {noun}");
+                return;
+            }
+            else if (messageToSend.Length < 1)
+            {
+                await messageContent.Channel.SendMessageAsync($"{messageContent.Author.Mention} is {rollVar}% {noun}");
+                return;
+            } else
+            {
+                await messageContent.Channel.SendMessageAsync($"{messageToSend} is {rollVar}% {noun}");
+            }
+          
         }
     }
 }

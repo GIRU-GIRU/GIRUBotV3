@@ -11,7 +11,6 @@ namespace GIRUBotV3.Modules
 {
     public static class Helpers
     {
-        //IS ROLE - is target moderator, etc. ?
         public static bool IsRole(string role, SocketGuildUser user)
         {
             var result = from r in user.Guild.Roles
@@ -54,7 +53,6 @@ namespace GIRUBotV3.Modules
                          where r.Name == emojiName
                          select r.Id;
             ulong emojiID = result.FirstOrDefault();
-            //first or default NEVER returns null
             if (emojiID == 0)
             {
                 Console.WriteLine($"Could not find {emojiName} emoji");
@@ -62,7 +60,6 @@ namespace GIRUBotV3.Modules
             }
             else
             {
-
                 string finalEmoji = $"<:{emojiName}:{emojiID}>";
                 return finalEmoji;
             }
@@ -74,7 +71,6 @@ namespace GIRUBotV3.Modules
                          where r.Name == roleName
                          select r.Id;
             ulong roleID = result.FirstOrDefault();
-            //first or default NEVER returns null
             var roleIRole = user.Guild.GetRole(roleID);
             if (roleID == 0)
             {

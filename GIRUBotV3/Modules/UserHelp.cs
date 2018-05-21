@@ -52,20 +52,6 @@ namespace GIRUBotV3.Modules
             await chnl.SendMessageAsync(welcomeMessage);
 
         }
-        //  var userSocketGuild = guildUser as SocketGuildUser; //allows more manipulation of user
-
-        ////  var roleIRole = Helpers.FindRole(guildUser, "noob");
-
-
-
-        // var channelID  = await guildUser.Guild.GetDefaultChannelAsync() as IMessageChannel;
-        //  var channelID2 = userSocketGuild.Guild.DefaultChannel as IMessageChannel;
-        //  var mainChannelID = "390097690203258882" as IMessageChannel;
-        //  Console.WriteLine($"Iguilduser{channelID.ToString()}, userSocketGuild{channelID2}");
-
-        //await userOfGuild.AddRoleAsync(roleIRole);
-        //await channelID.SendMessageAsync("32131232");
-
     }
 
     
