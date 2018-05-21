@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 
+
 namespace GIRUBotV3
 {
     class Program
@@ -88,12 +89,16 @@ namespace GIRUBotV3
                     await context.Channel.SendMessageAsync("stop crying for help");
                 }
 
-               Regex nounTest = new Regex("(?s)(.(.*)test)");
-                var nountTestFound = nounTest.Match(message.Content);
-                if (nountTestFound.Success)
+
+               Regex regexNounTest = new Regex("(?s)(.(.*)test)");
+                var nounTestFound = regexNounTest.Match(message.Content);
+                var noun = nounTestFound.Groups[1].ToString();
+
+                if (nounTestFound.Success)
                 {
-                   
-                    Task.Run(NounTest)
+
+                    var nounTestTask= new RollRandom();
+                    await nounTestTask.NounTest(noun, message);
                 }
               
                

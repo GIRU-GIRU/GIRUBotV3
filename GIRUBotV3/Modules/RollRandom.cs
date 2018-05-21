@@ -48,9 +48,9 @@ namespace GIRUBotV3.Modules
             await Context.Channel.SendMessageAsync($"{deusthinkEmoji} i would rate {Context.User.Mention} a {rollVar}/10");
         }
  
-       public async Task NounTest(Match nounTestFound)
+       public async Task NounTest(string noun, SocketUserMessage messageContent)
         {
-           
+           messageContent.MentionedUsers
 
         }
     }
