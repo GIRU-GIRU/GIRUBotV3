@@ -6,7 +6,6 @@ using GIRUBotV3.Personality;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Configuration;
-using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -21,8 +20,6 @@ namespace GIRUBotV3
         {
             var program = new Program();
             var bot = program.RunBotAsync();
-
-            // Wait for bot to exit
             bot.Wait();
         }
 
@@ -32,8 +29,8 @@ namespace GIRUBotV3
         private IServiceProvider _services;
         public async Task RunBotAsync()
         {
-            string botToken = "NDQwMjE1NDgzODU4NDE5NzIy.Dcx42Q.YbIWye4Q-5O59hrNZRfVm5Ajq2Y";
-            //ConfigurationManager.AppSettings["creds"];
+            //string botToken = "NDQwMjE1NDgzODU4NDE5NzIy.DeWvKQ.r2FDdZoYflUnroXOZhbuPwUjQoI";
+            string botToken = ConfigurationManager.AppSettings["AuthToken"];
 
             _client = new DiscordSocketClient();
             _commands = new CommandService();
@@ -89,7 +86,7 @@ namespace GIRUBotV3
             if (regexNounTest.Match(message.Content).Success)
             {
                 Console.WriteLine("regex code reached");
-                var noun = regexNounTest.Match(message.Content).Groups[1].ToString();
+                var noun = regexNounTest.Match(message.Content).Groups[2].ToString();
                 var nounTestTask = new RollRandom();
                 await nounTestTask.NounTest(noun, message);
             }

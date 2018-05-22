@@ -55,9 +55,11 @@ namespace GIRUBotV3.Modules
 
             var target = messageContent.MentionedUsers as IGuildUser;
             Regex regexNounTest = new Regex("(?s)(.(.*)test)");
-            var NounTestToRemove = regexNounTest.Match(messageContent.Content).ToString();
+            var nounTestToRemove = regexNounTest.Match(messageContent.Content);
+            var nounTestToRemoveString = regexNounTest.Match(messageContent.Content).ToString();
+     
 
-            var messageToSend = messageContent.Content.Remove(0, n);
+            var messageToSend = messageContent.Content.Replace(nounTestToRemoveString, "");
 
             if (target != null)
             {
