@@ -15,7 +15,7 @@ namespace GIRUBotV3.Modules
     public class Administration : ModuleBase<SocketCommandContext>
     {
         [Command("kick")]
-        [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireUserPermission(GuildPermission.ViewAuditLog)]
         [RequireBotPermission(GuildPermission.KickMembers)]
         private async Task KickUser(IGuildUser user, string reason = "cya")
         {
@@ -40,7 +40,7 @@ namespace GIRUBotV3.Modules
         }
 
         [Command("ban")]
-        [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireUserPermission(GuildPermission.ViewAuditLog)]
         [RequireBotPermission(GuildPermission.BanMembers)]
         private async Task BanUser(IGuildUser user, string reason = "cya")
         {
@@ -60,26 +60,43 @@ namespace GIRUBotV3.Modules
             await Context.Channel.SendMessageAsync("", false, embed.Build());
         }
 
-
-        [Command("warn")]
-        [RequireUserPermission(GuildPermission.Administrator)]
-        private async Task WarnUser(IGuildUser user, string reason)
+        [Command("unban")]
+        [RequireBotPermission(GuildPermission.Administrator)]
+        [RequireUserPermission(GuildPermission.ViewAuditLog)]
+        private async Task UnbanUser(IGuildUser user)
         {
             try
             {
+                await Context.Guild.RemoveBanAsync(user);
+                await Context.Channel.SendMessageAsync($"✅    *** {user.Nickname} has been unbanned ***");
+            }
+            catch (HttpException ex)
+            {
+                await Context.Channel.SendMessageAsync("they're not even banned weirdo");
+            }
+        }
 
-                await user.SendMessageAsync(reason);
+    
+
+    [Command("warn")]
+        [RequireUserPermission(GuildPermission.ViewAuditLog)]
+        private async Task WarnUser(IGuildUser user, string warningMessage)
+        {
+            try
+            {
+                await user.SendMessageAsync(warningMessage);
+                await Context.Channel.SendMessageAsync($"✅    *** {Context.User.Username} has been warned ***");
             }
             catch (HttpException ex)
             {
 
-                await Context.Channel.SendMessageAsync(reason);
+                await Context.Channel.SendMessageAsync(warningMessage);
             }
         }
 
  
         [Command("warn")]
-        [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireUserPermission(GuildPermission.ViewAuditLog)]
         private async Task WarnUser(IGuildUser user)
         {
                string warningMessage = await Insults.GetWarning();
@@ -100,7 +117,7 @@ namespace GIRUBotV3.Modules
         private IRole currentRoleExclusive;
 
         [Command("assign")]
-        [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireUserPermission(GuildPermission.ViewAuditLog)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         private async Task Assign(IGuildUser user, string roleSearch)
         {

@@ -14,8 +14,8 @@ namespace GIRUBotV3.Modules
     public class Cleanse : ModuleBase<SocketCommandContext>
     {
         [Command("cleanse")]
-        [RequireUserPermission(GuildPermission.Administrator)]
         [RequireBotPermission(GuildPermission.ManageMessages)]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
         private async Task CleanChat(int amount)
         {
             var messages = await Context.Channel.GetMessagesAsync(amount + 1).FlattenAsync();
@@ -26,7 +26,7 @@ namespace GIRUBotV3.Modules
 
         [Command("cleanse")]
         [RequireBotPermission(GuildPermission.ManageMessages)]
-        [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
         private async Task CleanChat()
         {
             int amount = 2;
@@ -39,7 +39,7 @@ namespace GIRUBotV3.Modules
 
         [Command("cleanse")]
         [RequireBotPermission(GuildPermission.ManageMessages)]
-        [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
         private async Task CleanChat(IGuildUser User)
         {
             // var messages = await Context.Channel.User.GetMessagesAsync(amount).FlattenAsync();
@@ -58,7 +58,7 @@ namespace GIRUBotV3.Modules
         }
         [Command("cleanse")]
         [RequireBotPermission(GuildPermission.ManageMessages)]
-        [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
         private async Task CleanChat(IGuildUser User, int messagesToDelete)
         {
             int amount = 99;// discord api limit for downloads
