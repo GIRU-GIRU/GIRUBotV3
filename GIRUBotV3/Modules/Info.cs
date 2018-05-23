@@ -67,7 +67,5 @@ namespace GIRUBotV3.Modules
             embed.WithColor(new Color(0, 204, 255));
             await Context.Channel.SendMessageAsync("", false, embed.Build());      
         }
-
-        
     }
 }

@@ -9,6 +9,10 @@ using System.Configuration;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TwitchLib.Api;
+using TwitchLib.Api.Models.Helix.Users.GetUsersFollows;
+using TwitchLib.Api.Models.v5.Subscriptions;
+
 
 
 
@@ -21,8 +25,8 @@ namespace GIRUBotV3
             var program = new Program();
             var bot = program.RunBotAsync();
             bot.Wait();
+            var runTwitch = TwitchIntegration.TwitchMainAsync();        
         }
-
 
         private DiscordSocketClient _client;
         private CommandService _commands;
@@ -91,10 +95,6 @@ namespace GIRUBotV3
                 await nounTestTask.NounTest(noun, message);
             }
         }
-
-          
-
-       
 
         //Handle Commands
         private async Task HandleCommandAsync(SocketMessage arg)
