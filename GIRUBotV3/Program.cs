@@ -33,8 +33,8 @@ namespace GIRUBotV3
         private IServiceProvider _services;
         public async Task RunBotAsync()
         {
-            //string botToken = "NDQwMjE1NDgzODU4NDE5NzIy.DeWvKQ.r2FDdZoYflUnroXOZhbuPwUjQoI";
-            string botToken = ConfigurationManager.AppSettings["AuthToken"];
+            string botToken = "";
+            //string botToken = ConfigurationManager.AppSettings["AuthToken"];
 
             _client = new DiscordSocketClient();
             _commands = new CommandService();
