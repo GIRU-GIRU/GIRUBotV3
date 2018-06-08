@@ -13,9 +13,6 @@ using TwitchLib.Api;
 using TwitchLib.Api.Models.Helix.Users.GetUsersFollows;
 using TwitchLib.Api.Models.v5.Subscriptions;
 
-
-
-
 namespace GIRUBotV3
 {
     class Program
@@ -33,7 +30,7 @@ namespace GIRUBotV3
         private IServiceProvider _services;
         public async Task RunBotAsync()
         {
-            string botToken = "";
+            string botToken = "NDQwMjE1NDgzODU4NDE5NzIy.De79IQ.qTvmX6qvC54INi2COs_ElkvbPo0";
             //string botToken = ConfigurationManager.AppSettings["AuthToken"];
 
             _client = new DiscordSocketClient();
@@ -56,14 +53,13 @@ namespace GIRUBotV3
             await Task.Delay(-1);
         }
 
-
         public async Task RegisterCommandAsync()
         {
             _client.MessageReceived += HandleCommandAsync;
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly());
         }
 
-        private Regex regexNounTest = new Regex("(?s)(.(.*)test)");
+        private Regex regexNounTest = new Regex(@"^\![^ ]+test");
         private async Task MessageContainsAsync(SocketMessage arg)
         {
             //ignore ourselves, check for null
@@ -82,9 +78,10 @@ namespace GIRUBotV3
             if (message.Content.Contains(" help "))
             {
                 var r = new Random();
-                if (r.Next(1, 15) >= 2)
+                if (r.Next(1, 15) <= 2)
                 {
-                    await context.Channel.SendMessageAsync("stop crying for help");
+                    string insultHelp = await Insults.GetInsult();
+                    await context.Channel.SendMessageAsync("stop crying for help " + insultHelp);
                 }
             }
             if (regexNounTest.Match(message.Content).Success)
@@ -109,7 +106,7 @@ namespace GIRUBotV3
 
             //    return;
             //}
-           
+         
             
             int argPos = 0;
             //does the message start with ! ? || is someone tagged in message at start ?
@@ -118,7 +115,6 @@ namespace GIRUBotV3
                 var context = new SocketCommandContext(_client, message);
                 //execute commands, pass in context and and look for cmd prefix, inject dependancies
                 var result = await _commands.ExecuteAsync(context, argPos, _services);
-
                 //error log
                 switch (result.Error)
                 {
@@ -130,11 +126,7 @@ namespace GIRUBotV3
                        Console.WriteLine(result.ErrorReason);
                         break;
                 }
-                
-                
-
-            }
-            
+            }   
         }
         private Task Log(LogMessage arg)
         {

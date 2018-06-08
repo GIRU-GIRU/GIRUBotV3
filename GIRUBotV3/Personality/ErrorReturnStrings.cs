@@ -17,6 +17,8 @@ namespace GIRUBotV3.Personality
            string[] insultsArray = new string[]
            {
                "not work",
+               "not allow",
+               "me not allow",
                "no cannot",          
                "me not can do",
                "sary not able to do",
@@ -35,10 +37,12 @@ namespace GIRUBotV3.Personality
             {
                "no",
                "nah",
-               "sry no",
+               "u think im gonna let a random shitter like u do that ?",
                "sry but no",
-               "mm no",
-               "mmm, no"
+               "mm, nah",
+               "mmm, no",
+               "yea coz im gonna let some random retard do that",
+               "no name = no power"
             };
             int pull = rnd.Next(NoPermArray.Length);
             string noPermString = NoPermArray[pull].ToString();

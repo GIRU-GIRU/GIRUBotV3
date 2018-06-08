@@ -27,10 +27,10 @@ namespace GIRUBotV3.Modules
             //Return bool if channel is online/offline.
             var giruTwitchID = await api.Channels.v5.GetChannelAsync("giru");
             bool isStreaming = await api.Streams.v5.BroadcasterOnlineAsync(giruTwitchID.Id);
-           
-            var meleeSlasherMainChannel = await meleeSlasher.GetChannelAsync(300832513595670529);
-            var chnl = meleeSlasherMainChannel as ITextChannel;
-            await chnl.SendMessageAsync("he live");
+
+            var meleeSlasherMainChannel = await meleeSlasher.GetTextChannelAsync(300832513595670529);
+            var viewers = Helpers.ReturnRole(meleeSlasherMainChannel.Guild as SocketGuild, "Viewers");
+            await meleeSlasherMainChannel.SendMessageAsync($"{viewers.Mention}, the stream is now online at: https://twitch.tv/giru");
         }        
     }
 }

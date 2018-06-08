@@ -27,6 +27,16 @@ namespace GIRUBotV3.Modules
                 return user.Roles.Contains(targetRole);
             }
         }
+        public static IRole ReturnRole(SocketGuild guild, string role)
+        {
+            var result = from r in guild.Roles
+                         where r.Name == role
+                         select r.Id;
+            ulong roleID = result.FirstOrDefault();
+            //first or default NEVER returns null
+            var targetRole = guild.GetRole(roleID);
+            return targetRole;
+        }
         public static IRole IsRoleReturn(string role, SocketGuildUser user)
         {
             var result = from r in user.Roles
