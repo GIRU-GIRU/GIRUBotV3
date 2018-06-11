@@ -56,7 +56,7 @@ namespace GIRUBotV3.Modules
             int amountOfMessages = result.Count();
             await chnl.DeleteMessagesAsync(result);
             var cleanseUserEmbed = new EmbedBuilder();
-            cleanseUserEmbed.WithTitle($"✅   cleasned {amountOfMessages} messages from {user.Username}");
+            cleanseUserEmbed.WithTitle($"✅   cleansed {amountOfMessages} messages from {user.Username}");
             cleanseUserEmbed.WithColor(new Color(0, 255, 0));
             await Context.Channel.SendMessageAsync("", false, cleanseUserEmbed.Build());
         }
@@ -67,7 +67,7 @@ namespace GIRUBotV3.Modules
         private async Task CleanChatUserAmount(SocketGuildUser user, int amountToDelete)
         {
             var usersocket = user as SocketGuildUser;
-            int amount = 300;
+            int amount = 900;
             var msgsCollection = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
             var result = from m in msgsCollection
                          where m.Author == user

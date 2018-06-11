@@ -52,7 +52,6 @@ C:\Users\danielyacoubian\Documents\GitHub\GIRUBotV3\GIRUBotV3\bin\Debug\netcorea
 C:\Users\danielyacoubian\Documents\GitHub\GIRUBotV3\GIRUBotV3\bin\Debug\netcoreapp2.0\GIRUBotV3.runtimeconfig.dev.json
 C:\Users\danielyacoubian\Documents\GitHub\GIRUBotV3\GIRUBotV3\bin\Debug\netcoreapp2.0\GIRUBotV3.dll
 C:\Users\danielyacoubian\Documents\GitHub\GIRUBotV3\GIRUBotV3\bin\Debug\netcoreapp2.0\GIRUBotV3.pdb
-C:\Users\danielyacoubian\Documents\GitHub\GIRUBotV3\GIRUBotV3\obj\Debug\netcoreapp2.0\GIRUBotV3.csprojResolveAssemblyReference.cache
 C:\Users\danielyacoubian\Documents\GitHub\GIRUBotV3\GIRUBotV3\obj\Debug\netcoreapp2.0\GIRUBotV3.csproj.CoreCompileInputs.cache
 C:\Users\danielyacoubian\Documents\GitHub\GIRUBotV3\GIRUBotV3\obj\Debug\netcoreapp2.0\GIRUBotV3.AssemblyInfoInputs.cache
 C:\Users\danielyacoubian\Documents\GitHub\GIRUBotV3\GIRUBotV3\obj\Debug\netcoreapp2.0\GIRUBotV3.AssemblyInfo.cs
@@ -70,3 +69,4 @@ C:\Users\danie\OneDrive\Documents\C#\GIRUBotV3\GIRUBotV3\obj\Debug\netcoreapp2.0
 C:\Users\danie\OneDrive\Documents\C#\GIRUBotV3\GIRUBotV3\obj\Debug\netcoreapp2.0\GIRUBotV3.AssemblyInfo.cs
 C:\Users\danie\OneDrive\Documents\C#\GIRUBotV3\GIRUBotV3\obj\Debug\netcoreapp2.0\GIRUBotV3.dll
 C:\Users\danie\OneDrive\Documents\C#\GIRUBotV3\GIRUBotV3\obj\Debug\netcoreapp2.0\GIRUBotV3.pdb
+C:\Users\danielyacoubian\Documents\GitHub\GIRUBotV3\GIRUBotV3\obj\Debug\netcoreapp2.0\GIRUBotV3.csprojResolveAssemblyReference.cache

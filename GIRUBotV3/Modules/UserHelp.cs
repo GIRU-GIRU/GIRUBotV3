@@ -32,7 +32,7 @@ namespace GIRUBotV3.Modules
             await guildUser.AddRoleAsync(noobRole);
 
             // welcoming
-            var insult = Insults.GetInsult();
+            var insult = await Insults.GetInsult();
             Random rnd = new Random();
             string[] welcomeArray = new string[]
             {

@@ -102,7 +102,7 @@ namespace GIRUBotV3.Modules
         }
 
         [Command("warn")]
-        [RequireUserPermission(GuildPermission.ViewAuditLog)]
+        [RequireUserPermission(GuildPermission.MoveMembers)]
         private async Task WarnUser(IGuildUser user, [Remainder]string warningMessage)
         {
             try
@@ -112,13 +112,12 @@ namespace GIRUBotV3.Modules
             }
             catch (HttpException ex)
             {
-
                 await Context.Channel.SendMessageAsync($"{user.Mention}, {warningMessage}");
             }
         }
  
         [Command("warn")]
-        [RequireUserPermission(GuildPermission.ViewAuditLog)]
+        [RequireUserPermission(GuildPermission.MoveMembers)]
         private async Task WarnUser(IGuildUser user)
         {
                string warningMessage = await Insults.GetWarning();
