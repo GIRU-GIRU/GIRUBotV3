@@ -33,9 +33,6 @@ namespace GIRUBotV3.Modules
             embed.WithDescription($"reason: **{reason}**");
             embed.WithColor(new Color(0, 255, 0));
             await Context.Channel.SendMessageAsync("", false, embed.Build());
-           // await Context.Channel.SendMessageAsync($"{Context.User} kicked {kickTargetName} reason: {reason}");
-         
-            
         }
 
         [Command("ban")]
@@ -52,10 +49,39 @@ namespace GIRUBotV3.Modules
             await user.Guild.AddBanAsync(user, 0, reason);
 
             var embed = new EmbedBuilder();
-            embed.WithTitle($"✅     {Context.User.Username} _booted_ {kickTargetName}");      
-            embed.WithDescription($"reason: **{reason}**");
+            embed.WithTitle($"✅     {Context.User.Username} banned {kickTargetName}");      
+            embed.WithDescription($"reason: _{reason}_");
             embed.WithColor(new Color(0, 255, 0));
             await Context.Channel.SendMessageAsync("", false, embed.Build());
+        }
+
+        [Command("hackban")]
+        [RequireUserPermission(GuildPermission.ViewAuditLog)]
+        [RequireBotPermission(GuildPermission.BanMembers)]
+        private async Task HackBanUser(string input)
+        {
+            ulong userID = Convert.ToUInt64(input);
+                  if (Helpers.IsRole("Moderator", Context.Guild.GetUser(userID)))
+                  {
+                      await Context.Channel.SendMessageAsync("stop fighting urselves u retards");
+                      return;
+                  }
+            try
+            {
+                await Context.Guild.AddBanAsync(userID);
+                var embed = new EmbedBuilder();
+                embed.WithTitle($"✅     {Context.User.Username} hackbanned userID {userID.ToString()}");
+               // embed.WithDescription($"reason: **{reason}**");
+                embed.WithColor(new Color(0, 255, 0));
+                await Context.Channel.SendMessageAsync("", false, embed.Build());
+            }
+            catch (Exception)
+            {
+                await Context.Channel.SendMessageAsync("Invalid userID");
+                throw;
+            }
+           
+            
         }
 
         [Command("unban")]
@@ -291,14 +317,13 @@ namespace GIRUBotV3.Modules
             await user.ModifyAsync(x => x.Nickname = user.Username);
             await Context.Channel.SendMessageAsync("name reset 👍");
         }
+
         [Command("say")]
         [RequireUserPermission(GuildPermission.Administrator)]
         private async Task SayInMain([Remainder]string message)
         {
             var chnl = Context.Guild.GetTextChannel(300832513595670529);          
-            await chnl.SendMessageAsync(message);
-           //await Context.Channel.SendMessageAsync(message);
-            
+            await chnl.SendMessageAsync(message);    
         }
     }  
 }

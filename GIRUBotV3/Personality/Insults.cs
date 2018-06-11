@@ -16,11 +16,11 @@ namespace GIRUBotV3.Personality
            Random rnd = new Random();
            string[] insultsArray = new string[]
            {
-               "son of bastard",
-               "fucking retard",          
-               "retard",
-               "autist",
-               "mongoloid",
+            "son of bastard",
+            "fucking retard",          
+            "retard",
+            "autist",
+            "mongoloid",
             "creature",
             "noob",
             "trash kid",
