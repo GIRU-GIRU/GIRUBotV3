@@ -17,6 +17,12 @@ namespace GIRUBotV3.Personality
            string[] insultsArray = new string[]
            {
             "son of bastard",
+            "spastic",
+            "fat cunt",
+            "uncultured swine",
+            "cockroach",
+            "stupid fuck",
+            "gay cunt",
             "fucking retard",          
             "retard",
             "autist",

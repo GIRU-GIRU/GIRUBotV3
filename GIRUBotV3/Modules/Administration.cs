@@ -35,6 +35,36 @@ namespace GIRUBotV3.Modules
             await Context.Channel.SendMessageAsync("", false, embed.Build());
         }
 
+
+        [Command("bancleanse")]
+        [RequireUserPermission(GuildPermission.ViewAuditLog)]
+        [RequireBotPermission(GuildPermission.BanMembers)]
+        private async Task BanUserAndCleanse()
+        {
+            var insult = await Insults.GetInsult();
+            var embed = new EmbedBuilder();
+            embed.WithTitle($"Bans & Cleanses a {insult} from this sacred place");
+            embed.WithDescription("**Usage**: .ban \"user\" \"reason\"\n" +
+                "**Target**: arrogant shitters \n" +
+                "**Chat Purge**: 24 hours. \n" +
+                "**Ban length:** Indefinite.");
+            embed.WithColor(new Color(0, 255, 0));
+            await Context.Channel.SendMessageAsync("", false, embed.Build());
+        }
+        [Command("ban")]
+        [RequireUserPermission(GuildPermission.ViewAuditLog)]
+        [RequireBotPermission(GuildPermission.BanMembers)]
+        private async Task BanUser()
+        {
+            var insult = await Insults.GetInsult();
+            var embed = new EmbedBuilder();
+            embed.WithTitle($"Permanently ends some {insult} from this sacred place");
+            embed.WithDescription("**Usage**: .ban \"user\" \"reason\"\n"+
+                "**Target**: arrogant shitters \n" +
+                "**Length**: Indefinite.");
+            embed.WithColor(new Color(0, 255, 0)); 
+            await Context.Channel.SendMessageAsync("", false, embed.Build());
+        }
         [Command("ban")]
         [RequireUserPermission(GuildPermission.ViewAuditLog)]
         [RequireBotPermission(GuildPermission.BanMembers)]
@@ -50,6 +80,25 @@ namespace GIRUBotV3.Modules
 
             var embed = new EmbedBuilder();
             embed.WithTitle($"✅     {Context.User.Username} banned {kickTargetName}");      
+            embed.WithDescription($"reason: _{reason}_");
+            embed.WithColor(new Color(0, 255, 0));
+            await Context.Channel.SendMessageAsync("", false, embed.Build());
+        }
+        [Command("bancleanse")]
+        [RequireUserPermission(GuildPermission.ViewAuditLog)]
+        [RequireBotPermission(GuildPermission.BanMembers)]
+        private async Task BanUserAndClean(IGuildUser user, string reason = "cya")
+        {
+            string kickTargetName = user.Username;
+            if (Helpers.IsRole("Moderator", (SocketGuildUser)user))
+            {
+                await Context.Channel.SendMessageAsync("stop fighting urselves u retards");
+                return;
+            }
+            await user.Guild.AddBanAsync(user, 1, reason);
+
+            var embed = new EmbedBuilder();
+            embed.WithTitle($"✅     {Context.User.Username} banned & cleansed {kickTargetName}");
             embed.WithDescription($"reason: _{reason}_");
             embed.WithColor(new Color(0, 255, 0));
             await Context.Channel.SendMessageAsync("", false, embed.Build());
@@ -97,7 +146,7 @@ namespace GIRUBotV3.Modules
             }
             catch (HttpException ex)
             {
-                await Context.Channel.SendMessageAsync("they're not even banned" + insult);
+                await Context.Channel.SendMessageAsync("they're not even banned " + insult);
             }
         }
 

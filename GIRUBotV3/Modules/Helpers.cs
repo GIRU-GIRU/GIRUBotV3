@@ -21,7 +21,8 @@ namespace GIRUBotV3.Modules
             if (roleID == 0)
             {
                 return false;
-            } else
+            }
+            else
             {
                 var targetRole = user.Guild.GetRole(roleID);
                 return user.Roles.Contains(targetRole);
@@ -29,31 +30,25 @@ namespace GIRUBotV3.Modules
         }
         public static IRole ReturnRole(SocketGuild guild, string role)
         {
-            var result = from r in guild.Roles
-                         where r.Name == role
-                         select r.Id;
-            ulong roleID = result.FirstOrDefault();
-            //first or default NEVER returns null
-            var targetRole = guild.GetRole(roleID);
-            return targetRole;
+            return guild.GetRole(guild.Roles.FirstOrDefault(x => x.Name == role).Id);
         }
         public static IRole IsRoleReturn(string role, SocketGuildUser user)
         {
+            //return user.Guild.GetRole(user.Guild.Roles.FirstOrDefault(x => x.Name == role).Id);     
             var result = from r in user.Roles
                          where r.Name == role
                          select r.Id;
             ulong roleID = result.FirstOrDefault();
-            //first or default NEVER returns null
-            
+          
             if (roleID == 0)
             {
-                var roleReturn = user.Guild.GetRole(0);
-                return roleReturn;
+            
+                return user.Guild.GetRole(0);
             }
             else
             {
-                var roleReturn = user.Guild.GetRole(roleID);
-                return roleReturn;
+                
+                return user.Guild.GetRole(roleID);
             }
         }
 
@@ -74,7 +69,7 @@ namespace GIRUBotV3.Modules
                 return finalEmoji;
             }
         }
-    
+
         public static IRole FindRole(SocketGuildUser user, string roleName)
         {
             var result = from r in user.Guild.Roles
@@ -100,9 +95,9 @@ namespace GIRUBotV3.Modules
         }
     }
 }
-        
 
-            
+
+
 
 
 //var result = from r in user.Guild.Emotes
