@@ -29,8 +29,8 @@ namespace GIRUBotV3
         private IServiceProvider _services;
         public async Task RunBotAsync()
         {
-            //string botToken = "NDQwMjE1NDgzODU4NDE5NzIy.DeWvKQ.r2FDdZoYflUnroXOZhbuPwUjQoI";
-            string botToken = ConfigurationManager.AppSettings["AuthToken"];
+            string botToken = "NDQwMjE1NDgzODU4NDE5NzIy.DeWvKQ.r2FDdZoYflUnroXOZhbuPwUjQoI";
+          // string botToken = ConfigurationManager.AppSettings["AuthToken"];
 
             _client = new DiscordSocketClient();
             _commands = new CommandService();
@@ -124,6 +124,9 @@ namespace GIRUBotV3
                 {
                     case CommandError.UnmetPrecondition: 
                         await context.Channel.SendMessageAsync(await ErrorReturnStrings.GetNoPerm());
+                        break;
+                    case CommandError.ParseFailed:
+                        await context.Channel.SendMessageAsync(await ErrorReturnStrings.GetParseFailed());
                         break;
                     default:
                      //   await context.Channel.SendMessageAsync($"ummmmm, \"{result.ErrorReason}\" <@150764876258607105> fix me");

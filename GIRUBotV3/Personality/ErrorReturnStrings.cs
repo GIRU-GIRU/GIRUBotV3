@@ -45,5 +45,23 @@ namespace GIRUBotV3.Personality
             return noPermString;
 
         }
+
+        public static async Task<string> GetParseFailed()
+        {
+            Random rnd = new Random();
+            string[] ParseFailedArray = new string[]
+            {
+               "how am i supposed to know who this nobody is",
+               "i have no idea who this shitter is",
+               "? why u think i know some nobody LOL",
+               "that kid not even real",
+               "nonexistant shitter",
+
+            };
+            int pull = rnd.Next(ParseFailedArray.Length);
+            string noParseString = ParseFailedArray[pull].ToString();
+            return noParseString;
+
+        }
     }
 }
