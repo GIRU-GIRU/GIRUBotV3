@@ -27,8 +27,11 @@ namespace GIRUBotV3.Modules
             }
             await user.KickAsync(reason);
 
+          
+
             var embed = new EmbedBuilder();
             embed.WithTitle($"✅     {Context.User.Username} _booted_ {kickTargetName}");
+        
             //embed.WithThumbnailUrl("https://yt3.ggpht.com/a-/AJLlDp3QNvGtiRpzGAvxRx0xQLpjOw1I_knKVT9NJA=s900-mo-c-c0xffffffff-rj-k-no");
             embed.WithDescription($"reason: **{reason}**");
             embed.WithColor(new Color(0, 255, 0));
@@ -73,6 +76,7 @@ namespace GIRUBotV3.Modules
              string kickTargetName = user.Username;
             if (Helpers.IsRole("Moderator", (SocketGuildUser)user))
             {
+                
                 await Context.Channel.SendMessageAsync("stop fighting urselves u retards");
                 return;
             }
@@ -179,6 +183,8 @@ namespace GIRUBotV3.Modules
             {
                 await Context.Channel.SendMessageAsync(user.Mention + ", " + warningMessage);
             }
+
+
         }
 
         private IRole currentRoleExclusive;

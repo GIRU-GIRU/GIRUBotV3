@@ -16,6 +16,10 @@ namespace GIRUBotV3.Modules
         [RequireUserPermission(GuildPermission.MoveMembers)]
         private async Task PugAnnounceEU([Remainder]string pugMessage)
         {
+            var PuggersRole = Context.Guild.GetRole(Helpers.ReturnRole(Context.Guild, "PuggersEU").Id);
+            PuggersRole.Permissions.Modify(mentionEveryone: true);
+
+  
                 IRole puggersEU = Helpers.ReturnRole(Context.Guild, "PuggersEU");
                 var embed = new EmbedBuilder();
                 embed.WithTitle("An EU Pug is commencing... ");
