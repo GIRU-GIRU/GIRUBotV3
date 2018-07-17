@@ -31,7 +31,7 @@ namespace GIRUBotV3.Modules
         }
 
         [Command("rate")]
-        private async Task Rate(string message)
+        private async Task Rate([Remainder]string message)
         {
             string deusthinkEmoji = Helpers.FindEmoji((SocketGuildUser)Context.User, "deusthink");
             Random rnd = new Random();
@@ -47,34 +47,52 @@ namespace GIRUBotV3.Modules
             int rollVar = rnd.Next(0, 11);
             await Context.Channel.SendMessageAsync($"{deusthinkEmoji} i would rate {Context.User.Mention} a {rollVar}/10");
         }
- 
-       public async Task NounTest(string noun, SocketUserMessage messageContent)
+
+        public async Task NounTest(string noun, SocketUserMessage messageContent)
         {
+            var chnl = messageContent.Channel as ITextChannel;
+            var target = messageContent.MentionedUsers as IGuildUser;
+
+            //match the regex
+            Regex regex = new Regex(@"^\![^ ]+test");
+            var regexMatch = regex.Match(messageContent.Content);
+            var nounTest = regexMatch.ToString();
+
+            //remove the . and the "test" so just noun is remaining
+            nounTest = nounTest.Remove(0, 1);
+            var nounTestArray = nounTest.Split(' ');
+            nounTest = nounTestArray[0];
+            nounTest = nounTest.Remove(nounTest.Length - 4);
+ 
+            // grab the passed in string
+            var fullMessage = messageContent.Content;
+            var fullMessageArray = fullMessage.Split(' ');
+            var stringBuilder = new StringBuilder();
+            for (int i = 1; i < fullMessageArray.Length; i++)
+            {
+                stringBuilder.Append(fullMessageArray[i]);
+                stringBuilder.Append(" ");
+            }
+
             Random rnd = new Random();
             int rollVar = rnd.Next(0, 101);
-
-            var target = messageContent.MentionedUsers as IGuildUser;
-            Regex regexNounTest = new Regex("(?s)(.(.*)test)");
-            var nounTestToRemove = regexNounTest.Match(messageContent.Content);
-            var nounTestToRemoveString = regexNounTest.Match(messageContent.Content).ToString();
-     
-
-            var messageToSend = messageContent.Content.Replace(nounTestToRemoveString, "");
-
             if (target != null)
             {
-                await messageContent.Channel.SendMessageAsync($"{target.Mention} is {rollVar}% {noun}");
+                //.stupidtest @user
+                await messageContent.Channel.SendMessageAsync($"{target.Mention} is {rollVar}% {nounTest}");
                 return;
             }
-            else if (messageToSend.Length < 1)
+            else if (stringBuilder.ToString().Length < 1)
             {
-                await messageContent.Channel.SendMessageAsync($"{messageContent.Author.Mention} is {rollVar}% {noun}");
+                //.stupidtest
+                await messageContent.Channel.SendMessageAsync($"{messageContent.Author.Mention} is {rollVar}% {nounTest}");
                 return;
-            } else
-            {
-                await messageContent.Channel.SendMessageAsync($"{messageToSend} is {rollVar}% {noun}");
             }
-          
+            else
+            {
+                //.stupidtest ur mum
+                await messageContent.Channel.SendMessageAsync($"{stringBuilder.ToString()}is {rollVar}% {nounTest}");
+            }
         }
     }
 }
