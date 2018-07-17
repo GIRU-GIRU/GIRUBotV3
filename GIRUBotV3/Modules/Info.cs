@@ -11,31 +11,29 @@ namespace GIRUBotV3.Modules
 {
     public class Info : ModuleBase<SocketCommandContext>
     {
+        ImageFormat png = ImageFormat.Png;
         [Command("info")]
         private async Task GetInfo(IGuildUser user)
         {
-            string avatarURL = user.GetAvatarUrl();
-            var userSocketGuild = user as SocketGuildUser;
-         
-            string userStatus = user.Status.ToString();
-
-            if (userStatus == "")
-            {
-                userStatus = "Somewhere";
-            }
-
-            var embed = new EmbedBuilder();
             
-            embed.WithTitle($"{user.Username}'s info");
+            var userSocketGuild = user as SocketGuildUser;
+            string userAvatarURL = user.GetAvatarUrl(png, 1024);
+            string userStatus = user.Status.ToString();
+            var userCreatedAtString = user.CreatedAt.ToString("yyyy/MM/dd hh:mm");
+            var userJoinedAtString = user.JoinedAt.Value.ToString("yyyy/MM/dd hh:mm");
+            var userDiscriminator = user.Discriminator;  
+            string userActivity = user.Activity == null ? "nothing" : user.Activity.Name;
 
-                 embed.AddField("User ID: ", user.Id, true);
-                 embed.AddField("User Tag: ", user.Discriminator, true);
-                 //embed.AddField("Playing: ", userGame, true);
-                 embed.AddField("Status: ", userStatus, true);
-                 embed.AddField("Account Created: ", user.CreatedAt, true);
-                 embed.AddField("Joined at: ", user.JoinedAt, true);
-            embed.ThumbnailUrl = avatarURL;
-            embed.WithColor(new Color(0, 204, 255));
+
+            var embed = new EmbedBuilder();       
+                  embed.WithTitle($"{user.Username}{userDiscriminator}");
+                  embed.AddField("Account Created: ", userCreatedAtString, true);
+                  embed.AddField("Joined Melee Slasher: ", userJoinedAtString, true);
+                  embed.AddField("User ID: ", user.Id, false);
+                  embed.AddField("Currently playing ", userActivity, true);
+                  embed.AddField("Status: ", userStatus, true);
+                  embed.WithThumbnailUrl(userAvatarURL);
+                  embed.WithColor(new Color(0, 204, 255));
             await Context.Channel.SendMessageAsync("", false, embed.Build());     
         }
 
@@ -43,31 +41,27 @@ namespace GIRUBotV3.Modules
         private async Task GetInfo()
         {
             string avatarURL = Context.User.GetAvatarUrl();
-            var caller = Context.User as IGuildUser;
+            var user = Context.User as IGuildUser;
             var callerSocketGuild = Context.User as SocketGuildUser;
-           // string userGame = callerSocketGuild.Game.ToString();
-            string userStatus = callerSocketGuild.Status.ToString();
+            // string userGame = callerSocketGuild.Game.ToString();
+            var userSocketGuild = user as SocketGuildUser;
+            string userAvatarURL = user.GetAvatarUrl(png, 1024);
+            string userStatus = user.Status.ToString();
+            var userCreatedAtString = user.CreatedAt.ToString("yyyy/MM/dd  hh:mm");
+            var userJoinedAtString = user.JoinedAt.Value.ToString("yyyy/MM/dd  hh:mm");
+            var userDiscriminator = user.Discriminator;
+            string userActivity = user.Activity == null ? "nothing" : user.Activity.Name;
 
-            if (userStatus == "")
-            {
-                userStatus = "Somewhere";
-            }
             var embed = new EmbedBuilder();
-            
-            embed.WithTitle($"{Context.User.Username}'s info");
-
-                 embed.WithTitle($"{caller.Username}'s info");
-                 embed.AddField("User ID: ", caller.Id, true);
-                 embed.AddField("User Tag: ", caller.Discriminator, true);
-              // embed.AddField("Playing: ", userGame);
+                 embed.WithTitle($"{user.Username}{userDiscriminator}");
+                 embed.AddField("Account Created: ", userCreatedAtString, true);
+                 embed.AddField("Joined Melee Slasher: ", userJoinedAtString, true);
+                 embed.AddField("User ID: ", user.Id, false);
+                 embed.AddField("Currently playing ", userActivity, true);
                  embed.AddField("Status: ", userStatus, true);
-                 embed.AddField("Account Created: ", caller.CreatedAt, true);
-                 embed.AddField("Joined at: ", caller.JoinedAt, true);        
-            embed.ThumbnailUrl = avatarURL;
-            embed.WithColor(new Color(0, 204, 255));
-            await Context.Channel.SendMessageAsync("", false, embed.Build());      
+                 embed.WithThumbnailUrl(userAvatarURL); ;
+                 embed.WithColor(new Color(0, 204, 255));
+            await Context.Channel.SendMessageAsync("", false, embed.Build());
         }
-
-        
     }
 }

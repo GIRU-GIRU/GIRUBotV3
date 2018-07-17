@@ -5,10 +5,8 @@ using GIRUBotV3.Modules;
 using GIRUBotV3.Personality;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Configuration;
 using System.Reflection;
 using System.Threading.Tasks;
-
 
 namespace GIRUBotV3
 {
@@ -18,63 +16,50 @@ namespace GIRUBotV3
         {
             var program = new Program();
             var bot = program.RunBotAsync();
-
-            // Wait for bot to exit
             bot.Wait();
+            var runTwitch = TwitchIntegration.TwitchMainAsync();        
         }
-   
 
-        private DiscordSocketClient _client;
+        public DiscordSocketClient _client;
         private CommandService _commands;
+        private OnMessage _onMessage;
         private IServiceProvider _services;
         public async Task RunBotAsync()
         {
+<<<<<<< HEAD
+            string botToken = "NDQwMjE1NDgzODU4NDE5NzIy.DeWvKQ.r2FDdZoYflUnroXOZhbuPwUjQoI";
+          // string botToken = ConfigurationManager.AppSettings["AuthToken"];
+=======
             string botToken = "";
-            //ConfigurationManager.AppSettings["creds"];
+            //string botToken = ConfigurationManager.AppSettings["AuthToken"];
+>>>>>>> a19226b662fcd35bfaf37a1e141efc797e28c632
 
             _client = new DiscordSocketClient();
             _commands = new CommandService();
-            
+            _onMessage = new OnMessage(_client);
+
             _services = new ServiceCollection()
-                 .AddSingleton(_client)
                  .AddSingleton(_commands)
                  .BuildServiceProvider();
 
+            _client.MessageUpdated += _onMessage.UpdatedMessageContainsAsync;         
             _client.UserJoined += UserHelp.UserJoined;
-            _client.MessageReceived += MessageContainsAsync;
+           
+            _client.MessageReceived += _onMessage.MessageContainsAsync;
+            
             _client.Log += Log;
             //register modules and login bot with auth credentials
             await RegisterCommandAsync();
             await _client.LoginAsync(TokenType.Bot, botToken);
             //starting client and continue forever
             await _client.StartAsync();
-            
             await Task.Delay(-1);
         }
-
 
         public async Task RegisterCommandAsync()
         {
             _client.MessageReceived += HandleCommandAsync;
-            await _commands.AddModulesAsync(Assembly.GetEntryAssembly());  
-        }
-
-        private async Task MessageContainsAsync(SocketMessage arg)
-        {
-            //ignore ourselves, check for null
-            var message = arg as SocketUserMessage;
-            if (message.Author.IsBot) return;
-            var context = new SocketCommandContext(_client, message);
-
-            if (message.Content.Contains("😃"))
-            {
-                await context.Channel.SendMessageAsync("😃");
-            }
-            if (message.Content.Contains(" help "))
-            {               
-                await context.Channel.SendMessageAsync("stop crying for help");
-            }
-
+            await _commands.AddModulesAsync(Assembly.GetEntryAssembly());
         }
 
         //Handle Commands
@@ -83,15 +68,7 @@ namespace GIRUBotV3
             //ignore ourselves, check for null
             var message = arg as SocketUserMessage;
             if (message.Author.IsBot) return;
-            //if (message is null || message.ToString().Length < 2)
-            //{
-            //    //string noPerm = await Insults.GetNoPerm();
-            //   await arg.Channel.SendMessageAsync("asdsad");
 
-            //    return;
-            //}
-           
-            
             int argPos = 0;
             //does the message start with ! ? || is someone tagged in message at start ?
             if (message.HasStringPrefix("!", ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
@@ -99,23 +76,21 @@ namespace GIRUBotV3
                 var context = new SocketCommandContext(_client, message);
                 //execute commands, pass in context and and look for cmd prefix, inject dependancies
                 var result = await _commands.ExecuteAsync(context, argPos, _services);
-
                 //error log
                 switch (result.Error)
                 {
                     case CommandError.UnmetPrecondition: 
                         await context.Channel.SendMessageAsync(await ErrorReturnStrings.GetNoPerm());
                         break;
+                    case CommandError.ParseFailed:
+                        await context.Channel.SendMessageAsync(await ErrorReturnStrings.GetParseFailed());
+                        break;
                     default:
                      //   await context.Channel.SendMessageAsync($"ummmmm, \"{result.ErrorReason}\" <@150764876258607105> fix me");
                        Console.WriteLine(result.ErrorReason);
                         break;
                 }
-                
-                
-
-            }
-            
+            }   
         }
         private Task Log(LogMessage arg)
         {

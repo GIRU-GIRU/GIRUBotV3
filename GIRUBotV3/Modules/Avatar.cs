@@ -15,7 +15,8 @@ namespace GIRUBotV3.Modules
         [Command("avatar")]
         private async Task PullAvatar(IGuildUser user)
         {
-            string avatarURL = user.GetAvatarUrl();
+            ImageFormat png = ImageFormat.Png;
+            string avatarURL = user.GetAvatarUrl(png, 1024);
             if (avatarURL is null)
             {
                 await Context.Message.Channel.SendMessageAsync($"{user.Mention} does not have a pfp");
@@ -35,10 +36,11 @@ namespace GIRUBotV3.Modules
         [Command("avatar")]
         private async Task PullAvatar()
         {
-            string avatarURL = Context.User.GetAvatarUrl();            
-            if (avatarURL is null)
+            ImageFormat png = ImageFormat.Png;
+            string avatarURL = Context.User.GetAvatarUrl(png, 1024);
+            if (avatarURL == "null")
             {
-                await Context.Message.Channel.SendMessageAsync($"{Context.User.Mention} does not have a pfp");
+                await Context.Message.Channel.SendMessageAsync($"{Context.User.Mention} is 1 of those losers with no pfp lmao");
                 return;
             }
 
