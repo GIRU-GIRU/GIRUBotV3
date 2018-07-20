@@ -63,5 +63,31 @@ namespace GIRUBotV3.Modules
                  embed.WithColor(new Color(0, 204, 255));
             await Context.Channel.SendMessageAsync("", false, embed.Build());
         }
+
+        [Command("serverinfo")]
+        private async Task GetServerInfo()
+        {
+            var g = Context.Guild;
+        
+            var createdAt = g.CreatedAt.ToString("yyyy/MM/dd  hh:mm");
+            var roleCount = g.Roles.Count;
+            var mmbrCount = g.MemberCount;
+            var image = g.IconUrl;
+            var owner = g.Owner.Username;
+            var channels = g.TextChannels.Count;
+            var guildID = g.Id;
+
+            var embed = new EmbedBuilder();
+                embed.WithTitle(g.Name);
+                embed.AddField("Member Count: ", mmbrCount, true);
+                embed.AddField("Created at: ", createdAt, true);
+                embed.AddField("Role Count: ", roleCount, true);
+                embed.AddField("Text Channel Count: ", channels, true);
+                embed.AddField("Guild ID: ", guildID, true);
+                embed.AddField("Owner: ", owner, true);
+                embed.WithThumbnailUrl(image);
+                embed.WithColor(new Color(0, 204, 255));
+            await Context.Channel.SendMessageAsync("", false, embed.Build());
+        }
     }
 }
