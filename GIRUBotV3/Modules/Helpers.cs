@@ -14,7 +14,7 @@ namespace GIRUBotV3.Modules
         public static bool IsRole(string role, SocketGuildUser user)
         {
             var result = from r in user.Guild.Roles
-                         where r.Name == role
+                         where r.Name.ToLower() == role.ToLower()
                          select r.Id;
             ulong roleID = result.FirstOrDefault();
             //first or default NEVER returns null
@@ -30,7 +30,7 @@ namespace GIRUBotV3.Modules
         }
         public static IRole ReturnRole(SocketGuild guild, string role)
         {
-            return guild.GetRole(guild.Roles.FirstOrDefault(x => x.Name == role).Id);
+            return guild.GetRole(guild.Roles.FirstOrDefault(x => x.Name.ToLower() == role.ToLower()).Id);
         }
         public static IRole IsRoleReturn(string role, SocketGuildUser user)
         {
@@ -92,6 +92,17 @@ namespace GIRUBotV3.Modules
         public static IEnumerable<T> Concat<T>(this IEnumerable<T> sequence, T item)
         {
             return sequence.Concat(new[] { item });
+        }
+
+        public static bool OnOffExecution(IMessage msg)
+        {
+            if (OnOffUser.TurnedOffUsers == null)
+            {
+                return false;
+            }
+            var list = OnOffUser.TurnedOffUsers;
+            var selectedList = list.Select(x => x.Id == msg.Author.Id).ToList();
+            return list.Where(x => x.Id == msg.Author.Id).Any();         
         }
     }
 }

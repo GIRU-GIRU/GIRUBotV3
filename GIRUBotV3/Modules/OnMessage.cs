@@ -10,14 +10,14 @@ namespace GIRUBotV3.Modules
 {
     public class OnMessage
     {
-        private DiscordSocketClient _client;
+        private static DiscordSocketClient _client;
         public OnMessage(DiscordSocketClient client)
         {
             _client = client;
         }
 
-        private Regex regexNounTest = new Regex(@"^\![^ ]+test");
-        private Regex regexInviteLinkDiscord = new Regex(@"(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]");
+        private static Regex regexNounTest = new Regex(@"^\![^ ]+test");
+        private static Regex regexInviteLinkDiscord = new Regex(@"(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]");
         public async Task MessageContainsAsync(SocketMessage arg)
         {
             //ignore ourselves, check for null
@@ -25,6 +25,10 @@ namespace GIRUBotV3.Modules
             var context = new SocketCommandContext(_client, message);
             if (message.Author.IsBot || Helpers.IsRole("Moderator", context.User as SocketGuildUser)) return;
 
+            if (Helpers.OnOffExecution(context.Message) == true)
+            {
+                await context.Message.DeleteAsync();
+            }
             if (message.Content.Contains("😃"))
             {
                 var r = new Random();
@@ -48,12 +52,16 @@ namespace GIRUBotV3.Modules
                 var nounTestTask = new RollRandom();
                 await nounTestTask.NounTest(noun, message);
             }
-            if (regexInviteLinkDiscord.Match(message.Content).Success)
+            if (regexInviteLinkDiscord.Match(message.Content).Success & !Helpers.IsRole("Moderator", message.Author as SocketGuildUser))
             {
+
                 var insult = await Insults.GetInsult();
                 await context.Message.DeleteAsync();
                 await context.Channel.SendMessageAsync($"{context.User.Mention}, don't post invite links {insult}");
             }
+     
+
+
 
         }
         public async Task UpdatedMessageContainsAsync(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)

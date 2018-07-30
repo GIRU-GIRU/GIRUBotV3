@@ -75,9 +75,9 @@ F:\GIRUBotV3\GIRUBotV3\bin\Debug\netcoreapp2.0\GIRUBotV3.runtimeconfig.json
 F:\GIRUBotV3\GIRUBotV3\bin\Debug\netcoreapp2.0\GIRUBotV3.runtimeconfig.dev.json
 F:\GIRUBotV3\GIRUBotV3\bin\Debug\netcoreapp2.0\GIRUBotV3.dll
 F:\GIRUBotV3\GIRUBotV3\bin\Debug\netcoreapp2.0\GIRUBotV3.pdb
-F:\GIRUBotV3\GIRUBotV3\obj\Debug\netcoreapp2.0\GIRUBotV3.csprojResolveAssemblyReference.cache
 F:\GIRUBotV3\GIRUBotV3\obj\Debug\netcoreapp2.0\GIRUBotV3.csproj.CoreCompileInputs.cache
 F:\GIRUBotV3\GIRUBotV3\obj\Debug\netcoreapp2.0\GIRUBotV3.AssemblyInfoInputs.cache
 F:\GIRUBotV3\GIRUBotV3\obj\Debug\netcoreapp2.0\GIRUBotV3.AssemblyInfo.cs
 F:\GIRUBotV3\GIRUBotV3\obj\Debug\netcoreapp2.0\GIRUBotV3.dll
 F:\GIRUBotV3\GIRUBotV3\obj\Debug\netcoreapp2.0\GIRUBotV3.pdb
+F:\GIRUBotV3\GIRUBotV3\obj\Debug\netcoreapp2.0\GIRUBotV3.csprojResolveAssemblyReference.cache
