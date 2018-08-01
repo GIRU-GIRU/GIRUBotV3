@@ -1,3 +1,7 @@
+GIRUBotV3/bin/
+GIRUBotV3/obj/
+GIRUBotV3/Config.cs
+
 # Built application files
 *.apk
 *.ap_
