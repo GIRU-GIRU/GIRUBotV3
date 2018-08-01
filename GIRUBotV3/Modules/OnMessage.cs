@@ -37,7 +37,7 @@ namespace GIRUBotV3.Modules
                     await context.Channel.SendMessageAsync("😃");
                 }
             }
-            if (message.Content.Contains(" help "))
+            if (message.Content.Contains("help"))
             {
                 var r = new Random();
                 if (r.Next(1, 15) <= 2)
