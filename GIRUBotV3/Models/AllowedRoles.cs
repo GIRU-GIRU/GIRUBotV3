@@ -58,13 +58,17 @@ namespace GIRUBotV3.Models
         {
             get { return "OCE"; }
         }
-        public string Noob
+        public string noob
         {
             get { return "noob"; }
         }
         public string ChivalryVeteran
         {
             get { return "ChivalryVeteran"; }
+        }
+        public string Toxic
+        {
+            get { return "Toxic"; }
         }
 
     }
