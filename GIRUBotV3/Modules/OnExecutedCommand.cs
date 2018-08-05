@@ -69,10 +69,12 @@ namespace GIRUBotV3.Modules
             async Task AdministrationEmbed(CommandInfo _info, ICommandContext _context, IResult _result)
             {
                 adminlogchannel = await context.Guild.GetChannelAsync(474729965359726593) as ITextChannel;
+                var dateTimeStamp = context.Message.Timestamp.ToString("yyyy/MM/dd hh:mm");
+
                 var embed = new EmbedBuilder();
                 embed.WithTitle($"🗡 {context.Message.Author.Username} used the \"{info.Module.Name}\" module");
                 embed.AddField("command: ", context.Message.Content, false);
-                embed.AddField("at: ", context.Message.Timestamp, false);
+                embed.AddField("at: ", dateTimeStamp, false);
                 embed.AddField("in: ", context.Message.Channel.Name, false);
                 embed.WithColor(new Color(255, 102, 0));
                 await adminlogchannel.SendMessageAsync("", false, embed.Build());
@@ -80,10 +82,12 @@ namespace GIRUBotV3.Modules
             async Task CleanseEmbed(CommandInfo _info, ICommandContext _context, IResult _result)
             {
                 adminlogchannel = await context.Guild.GetChannelAsync(474729965359726593) as ITextChannel;
+                var dateTimeStamp = context.Message.Timestamp.ToString("yyyy/MM/dd hh:mm");
+
                 var embed = new EmbedBuilder();
                 embed.WithTitle($"🗑 {context.Message.Author.Username} used the \"{info.Module.Name}\" module");
                 embed.AddField("command: ", context.Message.Content, false);
-                embed.AddField("at: ", context.Message.Timestamp, false);
+                embed.AddField("at: ", dateTimeStamp, false);
                 embed.AddField("in: ", context.Message.Channel.Name, false);
                 embed.WithColor(new Color(255, 204, 0));
                 await adminlogchannel.SendMessageAsync("", false, embed.Build());
@@ -92,10 +96,12 @@ namespace GIRUBotV3.Modules
             async Task RaidProtectEmbed(CommandInfo _info, ICommandContext _context, IResult _result)
             {
                 adminlogchannel = await context.Guild.GetChannelAsync(474729965359726593) as ITextChannel;
+                var dateTimeStamp = context.Message.Timestamp.ToString("yyyy/MM/dd hh:mm");
+
                 var embed = new EmbedBuilder();
                 embed.WithTitle($"⭕️ {context.Message.Author.Username} used the \"{info.Module.Name}\" module");
                 embed.AddField("command: ", context.Message.Content, false);
-                embed.AddField("at: ", context.Message.Timestamp, false);
+                embed.AddField("at: ", dateTimeStamp, false);
                 embed.AddField("in: ", context.Message.Channel.Name, false);
                 embed.WithColor(new Color(255, 0, 0));
                 await adminlogchannel.SendMessageAsync("", false, embed.Build());
@@ -104,10 +110,12 @@ namespace GIRUBotV3.Modules
             async Task PugEmbed(CommandInfo _info, ICommandContext _context, IResult _result)
             {
                 adminlogchannel = await context.Guild.GetChannelAsync(474729965359726593) as ITextChannel;
+                var dateTimeStamp = context.Message.Timestamp.ToString("yyyy/MM/dd hh:mm");
+
                 var embed = new EmbedBuilder();
                 embed.WithTitle($"🎮 {context.Message.Author.Username} used the \"{info.Module.Name}\" module");
                 embed.AddField("command: ", context.Message.Content, false);
-                embed.AddField("at: ", context.Message.Timestamp, false);
+                embed.AddField("at: ", dateTimeStamp, false);
                 embed.AddField("in: ", context.Message.Channel.Name, false);
                 embed.WithColor(new Color(20, 255, 0));
                 await adminlogchannel.SendMessageAsync("", false, embed.Build());
