@@ -15,7 +15,7 @@ namespace GIRUBotV3.Modules
     public class Administration : ModuleBase<SocketCommandContext>
     {
         [Command("kick")]
-        [RequireUserPermission(GuildPermission.MoveMembers)]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
         [RequireBotPermission(GuildPermission.KickMembers)]
         private async Task KickUser(IGuildUser user, [Remainder]string reason)
         {
@@ -31,47 +31,14 @@ namespace GIRUBotV3.Modules
             }
             await user.KickAsync(reason);
 
-
-
             var embed = new EmbedBuilder();
             embed.WithTitle($"✅     {Context.User.Username} _booted_ {kickTargetName}");
-
-            //embed.WithThumbnailUrl("https://yt3.ggpht.com/a-/AJLlDp3QNvGtiRpzGAvxRx0xQLpjOw1I_knKVT9NJA=s900-mo-c-c0xffffffff-rj-k-no");
+         
             embed.WithDescription($"reason: **{reason}**");
             embed.WithColor(new Color(0, 255, 0));
             await Context.Channel.SendMessageAsync("", false, embed.Build());
         }
 
-
-        [Command("bancleanse")]
-        [RequireUserPermission(GuildPermission.ViewAuditLog)]
-        [RequireBotPermission(GuildPermission.BanMembers)]
-        private async Task BanUserAndCleanse()
-        {
-            var insult = await Insults.GetInsult();
-            var embed = new EmbedBuilder();
-            embed.WithTitle($"Bans & Cleanses a {insult} from this sacred place");
-            embed.WithDescription("**Usage**: .ban \"user\" \"reason\"\n" +
-                "**Target**: arrogant shitters \n" +
-                "**Chat Purge**: 24 hours. \n" +
-                "**Ban length:** Indefinite.");
-            embed.WithColor(new Color(0, 255, 0));
-            await Context.Channel.SendMessageAsync("", false, embed.Build());
-        }
-        [Command("ban")]
-        [RequireUserPermission(GuildPermission.ViewAuditLog)]
-        [RequireBotPermission(GuildPermission.BanMembers)]
-        private async Task BanUser()
-        {
-            var insult = await Insults.GetInsult();
-            var embed = new EmbedBuilder();
-            embed.WithTitle($"Permanently ends some {insult} from this sacred place");
-            embed.WithDescription("**Usage**: .ban \"user\" \"reason\"\n" +
-                "**Target**: arrogant shitters \n" +
-                "**Length**: Indefinite.");
-            embed.WithColor(new Color(0, 255, 0));
-            await Context.Channel.SendMessageAsync("", false, embed.Build());
-        }
         [Command("ban")]
         [RequireUserPermission(GuildPermission.ViewAuditLog)]
         [RequireBotPermission(GuildPermission.BanMembers)]
@@ -128,7 +95,6 @@ namespace GIRUBotV3.Modules
                 await Context.Guild.AddBanAsync(userID);
                 var embed = new EmbedBuilder();
                 embed.WithTitle($"✅     {Context.User.Username} hackbanned userID {userID.ToString()}");
-                // embed.WithDescription($"reason: **{reason}**");
                 embed.WithColor(new Color(0, 255, 0));
                 await Context.Channel.SendMessageAsync("", false, embed.Build());
             }
@@ -164,19 +130,17 @@ namespace GIRUBotV3.Modules
                 }
             }
 
-
             if (existingBan != true)
             {
                 await Context.Channel.SendMessageAsync("that's not a valid ID " + insult);
             }
             await Context.Guild.RemoveBanAsync(userID);
             await Context.Channel.SendMessageAsync($"✅    *** {bannedUserName} has been unbanned ***");
-
         }
 
         [Command("warn")]
         [RequireUserPermission(GuildPermission.MoveMembers)]
-        private async Task WarnUser(IGuildUser user, [Remainder]string warningMessage)
+        private async Task WarnUserCustom(IGuildUser user, [Remainder]string warningMessage)
         {
             try
             {
@@ -187,25 +151,6 @@ namespace GIRUBotV3.Modules
             {
                 await Context.Channel.SendMessageAsync($"{user.Mention}, {warningMessage}");
             }
-        }
-
-        [Command("warn")]
-        [RequireUserPermission(GuildPermission.MoveMembers)]
-        private async Task WarnUser(IGuildUser user)
-        {
-
-            string warningMessage = await Insults.GetWarning();
-            try
-            {
-                await user.SendMessageAsync(warningMessage);
-                await Context.Channel.SendMessageAsync($"⚠      *** {user.Username} has received a warning.      ⚠***");
-            }
-            catch (HttpException ex)
-            {
-                await Context.Channel.SendMessageAsync(user.Mention + ", " + warningMessage);
-            }
-
-
         }
 
         private IRole currentRoleExclusive;
@@ -299,7 +244,7 @@ namespace GIRUBotV3.Modules
         }
          
         [Command("mute")]
-        [RequireUserPermission(GuildPermission.MoveMembers)]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         private async Task Mute(IGuildUser user)
         {
@@ -330,7 +275,7 @@ namespace GIRUBotV3.Modules
         }
 
         [Command("unmute")]
-        [RequireUserPermission(GuildPermission.MoveMembers)]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         private async Task UnMute(IGuildUser user)
         {
@@ -369,7 +314,12 @@ namespace GIRUBotV3.Modules
             var userSocket = user as SocketGuildUser;
             var currentName = user.Nickname;
             await user.ModifyAsync(x => x.Nickname = newName);
-            await Context.Channel.SendMessageAsync("👍");
+            await Context.Message.DeleteAsync();
+         
+            var embedReplaceRemovedRole = new EmbedBuilder();
+            embedReplaceRemovedRole.WithTitle($"✅ {Context.Message.Author} namechanged {currentName} => {user.Username}");
+            embedReplaceRemovedRole.WithColor(new Color(0, 255, 0));
+            await Context.Channel.SendMessageAsync("", false, embedReplaceRemovedRole.Build());
         }
         [Command("resetname")]
         [RequireUserPermission(GuildPermission.ViewAuditLog)]
@@ -382,13 +332,7 @@ namespace GIRUBotV3.Modules
             await Context.Channel.SendMessageAsync("name reset 👍");
         }
 
-        [Command("say")]
-        [RequireUserPermission(GuildPermission.Administrator)]
-        private async Task SayInMain([Remainder]string message)
-        {
-            var chnl = Context.Guild.GetTextChannel(300832513595670529);
-            await chnl.SendMessageAsync(message);
-        }
+
 
         [Command("off")]
         [RequireUserPermission(GuildPermission.ViewAuditLog)]
@@ -411,7 +355,7 @@ namespace GIRUBotV3.Modules
             return;
         }
         [Command("cant")]
-        [RequireUserPermission(GuildPermission.MoveMembers)]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         private async Task CantPostPics(IGuildUser user)
         {
@@ -442,7 +386,7 @@ namespace GIRUBotV3.Modules
         }
 
         [Command("can")]
-        [RequireUserPermission(GuildPermission.MoveMembers)]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         private async Task CanPostPics(IGuildUser user)
         {

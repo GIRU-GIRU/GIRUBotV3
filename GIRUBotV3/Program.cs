@@ -23,6 +23,7 @@ namespace GIRUBotV3
         public DiscordSocketClient _client;
         private CommandService _commands;
         private OnMessage _onMessage;
+        private OnExecutedCommand _onExecutedCommand;
         private IServiceProvider _services;
         public async Task RunBotAsync()
         {
@@ -31,6 +32,8 @@ namespace GIRUBotV3
             _client = new DiscordSocketClient();
             _commands = new CommandService();
             _onMessage = new OnMessage(_client);
+            _onExecutedCommand = new OnExecutedCommand(_client);
+           
 
             _services = new ServiceCollection()
                  .AddSingleton(_commands)
@@ -38,9 +41,10 @@ namespace GIRUBotV3
 
             _client.MessageUpdated += _onMessage.UpdatedMessageContainsAsync;         
             _client.UserJoined += UserHelp.UserJoined;
+         
            
             _client.MessageReceived += _onMessage.MessageContainsAsync;
-            
+            _commands.CommandExecuted += _onExecutedCommand.AdminLog;
             _client.Log += Log;
             //register modules and login bot with auth credentials
             await RegisterCommandAsync();
@@ -84,6 +88,8 @@ namespace GIRUBotV3
                        Console.WriteLine(result.ErrorReason);
                         break;
                 }
+             
+            
             }   
         }
         private Task Log(LogMessage arg)
