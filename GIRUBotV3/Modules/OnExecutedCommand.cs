@@ -13,7 +13,7 @@ namespace GIRUBotV3.Modules
     public class OnExecutedCommand
     {
        
-        int willBeLogged = 0;
+        int? willBeLogged = null;
         CommandInfo _info;
         ICommandContext _context;
         IResult _result;
@@ -46,7 +46,10 @@ namespace GIRUBotV3.Modules
                     break;
                 }
             }
-
+            if (willBeLogged == null)
+            {
+                return;
+            }
             switch (willBeLogged)
             {
                 case 0:
