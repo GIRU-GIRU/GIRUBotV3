@@ -30,38 +30,18 @@ namespace GIRUBotV3.Modules
             _context = context;
             _result = result;
 
-            List<string> administrativeModuleNames = new List<string>();
-            administrativeModuleNames.AddMany(
-            "Administration",
-            "Cleanse",
-            "RaidProtect",
-            "Pug"
-            );
-
-            for (int i = 0; i < administrativeModuleNames.Count; i++)
+            switch (info.Module.Name)
             {
-                if (administrativeModuleNames[i] == info.Module.Name)
-                {
-                    willBeLogged = i;
-                    break;
-                }
-            }
-            if (willBeLogged == null)
-            {
-                return;
-            }
-            switch (willBeLogged)
-            {
-                case 0:
+                case "Administration":
                     await AdministrationEmbed(_info, _context, _result);
                     break;
-                case 1:
+                case "Cleanse":
                     await CleanseEmbed(_info, _context, _result);
                     break;
-                case 2:
+                case "RaidProtect":
                     await RaidProtectEmbed(_info, _context, _result);
                     break;
-                case 3:
+                case "Pug":
                     await PugEmbed(_info, _context, _result);
                     break;
                 default:

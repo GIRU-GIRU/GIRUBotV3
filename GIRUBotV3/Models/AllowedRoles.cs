@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GIRUBotV3.Modules;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -26,9 +27,9 @@ namespace GIRUBotV3.Models
         {
             get { return "Weeb"; }
         }
-        public string Veterans
+        public string Elite
         {
-            get { return "Veterans"; }
+            get { return "Elite"; }
         }
         public string Scotland
         {
@@ -62,13 +63,29 @@ namespace GIRUBotV3.Models
         {
             get { return "noob"; }
         }
-        public string ChivalryVeteran
+        public string Veteran
         {
-            get { return "ChivalryVeteran"; }
+            get { return "Veteran"; }
         }
         public string Toxic
         {
             get { return "Toxic"; }
+        }
+        public string Simp
+        {
+            get { return "Simp"; }
+        }
+        public string Goon
+        {
+            get { return "Goon"; }
+        }
+        public string Aggressor
+        {
+            get { return "Aggressor"; }
+        }
+        public string Tryhard
+        {
+            get { return "Tryhard"; }
         }
 
     }

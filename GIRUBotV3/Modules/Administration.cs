@@ -193,8 +193,7 @@ namespace GIRUBotV3.Modules
 
             //user cant have these roles together, finding role to rmeove
 
-            List<string> exclusive_roles = new List<string>();
-            exclusive_roles.AddMany("EU", "NA", "RU", "SA", "Oceania", "noob");
+            List<string> exclusive_roles = Models.ExclusiveRoles.Exclusive_roles;
 
             for (int i = 0; i < exclusive_roles.Count; i++)
             {
@@ -319,7 +318,7 @@ namespace GIRUBotV3.Modules
             await Context.Message.DeleteAsync();
 
             var embedReplaceRemovedRole = new EmbedBuilder();
-            embedReplaceRemovedRole.WithTitle($"✅ {Context.Message.Author} namechanged {currentName} => {user.Username}");
+            embedReplaceRemovedRole.WithTitle($"✅ {currentName} had their name changed successfully");
             embedReplaceRemovedRole.WithColor(new Color(0, 255, 0));
             await Context.Channel.SendMessageAsync("", false, embedReplaceRemovedRole.Build());
         }
