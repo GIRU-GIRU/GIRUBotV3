@@ -36,7 +36,7 @@ namespace GIRUBotV3.Modules
         {
             //return user.Guild.GetRole(user.Guild.Roles.FirstOrDefault(x => x.Name == role).Id);     
             var result = from r in user.Roles
-                         where r.Name == role
+                         where r.Name.ToLower() == role.ToLower()
                          select r.Id;
             ulong roleID = result.FirstOrDefault();
           
