@@ -87,6 +87,57 @@ namespace GIRUBotV3.Models
         {
             get { return "Tryhard"; }
         }
+        
+        public string Weirdo
+        {
+            get { return "Weirdo"; }
+        }
+        public string Cunt
+        {
+            get { return "Cunt"; }
+        }
+        public string Titan
+        {
+            get { return "Titan"; }
+        }
+        public string Weak
+        {
+            get { return "Weak"; }
+        }
+        public string Fearful
+        {
+            get { return "Fearful"; }
+        }
+        public string Innocent
+        {
+            get { return "Innocent"; }
+        }
+        public string Stupid
+        {
+            get { return "Stupid"; }
+        }
+        public string Whelp
+        {
+            get { return "Whelp"; }
+        }
+        public string Creature
+        {
+            get { return "Creature"; }
+        }
+        public string Friendly
+        {
+            get { return "Friendly"; }
+        }
+        public string Dev
+        {
+            get { return "Dev"; }
+        }
+        public string Mongol
+        {
+            get { return "Mongol"; }
+        }
+
 
     }
 }
+Creature. , , ,  , fearful, weak, titan, weirdo, cunt
