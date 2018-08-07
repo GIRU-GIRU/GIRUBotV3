@@ -140,4 +140,3 @@ namespace GIRUBotV3.Models
 
     }
 }
-Creature. , , ,  , fearful, weak, titan, weirdo, cunt
