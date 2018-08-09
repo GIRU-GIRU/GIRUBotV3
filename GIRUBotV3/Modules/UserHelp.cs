@@ -58,7 +58,7 @@ namespace GIRUBotV3.Modules
         [RequireUserPermission(GuildPermission.Administrator)]
         private async Task SayInMain([Remainder]string message)
         {
-            var chnl = Context.Guild.GetTextChannel(300832513595670529);
+            var chnl = Context.Guild.GetTextChannel(Config.MeleeSlasherMainChannel);
             await chnl.SendMessageAsync(message);
         }
 

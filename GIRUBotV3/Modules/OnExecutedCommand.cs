@@ -13,7 +13,6 @@ namespace GIRUBotV3.Modules
     public class OnExecutedCommand
     {
        
-        int? willBeLogged = null;
         CommandInfo _info;
         ICommandContext _context;
         IResult _result;
@@ -46,12 +45,11 @@ namespace GIRUBotV3.Modules
                     break;
                 default:
                     return;
-
             }
 
             async Task AdministrationEmbed(CommandInfo _info, ICommandContext _context, IResult _result)
             {
-                adminlogchannel = await context.Guild.GetChannelAsync(474729965359726593) as ITextChannel;
+                adminlogchannel = await context.Guild.GetChannelAsync(Config.AuditChannel) as ITextChannel;
                 var dateTimeStamp = context.Message.Timestamp.ToString("yyyy/MM/dd hh:mm");
 
                 var embed = new EmbedBuilder();
@@ -64,7 +62,7 @@ namespace GIRUBotV3.Modules
             }
             async Task CleanseEmbed(CommandInfo _info, ICommandContext _context, IResult _result)
             {
-                adminlogchannel = await context.Guild.GetChannelAsync(474729965359726593) as ITextChannel;
+                adminlogchannel = await context.Guild.GetChannelAsync(Config.AuditChannel) as ITextChannel;
                 var dateTimeStamp = context.Message.Timestamp.ToString("yyyy/MM/dd hh:mm");
 
                 var embed = new EmbedBuilder();
@@ -78,7 +76,7 @@ namespace GIRUBotV3.Modules
             }
             async Task RaidProtectEmbed(CommandInfo _info, ICommandContext _context, IResult _result)
             {
-                adminlogchannel = await context.Guild.GetChannelAsync(474729965359726593) as ITextChannel;
+                adminlogchannel = await context.Guild.GetChannelAsync(Config.AuditChannel) as ITextChannel;
                 var dateTimeStamp = context.Message.Timestamp.ToString("yyyy/MM/dd hh:mm");
 
                 var embed = new EmbedBuilder();
@@ -92,7 +90,7 @@ namespace GIRUBotV3.Modules
             }
             async Task PugEmbed(CommandInfo _info, ICommandContext _context, IResult _result)
             {
-                adminlogchannel = await context.Guild.GetChannelAsync(474729965359726593) as ITextChannel;
+                adminlogchannel = await context.Guild.GetChannelAsync(Config.AuditChannel) as ITextChannel;
                 var dateTimeStamp = context.Message.Timestamp.ToString("yyyy/MM/dd hh:mm");
 
                 var embed = new EmbedBuilder();
