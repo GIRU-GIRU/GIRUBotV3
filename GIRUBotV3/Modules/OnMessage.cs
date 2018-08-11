@@ -32,24 +32,6 @@ namespace GIRUBotV3.Modules
             var context = new SocketCommandContext(_client, message);
 
             if (message.Author.IsBot || Helpers.IsRole("Moderator", context.User as SocketGuildUser)) return;
-
-            //for (int i = 0; i < FaceAppFilterTypes.Count; i++)
-            //{
-            //    //does the message contain an attempted URL, if not grab past 20 msgs ?
-            //    if (message.Content.Split(" ")[0].ToLower() == "+" + FaceAppFilterTypes[i].ToLower() && message.Content.Split(" ").Length <= 1)
-            //    {
-            //        var FaceApp = new FaceAppCommands(_FaceAppClient);
-            //        await FaceApp.FaceMorphPreviousMessages(context);
-            //        break;
-           
-            //    }
-            //    else if (message.Content.Split(" ")[0].ToLower() == "+" + FaceAppFilterTypes[i].ToLower())
-            //    {
-            //        var FaceApp = new FaceAppCommands(_FaceAppClient);
-            //        await FaceApp.ApplyFaceApp(message);
-            //        break;
-            //    }
-            //}
             if (Helpers.OnOffExecution(context.Message) == true)
             {
                 await context.Message.DeleteAsync();
@@ -84,10 +66,6 @@ namespace GIRUBotV3.Modules
                 await context.Message.DeleteAsync();
                 await context.Channel.SendMessageAsync($"{context.User.Mention}, don't post invite links {insult}");
             }
-
-
-
-
         }
         public async Task UpdatedMessageContainsAsync(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
         {

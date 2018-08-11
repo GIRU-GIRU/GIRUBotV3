@@ -8,6 +8,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 
 namespace GIRUBotV3.Preconditions
+
 {
     /// <summary> Sets how often a user is allowed to use this command
     /// or any command in this module. </summary>

@@ -11,6 +11,7 @@ using FaceApp;
 using System.Runtime.InteropServices.ComTypes;
 using System.Drawing;
 using System.Linq;
+using GIRUBotV3.Preconditions;
 
 namespace GIRUBotV3.Modules
 {
@@ -28,12 +29,14 @@ namespace GIRUBotV3.Modules
         public async Task FaceAppHelp()
         {
             string morphtypesString = String.Join(", ", morphtypes.ToArray());
-            await Context.Channel.SendMessageAsync("SYNTAX: +morph (type) \ncurrent types are: " + morphtypesString);
+            await Context.Channel.SendMessageAsync("SYNTAX: +morph type \ncurrent types are: " + morphtypesString);
             return;
         }
 
         private string url;
+        
         [Command("morph")]
+        [Ratelimit(45, 10, Measure.Minutes)]
         public async Task FaceMorph([Remainder]string input)
         {
             input = "+" + input;
