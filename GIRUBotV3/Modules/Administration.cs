@@ -153,6 +153,56 @@ namespace GIRUBotV3.Modules
                 await Context.Channel.SendMessageAsync($"{user.Mention}, {warningMessage}");
             }
         }
+        [Command("give")]
+        [RequireUserPermission(GuildPermission.ViewAuditLog)]
+        [RequireBotPermission(GuildPermission.ManageRoles)]
+        private async Task AssignMultiple(IGuildUser user, [Remainder]string inputRoles)
+        {
+            var userSocket = user as SocketGuildUser;
+            var userCurrentRoles = user.RoleIds;
+            string insult = await Insults.GetInsult();
+
+            //turn message into role array
+            var inputRolesArray = inputRoles.ToLower().Split(' ');
+
+            //get allowed roles as array
+            var allowedRoles = typeof(Models.AllowedRoles).GetProperties();
+            List<string> allowedRolesList = new List<string>();
+            foreach (var item in allowedRoles)
+            {
+                allowedRolesList.Add(item.Name.ToLower());
+            }
+
+            //validate matching roles
+            var succesfullyMatchingList = inputRolesArray.Where(x => allowedRolesList.Contains(x, StringComparer.InvariantCultureIgnoreCase)).ToList();
+
+            //remove regional roles from bulk add
+            ;
+            foreach (var item in Models.ExclusiveRoles.Exclusive_roles)
+            {
+                succesfullyMatchingList.Remove(item);
+            }
+
+            if (succesfullyMatchingList.Count == 0)
+            {
+                await Context.Channel.SendMessageAsync($"no valid roles, {insult}");
+                return;
+            }
+            //grab the IRole objects 
+            List<IRole> roleList = new List<IRole>();
+            for (int i = 0; i < succesfullyMatchingList.Count; i++)
+            {
+                roleList.Add(Helpers.ReturnRole(Context.Guild, succesfullyMatchingList[i]));
+            }
+
+            string successfullyMatchingListToString = string.Join(", ", succesfullyMatchingList.ToArray());
+            var embedReplace = new EmbedBuilder();
+            embedReplace.WithTitle($"✅   {Context.User.Username} granted {successfullyMatchingListToString} to {user.Username}");
+            embedReplace.WithColor(new Color(0, 255, 0));
+            await Context.Channel.SendMessageAsync("", false, embedReplace.Build());
+            await userSocket.AddRolesAsync(roleList);
+            return;
+        }
 
         private IRole currentRoleExclusive;
         private IRole roleToAssign;
@@ -221,22 +271,31 @@ namespace GIRUBotV3.Modules
 
 
 
+        List<IRole> RolesToRemove;
         [Command("del")]
         [RequireUserPermission(GuildPermission.ViewAuditLog)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
-        private async Task UnAssign(IGuildUser user, string roleSearch)
+        private async Task UnAssign(IGuildUser user, [Remainder]string roleSearch)
         {
             var insult = await Insults.GetInsult();
             var userSocket = user as SocketGuildUser;
             var roleToRemove = Helpers.ReturnRole(userSocket.Guild, roleSearch);
+            var embedReplaceRemovedRole = new EmbedBuilder();
 
-            if (roleToRemove == null)
+            if (roleSearch.Contains(' '))
             {
-                await Context.Channel.SendMessageAsync("how am i supposed to remove a role that dosen't exist you " + insult);
+                var inputRolesArray = roleSearch.ToLower().Split(',');
+                foreach (var item in inputRolesArray)
+                {
+                    RolesToRemove.Add(Helpers.FindRole(userSocket, item));
+                }
+
+                embedReplaceRemovedRole.WithTitle($"✅   {Context.User.Username} removed {inputRolesArray.ToList()} from {user.Username}");
+                embedReplaceRemovedRole.WithColor(new Color(0, 255, 0));
+                await Context.Channel.SendMessageAsync("", false, embedReplaceRemovedRole.Build());
+                await userSocket.RemoveRolesAsync(RolesToRemove);
                 return;
             }
-
-            var embedReplaceRemovedRole = new EmbedBuilder();
             embedReplaceRemovedRole.WithTitle($"✅   {Context.User.Username} removed {roleToRemove.Name} from {user.Username}");
             embedReplaceRemovedRole.WithColor(new Color(0, 255, 0));
             await Context.Channel.SendMessageAsync("", false, embedReplaceRemovedRole.Build());

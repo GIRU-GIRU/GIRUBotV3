@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using FaceApp;
+using System.Net.Http;
 
 namespace GIRUBotV3
 {
@@ -24,19 +26,23 @@ namespace GIRUBotV3
         private CommandService _commands;
         private OnMessage _onMessage;
         private OnExecutedCommand _onExecutedCommand;
-        private IServiceProvider _services;
+        private IServiceProvider _services;   
+
+        private FaceAppClient _FaceAppClient;
         public async Task RunBotAsync()
         {
             string botToken = Config.BotToken;
 
+            var _HttpClient = new HttpClient();
+            _FaceAppClient = new FaceAppClient(_HttpClient);
             _client = new DiscordSocketClient();
             _commands = new CommandService();
-            _onMessage = new OnMessage(_client);
+            _onMessage = new OnMessage(_client, _FaceAppClient);
             _onExecutedCommand = new OnExecutedCommand(_client);
-           
-
+            
             _services = new ServiceCollection()
                  .AddSingleton(_commands)
+                 .AddSingleton(_FaceAppClient)
                  .BuildServiceProvider();
 
             _client.MessageUpdated += _onMessage.UpdatedMessageContainsAsync;         
@@ -84,7 +90,6 @@ namespace GIRUBotV3
                         await context.Channel.SendMessageAsync(await ErrorReturnStrings.GetParseFailed());
                         break;
                     default:
-                     //   await context.Channel.SendMessageAsync($"ummmmm, \"{result.ErrorReason}\" <@150764876258607105> fix me");
                        Console.WriteLine(result.ErrorReason);
                         break;
                 }

@@ -87,7 +87,10 @@ namespace GIRUBotV3.Models
         {
             get { return "Tryhard"; }
         }
-        
+        public string Dogshit
+        {
+            get { return "Dogshit"; }
+        }
         public string Weirdo
         {
             get { return "Weirdo"; }
@@ -120,6 +123,10 @@ namespace GIRUBotV3.Models
         {
             get { return "Whelp"; }
         }
+        public string Tilter
+        {
+            get { return "Tilter"; }
+        }
         public string Creature
         {
             get { return "Creature"; }
@@ -127,6 +134,10 @@ namespace GIRUBotV3.Models
         public string Friendly
         {
             get { return "Friendly"; }
+        }
+        public string Helpful
+        {
+            get { return "Helpful"; }
         }
         public string Dev
         {
