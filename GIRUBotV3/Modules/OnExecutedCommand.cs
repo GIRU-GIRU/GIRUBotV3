@@ -102,8 +102,6 @@ namespace GIRUBotV3.Modules
                 await adminlogchannel.SendMessageAsync("", false, embed.Build());
                 return;
             }
-
-
         }
     }
 }

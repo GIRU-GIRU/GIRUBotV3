@@ -8,6 +8,7 @@ namespace GIRUBotV3.Models
     public static class FilterTypes
     {
         private static List<string> _FilterTypesStrings;
+
         public static List<string> FilterTypesStrings
         {
             get

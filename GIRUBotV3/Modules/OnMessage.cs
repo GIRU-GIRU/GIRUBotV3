@@ -3,7 +3,6 @@ using Discord.Commands;
 using Discord.WebSocket;
 using GIRUBotV3.Models;
 using GIRUBotV3.Personality;
-using GIRUBotV3.Models;
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -73,7 +72,6 @@ namespace GIRUBotV3.Modules
 
             var context = new SocketCommandContext(_client, messageAfter);
             if (messageAfter.Author.IsBot || Helpers.IsRole("Moderator", context.User as SocketGuildUser)) return;
-
             if (regexInviteLinkDiscord.Match(messageAfter.Content).Success)
             {
                 var insult = await Insults.GetInsult();

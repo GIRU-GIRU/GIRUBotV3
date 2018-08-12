@@ -69,7 +69,6 @@ namespace GIRUBotV3.Modules
             {
                 url = Context.Message.Attachments.First().Url;
             }
-
             if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
             {
                 try
@@ -87,7 +86,7 @@ namespace GIRUBotV3.Modules
                     return;
                 }
             }
-        }
+        } 
     }
 }
 
