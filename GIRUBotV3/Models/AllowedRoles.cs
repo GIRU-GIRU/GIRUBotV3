@@ -147,6 +147,10 @@ namespace GIRUBotV3.Models
         {
             get { return "Mongol"; }
         }
+        public string Hot
+        {
+            get { return "Hot"; }
+        }
 
 
     }

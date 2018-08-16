@@ -85,7 +85,7 @@ namespace GIRUBotV3.Preconditions
                 return Task.FromResult(PreconditionResult.FromSuccess());
 
             var now = DateTime.UtcNow;
-            var key = _applyPerGuild ? (context.User.Id, context.Guild?.Id) : (context.User.Id, null);
+            var key = _applyPerGuild ? (context.Guild.Id, context.Guild?.Id) : (context.Guild.Id, null);
 
             var timeout = (_invokeTracker.TryGetValue(key, out var t)
                 && ((now - t.FirstInvoke) < _invokeLimitPeriod))

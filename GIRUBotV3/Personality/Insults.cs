@@ -19,7 +19,6 @@ namespace GIRUBotV3.Personality
             "son of bastard",
             "spastic",
             "fat cunt",
-            "uncultured swine",
             "cockroach",
             "stupid fuck",
             "gay cunt",

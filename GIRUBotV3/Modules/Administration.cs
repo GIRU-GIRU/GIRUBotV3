@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using GIRUBotV3.Preconditions;
 using Discord.Net;
 using System.Linq;
+using GIRUBotV3.Models;
 
 namespace GIRUBotV3.Modules
 {
@@ -25,7 +26,7 @@ namespace GIRUBotV3.Modules
                 reason = "cya";
             }
             string kickTargetName = user.Username;
-            if (Helpers.IsRole("Moderator", (SocketGuildUser)user))
+            if (Helpers.IsRole(UtilityRoles.Moderator, (SocketGuildUser)user))
             {
                 await Context.Channel.SendMessageAsync("stop fighting urselves u retards");
                 return;
@@ -46,9 +47,8 @@ namespace GIRUBotV3.Modules
         private async Task BanUser(IGuildUser user, string reason = "cya")
         {
             string kickTargetName = user.Username;
-            if (Helpers.IsRole("Moderator", (SocketGuildUser)user))
+            if (Helpers.IsRole(UtilityRoles.Moderator, (SocketGuildUser)user))
             {
-
                 await Context.Channel.SendMessageAsync("stop fighting urselves u retards");
                 return;
             }
@@ -66,7 +66,7 @@ namespace GIRUBotV3.Modules
         private async Task BanUserAndClean(IGuildUser user, string reason = "cya")
         {
             string kickTargetName = user.Username;
-            if (Helpers.IsRole("Moderator", (SocketGuildUser)user))
+            if (Helpers.IsRole(UtilityRoles.Moderator, (SocketGuildUser)user))
             {
                 await Context.Channel.SendMessageAsync("stop fighting urselves u retards");
                 return;
@@ -86,7 +86,7 @@ namespace GIRUBotV3.Modules
         private async Task HackBanUser(string input)
         {
             ulong userID = Convert.ToUInt64(input);
-            if (Helpers.IsRole("Moderator", Context.Guild.GetUser(userID)))
+            if (Helpers.IsRole(UtilityRoles.Moderator, Context.Guild.GetUser(userID)))
             {
                 await Context.Channel.SendMessageAsync("stop fighting urselves u retards");
                 return;
@@ -153,6 +153,8 @@ namespace GIRUBotV3.Modules
                 await Context.Channel.SendMessageAsync($"{user.Mention}, {warningMessage}");
             }
         }
+
+        List<string> RolesNamesList = new List<string>();
         [Command("give")]
         [RequireUserPermission(GuildPermission.ViewAuditLog)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
@@ -188,16 +190,18 @@ namespace GIRUBotV3.Modules
                 await Context.Channel.SendMessageAsync($"no valid roles, {insult}");
                 return;
             }
-            //grab the IRole objects 
+            //grab the IRole objects and populate the return string
             List<IRole> roleList = new List<IRole>();
             for (int i = 0; i < succesfullyMatchingList.Count; i++)
             {
-                roleList.Add(Helpers.ReturnRole(Context.Guild, succesfullyMatchingList[i]));
+                var returnedRole = Helpers.ReturnRole(Context.Guild, succesfullyMatchingList[i]);
+                roleList.Add(returnedRole);
+                RolesNamesList.Add(returnedRole.Name);
             }
 
-            string successfullyMatchingListToString = string.Join(", ", succesfullyMatchingList.ToArray());
+            var rolesAsString = string.Join(", ", RolesNamesList.ToArray());
             var embedReplace = new EmbedBuilder();
-            embedReplace.WithTitle($"✅   {Context.User.Username} granted {successfullyMatchingListToString} to {user.Username}");
+            embedReplace.WithTitle($"✅   {Context.User.Username} granted {rolesAsString} to {user.Username}");
             embedReplace.WithColor(new Color(0, 255, 0));
             await Context.Channel.SendMessageAsync("", false, embedReplace.Build());
             await userSocket.AddRolesAsync(roleList);
@@ -271,36 +275,42 @@ namespace GIRUBotV3.Modules
 
 
 
-        List<IRole> RolesToRemove;
+        List<IRole> RolesToRemove = new List<IRole>();
+        List<string> RolesToRemoveNames = new List<string>();
         [Command("del")]
         [RequireUserPermission(GuildPermission.ViewAuditLog)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         private async Task UnAssign(IGuildUser user, [Remainder]string roleSearch)
         {
+            
             var insult = await Insults.GetInsult();
             var userSocket = user as SocketGuildUser;
-            var roleToRemove = Helpers.ReturnRole(userSocket.Guild, roleSearch);
             var embedReplaceRemovedRole = new EmbedBuilder();
 
-            if (roleSearch.Contains(' '))
+            if (!roleSearch.Contains(' '))
             {
-                var inputRolesArray = roleSearch.ToLower().Split(',');
-                foreach (var item in inputRolesArray)
-                {
-                    RolesToRemove.Add(Helpers.FindRole(userSocket, item));
-                }
-
-                embedReplaceRemovedRole.WithTitle($"✅   {Context.User.Username} removed {inputRolesArray.ToList()} from {user.Username}");
+                var roleToRemove = Helpers.ReturnRole(userSocket.Guild, roleSearch);
+                embedReplaceRemovedRole.WithTitle($"✅   {Context.User.Username} removed {roleToRemove.Name} from {user.Username}");
                 embedReplaceRemovedRole.WithColor(new Color(0, 255, 0));
                 await Context.Channel.SendMessageAsync("", false, embedReplaceRemovedRole.Build());
-                await userSocket.RemoveRolesAsync(RolesToRemove);
+                await userSocket.RemoveRoleAsync(roleToRemove);
                 return;
+
             }
-            embedReplaceRemovedRole.WithTitle($"✅   {Context.User.Username} removed {roleToRemove.Name} from {user.Username}");
-            embedReplaceRemovedRole.WithColor(new Color(0, 255, 0));
-            await Context.Channel.SendMessageAsync("", false, embedReplaceRemovedRole.Build());
-            await userSocket.RemoveRoleAsync(roleToRemove);
-            return;
+               var inputRolesArray = roleSearch.ToLower().Split(' ');
+               foreach (var item in inputRolesArray)
+               {
+                  var returnedRole = Helpers.ReturnRole(userSocket.Guild, item);
+                  RolesToRemove.Add(returnedRole);
+                  RolesToRemoveNames.Add(returnedRole.Name);
+               }
+
+               var rolesAsString = string.Join(", ", RolesToRemoveNames.ToArray());
+               embedReplaceRemovedRole.WithTitle($"✅   {Context.User.Username} removed {rolesAsString} from {user.Username}");
+               embedReplaceRemovedRole.WithColor(new Color(0, 255, 0));
+               await Context.Channel.SendMessageAsync("", false, embedReplaceRemovedRole.Build());
+               await userSocket.RemoveRolesAsync(RolesToRemove);
+               return;
         }
 
         [Command("mute")]
@@ -309,19 +319,19 @@ namespace GIRUBotV3.Modules
         private async Task Mute(IGuildUser user)
         {
             var userSocket = user as SocketGuildUser;
-            var mutedRole = Helpers.FindRole(userSocket, "Muted");
+            var mutedRole = Helpers.FindRole(userSocket, UtilityRoles.Muted);
             if (mutedRole is null)
             {
                 await Context.Channel.SendMessageAsync("cant find muted role !");
                 return;
             }
             var insult = await Insults.GetInsult();
-            if (Helpers.IsRole("Muted", userSocket))
+            if (Helpers.IsRole(UtilityRoles.Muted, userSocket))
             {
                 await Context.Channel.SendMessageAsync("they already muted u dumbass");
                 return;
             }
-            if (Helpers.IsRole("Moderator", userSocket))
+            if (Helpers.IsRole(UtilityRoles.Moderator, userSocket))
             {
                 await Context.Channel.SendMessageAsync("stop beefing with eachother fucking bastards");
                 return;
@@ -340,7 +350,7 @@ namespace GIRUBotV3.Modules
         private async Task UnMute(IGuildUser user)
         {
             var userSocket = user as SocketGuildUser;
-            var mutedRole = Helpers.FindRole(userSocket, "Muted");
+            var mutedRole = Helpers.FindRole(userSocket, UtilityRoles.Muted);
             if (mutedRole is null)
             {
                 await Context.Channel.SendMessageAsync("cant find muted role !");
@@ -348,12 +358,12 @@ namespace GIRUBotV3.Modules
             }
             var insult = await Insults.GetInsult();
 
-            if (!Helpers.IsRole("Muted", userSocket))
+            if (!Helpers.IsRole(UtilityRoles.Muted, userSocket))
             {
                 await Context.Channel.SendMessageAsync("theyre not even muted u " + insult);
                 return;
             }
-            if (Helpers.IsRole("Moderator", userSocket))
+            if (Helpers.IsRole(UtilityRoles.Moderator, userSocket))
             {
                 await Context.Channel.SendMessageAsync("stop beefing with eachother fucking bastards");
                 return;
@@ -420,19 +430,19 @@ namespace GIRUBotV3.Modules
         private async Task CantPostPics(IGuildUser user)
         {
             var userSocket = user as SocketGuildUser;
-            var picsRole = Helpers.FindRole(userSocket, "Can't post pics");
+            var picsRole = Helpers.FindRole(userSocket, UtilityRoles.PicPermDisable);
             if (picsRole is null)
             {
                 await Context.Channel.SendMessageAsync("cant find cpp role !");
                 return;
             }
             var insult = await Insults.GetInsult();
-            if (Helpers.IsRole("Can't post pics", userSocket))
+            if (Helpers.IsRole(UtilityRoles.PicPermDisable, userSocket))
             {
                 await Context.Channel.SendMessageAsync("they already cant u dumbass");
                 return;
             }
-            if (Helpers.IsRole("Moderator", userSocket))
+            if (Helpers.IsRole(UtilityRoles.Moderator, userSocket))
             {
                 await Context.Channel.SendMessageAsync("stop beefing with eachother fucking bastards");
                 return;
@@ -451,7 +461,7 @@ namespace GIRUBotV3.Modules
         private async Task CanPostPics(IGuildUser user)
         {
             var userSocket = user as SocketGuildUser;
-            var picsRole = Helpers.FindRole(userSocket, "Can't post pics");
+            var picsRole = Helpers.FindRole(userSocket, UtilityRoles.PicPermDisable);
             if (picsRole is null)
             {
                 await Context.Channel.SendMessageAsync("cant find cant post pics role !");
@@ -459,12 +469,12 @@ namespace GIRUBotV3.Modules
             }
             var insult = await Insults.GetInsult();
 
-            if (!Helpers.IsRole("Can't post pics", userSocket))
+            if (!Helpers.IsRole(UtilityRoles.PicPermDisable, userSocket))
             {
                 await Context.Channel.SendMessageAsync("they can post pics u " + insult);
                 return;
             }
-            if (Helpers.IsRole("Moderator", userSocket))
+            if (Helpers.IsRole(UtilityRoles.Moderator, userSocket))
             {
                 await Context.Channel.SendMessageAsync("stop beefing with eachother fucking bastards");
                 return;

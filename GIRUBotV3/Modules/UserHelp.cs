@@ -55,11 +55,19 @@ namespace GIRUBotV3.Modules
         }
 
         [Command("say")]
-        [RequireUserPermission(GuildPermission.Administrator)]
         private async Task SayInMain([Remainder]string message)
         {
-            var chnl = Context.Guild.GetTextChannel(Config.MeleeSlasherMainChannel);
-            await chnl.SendMessageAsync(message);
+            if (Helpers.IsRole("God", Context.User as SocketGuildUser) || Helpers.IsRole("Moderator", Context.User as SocketGuildUser))
+            {
+                var chnl = Context.Guild.GetTextChannel(Config.MeleeSlasherMainChannel);
+                await chnl.SendMessageAsync(message);
+                return;
+            }
+            else
+            {
+                return;
+            }
+
         }
 
         [Command("warn")]

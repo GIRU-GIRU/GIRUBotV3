@@ -26,6 +26,7 @@ namespace GIRUBotV3.Modules
         }
 
         [Command("morphtypes")]
+        [Ratelimit(3, 1, Measure.Minutes)]
         public async Task FaceAppHelp()
         {
             string morphtypesString = String.Join(", ", morphtypes.ToArray());
@@ -35,58 +36,63 @@ namespace GIRUBotV3.Modules
 
         private string url;
         [Command("morph")]
-        [Ratelimit(45, 10, Measure.Minutes)]
+        [Ratelimit(49, 10, Measure.Minutes)]
         public async Task FaceMorph([Remainder]string input)
         {
-            input = "+" + input;
-            var inputArray = Context.Message.Content.Split(" ");
-            var type = inputArray[1].TrimStart('+');
 
-            //get previous messages because no URL was passed in
-            if (inputArray.Length <= 2)
+            using (Context.Channel.EnterTypingState())
             {
-                var recentMessages = await Context.Channel.GetMessagesAsync(30).FlattenAsync();
-                foreach (var item in recentMessages)
+                await Context.Message.Channel.TriggerTypingAsync();
+                input = "+" + input;
+                var inputArray = Context.Message.Content.Split(" ");
+                var type = inputArray[1].TrimStart('+');
+
+                //get previous messages because no URL was passed in
+                if (inputArray.Length <= 2)
                 {
-                    if (item.Attachments.Count > 0)
+                    var recentMessages = await Context.Channel.GetMessagesAsync(30).FlattenAsync();
+                    foreach (var item in recentMessages)
                     {
-                        url = item.Attachments.First().Url;
-                        break;
-                    }
-                    else if (item.Embeds.Count > 0)
-                    {
-                        url = item.Embeds.First().Url;
-                        break; ;
+                        if (item.Attachments.Count > 0)
+                        {
+                            url = item.Attachments.First().Url;
+                            break;
+                        }
+                        else if (item.Embeds.Count > 0)
+                        {
+                            url = item.Embeds.First().Url;
+                            break; ;
+                        }
                     }
                 }
-            }
-            //URL was passed in? check if it's a URL or embedded image passed in
-            else if (Context.Message.Attachments.Count == 0)
-            {
-                url = inputArray[2];
-            }
-            else
-            {
-                url = Context.Message.Attachments.First().Url;
-            }
-            if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
-            {
-                try
+                //URL was passed in? check if it's a URL or embedded image passed in
+                else if (Context.Message.Attachments.Count == 0)
                 {
-                    var code = await _FaceAppClient.GetCodeAsync(uri);
-                    using (var imgStream = await _FaceAppClient.ApplyFilterAsync(code, (FilterType)Enum.Parse(typeof(FilterType), type, true)))
+                    url = inputArray[2];
+                }
+                else
+                {
+                    url = Context.Message.Attachments.First().Url;
+                }
+                if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
+                {
+                    try
                     {
-                        await Context.Channel.SendFileAsync(imgStream, type + ".png");
+                        var code = await _FaceAppClient.GetCodeAsync(uri);
+                        using (var imgStream = await _FaceAppClient.ApplyFilterAsync(code, (FilterType)Enum.Parse(typeof(FilterType), type, true)))
+                        {
+                            await Context.Channel.SendFileAsync(imgStream, type + ".png");
+                            return;
+                        }
+                    }
+                    catch (FaceException ex)
+                    {
+                        await Context.Channel.SendMessageAsync(ex.Message);
                         return;
                     }
                 }
-                catch (FaceException ex)
-                {
-                    await Context.Channel.SendMessageAsync(ex.Message);
-                    return;
-                }
             }
-        } 
+        }
     }
 }
 

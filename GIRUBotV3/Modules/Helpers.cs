@@ -30,7 +30,13 @@ namespace GIRUBotV3.Modules
         }
         public static IRole ReturnRole(SocketGuild guild, string role)
         {
-            return guild.GetRole(guild.Roles.FirstOrDefault(x => x.Name.ToLower() == role.ToLower()).Id);
+
+            var result = from r in guild.Roles
+                         where r.Name.ToLower() == role.ToLower()
+                         select r.Id;
+            ulong roleID = result.FirstOrDefault();
+            var rolereturn = guild.GetRole(roleID) as IRole;
+            return rolereturn;
         }
         public static IRole IsRoleReturn(string role, SocketGuildUser user)
         {

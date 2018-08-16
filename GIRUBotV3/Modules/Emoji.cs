@@ -16,20 +16,17 @@ namespace GIRUBotV3.Modules
         [Command("emoji")]
         private async Task GetInfo(string input)
         {
-
             Emote emote;
             if (Emote.TryParse(input, out emote))
             {
                 await Context.Channel.SendMessageAsync(emote.Url);
                 return;
-            }
-          
+            }          
             for (int i = 0; i < input.Length; i += Char.IsSurrogatePair(input, i) ? 2 : 1)
             {
                 int x = Char.ConvertToUtf32(input, i);
                 emojiFileName = string.Format("{0:X4}", x);
-            }
-     
+            }     
             try
             {
                 await Context.Channel.SendFileAsync(@"C:\Users\danielyacoubian\Pictures\test\" + emojiFileName + ".png");

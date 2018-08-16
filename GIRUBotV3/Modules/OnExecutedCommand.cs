@@ -12,7 +12,7 @@ namespace GIRUBotV3.Modules
 
     public class OnExecutedCommand
     {
-       
+
         CommandInfo _info;
         ICommandContext _context;
         IResult _result;
@@ -25,7 +25,7 @@ namespace GIRUBotV3.Modules
         }
         public async Task AdminLog(CommandInfo info, ICommandContext context, IResult result)
         {
-             _info = info;
+            _info = info;
             _context = context;
             _result = result;
 
@@ -102,7 +102,22 @@ namespace GIRUBotV3.Modules
                 await adminlogchannel.SendMessageAsync("", false, embed.Build());
                 return;
             }
+
         }
+        //public async Task AdminLogVCMovement(SocketUser user, SocketVoiceState voiceBefore, SocketVoiceState voiceAfter)
+        //{
+        //    adminlogchannel = await context.Guild.GetChannelAsync(Config.AuditChannel) as ITextChannel;
+
+           
+        //    var embed = new EmbedBuilder();
+        //    embed.WithTitle($"🎮 {_context.Message.Author.Username} used the \"{state.}\" module");
+        //    embed.AddField("command: ", context.Message.Content, false);
+        //    embed.AddField("at: ", dateTimeStamp, false);
+        //    embed.AddField("in: ", context.Message.Channel.Name, false);
+        //    embed.WithColor(new Color(20, 255, 0));
+        //    await adminlogchannel.SendMessageAsync("", false, embed.Build());
+        //    return;
+        //}
     }
 }
 

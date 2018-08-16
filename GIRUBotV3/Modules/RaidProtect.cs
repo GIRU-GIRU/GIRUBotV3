@@ -21,7 +21,7 @@ namespace GIRUBotV3.Modules
         private async Task RaidProtectOn()
         {
             var chnl = Context.Channel as SocketGuildChannel;
-           await chnl.AddPermissionOverwriteAsync(Helpers.ReturnRole(Context.Guild, "noob"), denyTalk);
+            await chnl.AddPermissionOverwriteAsync(Helpers.ReturnRole(Context.Guild, "noob"), denyTalk);
 
             var embed = new EmbedBuilder();
               embed.WithTitle("Raid Protection Enabled      ⭕");

@@ -9,6 +9,9 @@ using System.Reflection;
 using System.Threading.Tasks;
 using FaceApp;
 using System.Net.Http;
+using TwitchLib.Api.Services;
+using TwitchLib.Api.Interfaces;
+using TwitchLib.Api;
 
 namespace GIRUBotV3
 {
@@ -18,22 +21,32 @@ namespace GIRUBotV3
         {
             var program = new Program();
             var bot = program.RunBotAsync();
-            bot.Wait();
-            var runTwitch = TwitchIntegration.TwitchMainAsync();        
+            bot.Wait();   
         }
+
 
         public DiscordSocketClient _client;
         private CommandService _commands;
         private OnMessage _onMessage;
         private OnExecutedCommand _onExecutedCommand;
-        private IServiceProvider _services;   
+        private IServiceProvider _services;
+        public static TwitchAPI api;
+        private TwitchBot _twitchBot;
+        private LiveStreamMonitor _liveStreamMonitor;
 
         private FaceAppClient _FaceAppClient;
         public async Task RunBotAsync()
         {
             string botToken = Config.BotToken;
+            api = new TwitchAPI();
+            api.Settings.ClientId = Config.TwitchClientId;
+            api.Settings.AccessToken = Config.TwitchAccessToken;
+            _liveStreamMonitor = new LiveStreamMonitor(api, 60, true, false);
 
             var _HttpClient = new HttpClient();
+
+            _twitchBot = new TwitchBot(api);
+            
             _FaceAppClient = new FaceAppClient(_HttpClient);
             _client = new DiscordSocketClient();
             _commands = new CommandService();
@@ -43,6 +56,7 @@ namespace GIRUBotV3
             _services = new ServiceCollection()
                  .AddSingleton(_commands)
                  .AddSingleton(_FaceAppClient)
+                 .AddSingleton(_twitchBot)
                  .BuildServiceProvider();
 
             _client.MessageUpdated += _onMessage.UpdatedMessageContainsAsync;         
@@ -50,8 +64,12 @@ namespace GIRUBotV3
          
            
             _client.MessageReceived += _onMessage.MessageContainsAsync;
-            _commands.CommandExecuted += _onExecutedCommand.AdminLog;
+            _liveStreamMonitor.OnStreamOnline += _twitchBot.NotifyMainOnStreamStart;
+
+             _commands.CommandExecuted += _onExecutedCommand.AdminLog;
+            //_client.UserVoiceStateUpdated += _onExecutedCommand.AdminLogVCMovement;
             _client.Log += Log;
+            
             //register modules and login bot with auth credentials
             await RegisterCommandAsync();
             await _client.LoginAsync(TokenType.Bot, botToken);
@@ -80,7 +98,6 @@ namespace GIRUBotV3
                 var context = new SocketCommandContext(_client, message);
                 //execute commands, pass in context and and look for cmd prefix, inject dependancies
                 var result = await _commands.ExecuteAsync(context, argPos, _services);
-                //error log
                 switch (result.Error)
                 {
                     case CommandError.UnmetPrecondition: 
@@ -92,9 +109,7 @@ namespace GIRUBotV3
                     default:
                        Console.WriteLine(result.ErrorReason);
                         break;
-                }
-             
-            
+                }                   
             }   
         }
         private Task Log(LogMessage arg)
