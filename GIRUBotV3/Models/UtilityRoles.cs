@@ -16,7 +16,7 @@ namespace GIRUBotV3.Models
         }
         public static string Muted
         {
-            get { return "muted"; }
+            get { return "Muted"; }
         }
         public static string Moderator
         {
