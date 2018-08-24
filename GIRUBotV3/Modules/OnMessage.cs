@@ -23,7 +23,6 @@ namespace GIRUBotV3.Modules
 
         private static Regex regexNounTest = new Regex(@"^\![^ ]+test");
         private static Regex regexInviteLinkDiscord = new Regex(@"(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]");
-        private static List<string> FaceAppFilterTypes = FilterTypes.FilterTypesStrings;
         public async Task MessageContainsAsync(SocketMessage arg)
         {
             //ignore ourselves, check for null

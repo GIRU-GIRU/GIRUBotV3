@@ -22,6 +22,10 @@ namespace GIRUBotV3.Models
         {
             get { return "Moderator"; }
         }
+        public static string God
+        {
+            get { return "God"; }
+        }
 
     }
 }

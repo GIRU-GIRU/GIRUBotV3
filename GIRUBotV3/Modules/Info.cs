@@ -6,6 +6,7 @@ using System.Text;
 using Discord.WebSocket;
 using GIRUBotV3.Personality;
 using System.Threading.Tasks;
+using GIRUBotV3.Models;
 
 namespace GIRUBotV3.Modules
 {
@@ -15,26 +16,26 @@ namespace GIRUBotV3.Modules
         [Command("info")]
         private async Task GetInfo(IGuildUser user)
         {
-            
+
             var userSocketGuild = user as SocketGuildUser;
             string userAvatarURL = user.GetAvatarUrl(png, 1024);
             string userStatus = user.Status.ToString();
             var userCreatedAtString = user.CreatedAt.ToString("yyyy/MM/dd hh:mm");
             var userJoinedAtString = user.JoinedAt.Value.ToString("yyyy/MM/dd hh:mm");
-            var userDiscriminator = user.Discriminator;  
+            var userDiscriminator = user.Discriminator;
             string userActivity = user.Activity == null ? "nothing" : user.Activity.Name;
 
 
-            var embed = new EmbedBuilder();       
-                  embed.WithTitle($"{user.Username}{userDiscriminator}");
-                  embed.AddField("Account Created: ", userCreatedAtString, true);
-                  embed.AddField("Joined Melee Slasher: ", userJoinedAtString, true);
-                  embed.AddField("User ID: ", user.Id, false);
-                  embed.AddField("Currently playing ", userActivity, true);
-                  embed.AddField("Status: ", userStatus, true);
-                  embed.WithThumbnailUrl(userAvatarURL);
-                  embed.WithColor(new Color(0, 204, 255));
-            await Context.Channel.SendMessageAsync("", false, embed.Build());     
+            var embed = new EmbedBuilder();
+            embed.WithTitle($"{user.Username}{userDiscriminator}");
+            embed.AddField("Account Created: ", userCreatedAtString, true);
+            embed.AddField("Joined Melee Slasher: ", userJoinedAtString, true);
+            embed.AddField("User ID: ", user.Id, false);
+            embed.AddField("Currently playing ", userActivity, true);
+            embed.AddField("Status: ", userStatus, true);
+            embed.WithThumbnailUrl(userAvatarURL);
+            embed.WithColor(new Color(0, 204, 255));
+            await Context.Channel.SendMessageAsync("", false, embed.Build());
         }
 
         [Command("info")]
@@ -53,14 +54,14 @@ namespace GIRUBotV3.Modules
             string userActivity = user.Activity == null ? "nothing" : user.Activity.Name;
 
             var embed = new EmbedBuilder();
-                 embed.WithTitle($"{user.Username}{userDiscriminator}");
-                 embed.AddField("Account Created: ", userCreatedAtString, true);
-                 embed.AddField("Joined Melee Slasher: ", userJoinedAtString, true);
-                 embed.AddField("User ID: ", user.Id, false);
-                 embed.AddField("Currently playing ", userActivity, true);
-                 embed.AddField("Status: ", userStatus, true);
-                 embed.WithThumbnailUrl(userAvatarURL); ;
-                 embed.WithColor(new Color(0, 204, 255));
+            embed.WithTitle($"{user.Username}{userDiscriminator}");
+            embed.AddField("Account Created: ", userCreatedAtString, true);
+            embed.AddField("Joined Melee Slasher: ", userJoinedAtString, true);
+            embed.AddField("User ID: ", user.Id, false);
+            embed.AddField("Currently playing ", userActivity, true);
+            embed.AddField("Status: ", userStatus, true);
+            embed.WithThumbnailUrl(userAvatarURL); ;
+            embed.WithColor(new Color(0, 204, 255));
             await Context.Channel.SendMessageAsync("", false, embed.Build());
         }
 
@@ -68,7 +69,7 @@ namespace GIRUBotV3.Modules
         private async Task GetServerInfo()
         {
             var g = Context.Guild;
-        
+
             var createdAt = g.CreatedAt.ToString("yyyy/MM/dd  hh:mm");
             var roleCount = g.Roles.Count;
             var mmbrCount = g.MemberCount;
@@ -78,16 +79,48 @@ namespace GIRUBotV3.Modules
             var guildID = g.Id;
 
             var embed = new EmbedBuilder();
-                embed.WithTitle(g.Name);
-                embed.AddField("Member Count: ", mmbrCount, true);
-                embed.AddField("Created at: ", createdAt, true);
-                embed.AddField("Role Count: ", roleCount, true);
-                embed.AddField("Text Channel Count: ", channels, true);
-                embed.AddField("Guild ID: ", guildID, true);
-                embed.AddField("Owner: ", owner, true);
-                embed.WithThumbnailUrl(image);
-                embed.WithColor(new Color(0, 204, 255));
+            embed.WithTitle(g.Name);
+            embed.AddField("Member Count: ", mmbrCount, true);
+            embed.AddField("Created at: ", createdAt, true);
+            embed.AddField("Role Count: ", roleCount, true);
+            embed.AddField("Text Channel Count: ", channels, true);
+            embed.AddField("Guild ID: ", guildID, true);
+            embed.AddField("Owner: ", owner, true);
+            embed.WithThumbnailUrl(image);
+            embed.WithColor(new Color(0, 204, 255));
             await Context.Channel.SendMessageAsync("", false, embed.Build());
         }
+
+
+        //private StringBuilder roles = new StringBuilder();
+        //[Command("roletypes")]
+        //private async Task GetRoleTypes()
+        //{
+        //    AllowedRoles roles1 = new AllowedRoles();
+
+        //    var allowedRoles = typeof(AllowedRoles).GetProperties();
+
+        //    int i = 0;
+        //    foreach (var item in allowedRoles)
+        //    {
+                
+        //        roles.Append(item.Name + ", ");
+        //        i++;
+        //        if (i == 6)
+        //        {
+        //            i = 0;
+        //            roles.Append("\n");
+        //        }
+        //    }
+        //    try
+        //    {
+        //       await Context.User.SendMessageAsync(roles.ToString());
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        await Context.Channel.SendMessageAsync(roles.ToString());
+        //    }
+        //}
     }
 }

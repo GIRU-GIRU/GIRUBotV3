@@ -12,12 +12,12 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Drawing;
 using System.Linq;
 using GIRUBotV3.Preconditions;
+using GIRUBotV3.Models;
 
 namespace GIRUBotV3.Modules
 {
     public class FaceAppCommands : ModuleBase<SocketCommandContext>
     {
-        private static List<string> morphtypes = Models.FilterTypes.FilterTypesStrings;
 
         private FaceAppClient _FaceAppClient;
         public FaceAppCommands(FaceAppClient FaceAppClient)
@@ -26,17 +26,16 @@ namespace GIRUBotV3.Modules
         }
 
         [Command("morphtypes")]
-        [Ratelimit(3, 1, Measure.Minutes)]
         public async Task FaceAppHelp()
         {
-            string morphtypesString = String.Join(", ", morphtypes.ToArray());
-            await Context.Channel.SendMessageAsync("SYNTAX: +morph type \ncurrent types are: " + morphtypesString);
+            await Context.Channel.SendMessageAsync(String.Join(", ", FilterTypes.GetMorphTypes()));
             return;
         }
 
         private string url;
+        private bool typeAvailable;
         [Command("morph")]
-        [Ratelimit(49, 10, Measure.Minutes)]
+        [Ratelimit(35, 10, Measure.Minutes)]
         public async Task FaceMorph([Remainder]string input)
         {
 
@@ -46,6 +45,21 @@ namespace GIRUBotV3.Modules
                 input = "+" + input;
                 var inputArray = Context.Message.Content.Split(" ");
                 var type = inputArray[1].TrimStart('+');
+
+                foreach (var item in FilterTypes.GetMorphTypes())
+                {
+                    if (item.ToLower() == type.ToLower())
+                    {
+                        typeAvailable = true;
+                    }
+                }
+
+                if (!typeAvailable)
+                {
+                    var insult = await Insults.GetInsult();
+                    await Context.Channel.SendMessageAsync("not a valid type you fucking " + insult + ", use !morphtypes");
+                    return;
+                }
 
                 //get previous messages because no URL was passed in
                 if (inputArray.Length <= 2)
@@ -87,7 +101,7 @@ namespace GIRUBotV3.Modules
                     }
                     catch (FaceException ex)
                     {
-                        await Context.Channel.SendMessageAsync(ex.Message);
+                        await Context.Channel.SendMessageAsync("Face not recognized, or Bot has been banned from the API");
                         return;
                     }
                 }

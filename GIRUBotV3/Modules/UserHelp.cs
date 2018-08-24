@@ -57,7 +57,8 @@ namespace GIRUBotV3.Modules
         [Command("say")]
         private async Task SayInMain([Remainder]string message)
         {
-            if (Helpers.IsRole("God", Context.User as SocketGuildUser) || Helpers.IsRole("Moderator", Context.User as SocketGuildUser))
+            var user = Context.User as IGuildUser;
+            if (Helpers.IsRole(Models.UtilityRoles.God, Context.User as SocketGuildUser) || user.GuildPermissions.ViewAuditLog)
             {
                 var chnl = Context.Guild.GetTextChannel(Config.MeleeSlasherMainChannel);
                 await chnl.SendMessageAsync(message);
@@ -67,14 +68,12 @@ namespace GIRUBotV3.Modules
             {
                 return;
             }
-
         }
 
         [Command("warn")]
         [RequireUserPermission(GuildPermission.MoveMembers)]
         private async Task WarnUser(IGuildUser user)
         {
-
             string warningMessage = await Insults.GetWarning();
             try
             {

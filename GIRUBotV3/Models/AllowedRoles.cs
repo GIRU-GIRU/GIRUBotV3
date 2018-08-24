@@ -7,151 +7,194 @@ namespace GIRUBotV3.Models
 {
     class AllowedRoles
     {
-        public string Viewers
+        public  string Viewers
         {
             get { return "Viewers"; }
         }
-        public string PugEU
+        public  string PugEU
         {
             get { return "PugEU"; }
         }
-        public string PugNA
+        public  string PugNA
         {
             get { return "PugNA"; }
         }
-        public string Roleplayer
+        public  string Roleplayer
         {
             get { return "Roleplayer"; }
         }
-        public string Weeb
+        public  string Weeb
         {
             get { return "Weeb"; }
         }
-        public string Elite
+        public  string Elite
         {
             get { return "Elite"; }
         }
-        public string Scotland
+        public  string Scotland
         {
             get { return "Scotland"; }
         }
-        public string Armenia
+        public  string Armenia
         {
             get { return "Armenia"; }
         }
-        public string EU
+        public  string EU
         {
             get { return "EU"; }
         }
-        public string NA
+        public  string NA
         {
             get { return "NA"; }
         }
-        public string RU
+        public  string RU
         {
             get { return "RU"; }
         }
-        public string SA
+        public  string SA
         {
             get { return "SA"; }
         }
-        public string OCE
+        public  string OCE
         {
             get { return "OCE"; }
         }
-        public string noob
+        public  string noob
         {
             get { return "noob"; }
         }
-        public string Veteran
+        public  string Veteran
         {
             get { return "Veteran"; }
         }
-        public string Toxic
+        public  string Toxic
         {
             get { return "Toxic"; }
         }
-        public string Simp
+        public  string Simp
         {
             get { return "Simp"; }
         }
-        public string Goon
+        public  string Goon
         {
             get { return "Goon"; }
         }
-        public string Aggressor
+        public  string Aggressor
         {
             get { return "Aggressor"; }
         }
-        public string Tryhard
+        public  string Tryhard
         {
             get { return "Tryhard"; }
         }
-        public string Dogshit
+        public  string Dogshit
         {
             get { return "Dogshit"; }
         }
-        public string Weirdo
+        public  string Weirdo
         {
             get { return "Weirdo"; }
         }
-        public string Cunt
+        public  string Cunt
         {
             get { return "Cunt"; }
         }
-        public string Titan
+        public  string Titan
         {
             get { return "Titan"; }
         }
-        public string Weak
+        public  string Weak
         {
             get { return "Weak"; }
         }
-        public string Fearful
+        public  string Fearful
         {
             get { return "Fearful"; }
         }
-        public string Innocent
+        public  string Innocent
         {
             get { return "Innocent"; }
         }
-        public string Stupid
+        public  string Stupid
         {
             get { return "Stupid"; }
         }
-        public string Whelp
+        public  string Whelp
         {
             get { return "Whelp"; }
         }
-        public string Tilter
+        public  string Tilter
         {
             get { return "Tilter"; }
         }
-        public string Creature
+        public  string Creature
         {
             get { return "Creature"; }
         }
-        public string Friendly
+        public  string Friendly
         {
             get { return "Friendly"; }
         }
-        public string Helpful
+        public  string Helpful
         {
             get { return "Helpful"; }
         }
-        public string Dev
+        public  string Dev
         {
             get { return "Dev"; }
         }
-        public string Mongol
+        public  string Mongol
         {
             get { return "Mongol"; }
         }
-        public string Hot
+        public  string Hot
         {
             get { return "Hot"; }
         }
-
+        public  string Leaker
+        {
+            get { return "Leaker"; }
+        }
+        public  string Manipulative
+        {
+            get { return "Manipulative"; }
+        }
+        public  string ORC
+        {
+            get { return "ORC"; }
+        }
+        public  string Disgusting
+        {
+            get { return "Disgusting"; }
+        }
+        public  string Thot
+        {
+            get { return "Slut"; }
+        }
+        public  string Substances
+        {
+            get { return "Substances"; }
+        }
+        public  string Cool
+        {
+            get { return "Cool"; }
+        }
+        public  string Liar
+        {
+            get { return "Liar"; }
+        }
+        public  string Crybaby
+        {
+            get { return "Crybaby"; }
+        }
+        public  string Loser
+        {
+            get { return "Loser"; }
+        }
+        public  string Alcoholic
+        {
+            get { return "Alcoholic"; }
+        }
 
     }
 }

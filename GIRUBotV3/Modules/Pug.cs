@@ -18,19 +18,19 @@ namespace GIRUBotV3.Modules
         [RequireUserPermission(GuildPermission.MoveMembers)]
         private async Task PugAnnounceEU([Remainder]string pugMessage)
         {
-            
+
             IRole puggersEU = Helpers.ReturnRole(Context.Guild, allowedRoles.PugEU);
             await puggersEU.ModifyAsync(x => x.Mentionable = true);
-              
-                var embed = new EmbedBuilder();
-                embed.WithTitle("An EU Pug is commencing... ");
-                embed.WithDescription($"Hosted by {Context.Message.Author}\n{pugMessage}");
-                embed.ThumbnailUrl = "https://cdn.discordapp.com/attachments/449997696682688522/451383069329588224/helmet.PNG";
-                embed.WithColor(new Color(0, 204, 255));
-                await Context.Channel.SendMessageAsync(puggersEU.Mention, false, embed.Build());
+
+            var embed = new EmbedBuilder();
+            embed.WithTitle("An EU Pug is commencing... ");
+            embed.WithDescription($"Hosted by {Context.Message.Author}\n{pugMessage}");
+            embed.ThumbnailUrl = "https://cdn.discordapp.com/attachments/449997696682688522/451383069329588224/helmet.PNG";
+            embed.WithColor(new Color(0, 204, 255));
+            await Context.Channel.SendMessageAsync(puggersEU.Mention, false, embed.Build());
 
             await puggersEU.ModifyAsync(x => x.Mentionable = false);
-            return;          
+            return;
         }
 
         [Command("pugna")]
@@ -39,16 +39,16 @@ namespace GIRUBotV3.Modules
         {
             IRole puggersNA = Helpers.ReturnRole(Context.Guild, allowedRoles.PugNA);
             await puggersNA.ModifyAsync(x => x.Mentionable = true);
-            
-                var embed = new EmbedBuilder();
-                embed.WithTitle("An NA Pug is commencing... ");
-                embed.WithDescription($"Hosted by {Context.Message.Author}\n{pugMessage}");
-                embed.ThumbnailUrl = "https://i.ytimg.com/vi/-gTbxqK-4yU/maxresdefault.jpg";
-                embed.WithColor(new Color(0, 204, 255));
-                await Context.Channel.SendMessageAsync(puggersNA.Mention, false, embed.Build());
+
+            var embed = new EmbedBuilder();
+            embed.WithTitle("An NA Pug is commencing... ");
+            embed.WithDescription($"Hosted by {Context.Message.Author}\n{pugMessage}");
+            embed.ThumbnailUrl = "https://i.ytimg.com/vi/-gTbxqK-4yU/maxresdefault.jpg";
+            embed.WithColor(new Color(0, 204, 255));
+            await Context.Channel.SendMessageAsync(puggersNA.Mention, false, embed.Build());
 
             await puggersNA.ModifyAsync(x => x.Mentionable = false);
             return;
-        }   
+        }
     }
 }
