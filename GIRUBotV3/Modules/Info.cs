@@ -91,6 +91,19 @@ namespace GIRUBotV3.Modules
             await Context.Channel.SendMessageAsync("", false, embed.Build());
         }
 
+        [Command("stream")]
+        [RequireUserPermission(GuildPermission.MoveMembers)]
+        private async Task PugAnnounceEU([Remainder]string pugMessage)
+        {
+
+            IRole viewerRole = Helpers.ReturnRole(Context.Guild, UtilityRoles.Viewers);
+            await viewerRole.ModifyAsync(x => x.Mentionable = true);
+
+            await Context.Channel.SendMessageAsync(viewerRole.Mention + ", Stream is now live! https://www.twitch.tv/giru");
+
+            await viewerRole.ModifyAsync(x => x.Mentionable = false);
+            return;
+        }
 
         //private StringBuilder roles = new StringBuilder();
         //[Command("roletypes")]
@@ -103,7 +116,7 @@ namespace GIRUBotV3.Modules
         //    int i = 0;
         //    foreach (var item in allowedRoles)
         //    {
-                
+
         //        roles.Append(item.Name + ", ");
         //        i++;
         //        if (i == 6)
