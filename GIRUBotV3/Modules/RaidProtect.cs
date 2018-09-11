@@ -13,7 +13,7 @@ namespace GIRUBotV3.Modules
 {
     public class RaidProtect : ModuleBase<SocketCommandContext>
     {
-        OverwritePermissions allowTalk = new OverwritePermissions(sendMessages: PermValue.Allow);
+        OverwritePermissions allowTalk = new OverwritePermissions(sendMessages: PermValue.Inherit);
         OverwritePermissions denyTalk = new OverwritePermissions(sendMessages: PermValue.Deny);
 
         [Command("raidprotect on")]
