@@ -105,6 +105,13 @@ namespace GIRUBotV3.Modules
             return;
         }
 
+        [Command("github")]
+        private async Task GithubURLPost()
+        {
+            await Context.Channel.SendMessageAsync("https://github.com/GIRU-GIRU/GIRUBotV3");
+            return;
+        }
+
         //private StringBuilder roles = new StringBuilder();
         //[Command("roletypes")]
         //private async Task GetRoleTypes()
