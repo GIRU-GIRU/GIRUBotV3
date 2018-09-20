@@ -234,13 +234,13 @@ namespace GIRUBotV3.Modules
 
 
             //is it an allowed role ?
-            var allowedRoles = typeof(Models.AllowedRoles).GetProperties();
+  
 
-            foreach (var item in allowedRoles)
+            foreach (var item in AllowedRoles.AllowedRolesDictionary)
             {
-                if (roleSearch.ToLower() == item.Name.ToLower())
+                if (roleSearch.ToLower() == item.Key.ToLower())
                 {
-                    roleToAssign = Helpers.ReturnRole(Context.Guild, roleSearch);
+                    roleToAssign = Helpers.ReturnRole(Context.Guild, item.Value);
                     break;
                 }
             }
