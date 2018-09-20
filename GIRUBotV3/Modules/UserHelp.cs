@@ -18,6 +18,7 @@ namespace GIRUBotV3.Modules
             await Context.Channel.SendMessageAsync("dont be so fucking WEAK");
         }
 
+        
         public static async Task UserJoined(SocketGuildUser guildUser)
         {
             // casting
@@ -48,9 +49,18 @@ namespace GIRUBotV3.Modules
 
             };
             int pull = rnd.Next(welcomeArray.Length);
-            string welcomeMessage = welcomeArray[pull].ToString();
-    
+            string welcomeMessage = welcomeArray[pull].ToString(); 
             await chnl.SendMessageAsync(welcomeMessage);
+
+            //log it
+            ITextChannel logChannel = guildUser.Guild.GetChannel(492381877630402572) as ITextChannel;
+            string userJoinedDate = "{Date unavailable}";
+            if (guildUser.JoinedAt.HasValue)
+            {
+                string[] dateArray = guildUser.JoinedAt.GetValueOrDefault().ToString("dd/MM/yyyy hh:mm").Split(" ");
+                userJoinedDate = dateArray[0] + ", at " + dateArray[1];
+            }
+            await logChannel.SendMessageAsync($"{guildUser.Username}#{guildUser.Discriminator} joined Melee Slasher on {userJoinedDate}. UserID = {guildUser.Id}");
 
         }
 
@@ -69,6 +79,22 @@ namespace GIRUBotV3.Modules
                 return;
             }
         }
+
+ 
+        //[Command("saytest")]
+        //private async Task SaTest([Remainder]string message)
+        //{
+        //    var guildUser = Context.User as IGuildUser;
+        //    ITextChannel logChannel = await guildUser.Guild.GetChannelAsync(492381877630402572) as ITextChannel;
+            
+        //    if (guildUser.JoinedAt.HasValue)
+        //    {
+        //        string[] dateArray = guildUser.JoinedAt.GetValueOrDefault().ToString("dd/MM/yyyy hh:mm").Split(" ");
+        //        userJoinedDate = dateArray[0] + ", at " + dateArray[1];
+        //    }
+        //    await logChannel.SendMessageAsync($"{guildUser.Username}#{guildUser.Discriminator} joined Melee Slasher on {userJoinedDate}. UserID = {guildUser.Id}");
+        //}
+
 
         [Command("warn")]
         [RequireUserPermission(GuildPermission.MoveMembers)]
@@ -114,7 +140,5 @@ namespace GIRUBotV3.Modules
             embed.WithColor(new Color(0, 255, 0));
             await Context.Channel.SendMessageAsync("", false, embed.Build());
         }
-    }
-
-    
+    } 
 }

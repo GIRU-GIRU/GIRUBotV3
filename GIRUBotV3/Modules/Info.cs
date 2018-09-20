@@ -93,7 +93,7 @@ namespace GIRUBotV3.Modules
 
         [Command("stream")]
         [RequireUserPermission(GuildPermission.MoveMembers)]
-        private async Task PugAnnounceEU([Remainder]string pugMessage)
+        private async Task StreamAnnounce()
         {
 
             IRole viewerRole = Helpers.ReturnRole(Context.Guild, UtilityRoles.Viewers);
@@ -111,36 +111,5 @@ namespace GIRUBotV3.Modules
             await Context.Channel.SendMessageAsync("https://github.com/GIRU-GIRU/GIRUBotV3");
             return;
         }
-
-        //private StringBuilder roles = new StringBuilder();
-        //[Command("roletypes")]
-        //private async Task GetRoleTypes()
-        //{
-        //    AllowedRoles roles1 = new AllowedRoles();
-
-        //    var allowedRoles = typeof(AllowedRoles).GetProperties();
-
-        //    int i = 0;
-        //    foreach (var item in allowedRoles)
-        //    {
-
-        //        roles.Append(item.Name + ", ");
-        //        i++;
-        //        if (i == 6)
-        //        {
-        //            i = 0;
-        //            roles.Append("\n");
-        //        }
-        //    }
-        //    try
-        //    {
-        //       await Context.User.SendMessageAsync(roles.ToString());
-        //    }
-        //    catch (Exception)
-        //    {
-
-        //        await Context.Channel.SendMessageAsync(roles.ToString());
-        //    }
-        //}
     }
 }

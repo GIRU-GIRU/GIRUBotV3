@@ -27,6 +27,10 @@ namespace GIRUBotV3.Models
         {
             get { return "OCE"; }
         }
+        public static string ZA
+        {
+            get { return "ZA"; }
+        }
         public static string noob
         {
             get { return "noob"; }
@@ -40,7 +44,7 @@ namespace GIRUBotV3.Models
                 {
                     _exclusiveRoles = new List<string>();
                 }
-                _exclusiveRoles.AddMany(EU, NA, RU, SA, OCE, noob);
+                _exclusiveRoles.AddMany(EU, NA, RU, SA, OCE, ZA, noob);
                 return _exclusiveRoles;
             }
         }

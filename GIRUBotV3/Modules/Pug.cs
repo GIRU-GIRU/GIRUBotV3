@@ -12,14 +12,14 @@ namespace GIRUBotV3.Modules
 {
     public class Pug : ModuleBase<SocketCommandContext>
     {
-        AllowedRoles allowedRoles = new AllowedRoles();
+       
 
         [Command("pugeu")]
         [RequireUserPermission(GuildPermission.MoveMembers)]
         private async Task PugAnnounceEU([Remainder]string pugMessage)
         {
 
-            IRole puggersEU = Helpers.ReturnRole(Context.Guild, allowedRoles.PugEU);
+            IRole puggersEU = Helpers.ReturnRole(Context.Guild, AllowedRoles.AllowedRolesDictionary.GetValueOrDefault("PugEU"));
             await puggersEU.ModifyAsync(x => x.Mentionable = true);
 
             var embed = new EmbedBuilder();
@@ -37,7 +37,7 @@ namespace GIRUBotV3.Modules
         [RequireUserPermission(GuildPermission.MoveMembers)]
         private async Task PugAnnounceNA([Remainder]string pugMessage)
         {
-            IRole puggersNA = Helpers.ReturnRole(Context.Guild, allowedRoles.PugNA);
+            IRole puggersNA = Helpers.ReturnRole(Context.Guild, AllowedRoles.AllowedRolesDictionary.GetValueOrDefault("PugNA"));
             await puggersNA.ModifyAsync(x => x.Mentionable = true);
 
             var embed = new EmbedBuilder();

@@ -104,8 +104,6 @@ namespace GIRUBotV3.Modules
                 await Context.Channel.SendMessageAsync("Invalid userID");
                 throw;
             }
-
-
         }
 
         bool existingBan;
@@ -155,6 +153,7 @@ namespace GIRUBotV3.Modules
         }
 
         List<string> RolesNamesList = new List<string>();
+        List<IRole> RolesToAdd = new List<IRole>();
         [Command("give")]
         [RequireUserPermission(GuildPermission.ViewAuditLog)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
@@ -167,19 +166,17 @@ namespace GIRUBotV3.Modules
             //turn message into role array
             var inputRolesArray = inputRoles.ToLower().Split(' ');
 
-            //get allowed roles as array
-            var allowedRoles = typeof(Models.AllowedRoles).GetProperties();
+            //convert allowedroles dictionary to array
             List<string> allowedRolesList = new List<string>();
-            foreach (var item in allowedRoles)
+            foreach (var item in AllowedRoles.AllowedRolesDictionary)
             {
-                allowedRolesList.Add(item.Name.ToLower());
+                allowedRolesList.Add(item.Key.ToLower());
             }
 
             //validate matching roles
             var succesfullyMatchingList = inputRolesArray.Where(x => allowedRolesList.Contains(x, StringComparer.InvariantCultureIgnoreCase)).ToList();
 
-            //remove regional roles from bulk add
-            ;
+            //remove regional roles from bulk add           
             foreach (var item in Models.ExclusiveRoles.Exclusive_roles)
             {
                 succesfullyMatchingList.Remove(item);
@@ -190,11 +187,26 @@ namespace GIRUBotV3.Modules
                 await Context.Channel.SendMessageAsync($"no valid roles, {insult}");
                 return;
             }
+
+
+            List<string> succesfullyMatchingListValues = new List<string>();
+            //grab role values rahter than alias
+            foreach (var item in AllowedRoles.AllowedRolesDictionary)
+            {
+                for (int i = 0; i < succesfullyMatchingList.Count; i++)
+                {
+                    if (item.Key.ToLower() == succesfullyMatchingList[i].ToLower())
+                    {
+                        succesfullyMatchingListValues.Add(item.Value);
+                    }
+                }
+          
+            }
             //grab the IRole objects and populate the return string
             List<IRole> roleList = new List<IRole>();
-            for (int i = 0; i < succesfullyMatchingList.Count; i++)
+            for (int i = 0; i < succesfullyMatchingListValues.Count; i++)
             {
-                var returnedRole = Helpers.ReturnRole(Context.Guild, succesfullyMatchingList[i]);
+                var returnedRole = Helpers.ReturnRole(Context.Guild, succesfullyMatchingListValues[i]);
                 roleList.Add(returnedRole);
                 RolesNamesList.Add(returnedRole.Name);
             }
@@ -485,6 +497,47 @@ namespace GIRUBotV3.Modules
             await Context.Channel.SendMessageAsync("", false, embedReplaceRemovedRole.Build());
             await userSocket.RemoveRoleAsync(picsRole);
             return;
+        }
+
+        [Command("commencepurge")]
+        [RequireUserPermission(GuildPermission.ManageGuild)]
+        private async Task ThePurge()
+        {
+            var allUsers = Context.Guild.Users;
+            var noobRole = Helpers.ReturnRole(Context.Guild, "noob");
+            int purgeReminderCount = 0;
+            int purgeFinalCount = 0;
+
+            foreach (var user in allUsers)
+            {
+                if (user.Roles.Contains(noobRole))
+                {
+                    await Context.Channel.SendMessageAsync($"{user.Username} has been cleansed");
+                    await user.KickAsync();
+                    purgeReminderCount++;
+                    purgeFinalCount++;
+                }
+                if (purgeReminderCount == 5)
+                {
+                    await Context.Channel.SendMessageAsync($"The Purge is commencing, cleansing all shitters from Melee Slasher");
+                    purgeReminderCount = 0;
+                }
+            }
+
+            if (purgeFinalCount == 0)
+            {
+                await Context.Channel.SendMessageAsync("Melee Slasher is currently clean");
+                return;
+            }
+
+            var thePurgeEmbed = new EmbedBuilder();
+                thePurgeEmbed.WithTitle($"⭕          A total of {purgeFinalCount} shitters were cleansed.        ⭕");
+                thePurgeEmbed.ThumbnailUrl = "https://cdn.discordapp.com/attachments/300832513595670529/469942372034150440/detailed_helmet_discord_embed.png";
+                thePurgeEmbed.WithColor(new Color(255, 0, 0));
+            await Context.Channel.SendMessageAsync("", false, thePurgeEmbed.Build());
+            return;
+
+
         }
     }
 }
