@@ -52,7 +52,6 @@ namespace GIRUBotV3.Modules
                 await targetUser.AddRoleAsync(mutedRole);
                 await context.Channel.SendMessageAsync($"stay small {message.Author.Mention}, no spam in my server you little shitter");            
                 await adminlogchannel.SendMessageAsync($"{targetUser.Username}#{targetUser.DiscriminatorValue} has been auto muted for mass mention, please investigate {moderators.Mention}");
-
             }
             //if (message.Content.Contains("help"))
             //{
@@ -80,7 +79,6 @@ namespace GIRUBotV3.Modules
         public async Task UpdatedMessageContainsAsync(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
         {
             var messageAfter = after as SocketUserMessage;
-
             var context = new SocketCommandContext(_client, messageAfter);
             if (messageAfter.Author.IsBot || Helpers.IsRole("Moderator", context.User as SocketGuildUser)) return;
             if (regexInviteLinkDiscord.Match(messageAfter.Content).Success)
@@ -88,6 +86,17 @@ namespace GIRUBotV3.Modules
                 var insult = await Insults.GetInsult();
                 await context.Message.DeleteAsync();
                 await context.Channel.SendMessageAsync($"{context.User.Mention}, don't post invite links {insult}");
+            }
+            if (messageAfter.MentionedUsers.Count > 8)
+            {
+                IGuildUser targetUser = context.Guild.GetUser(messageAfter.Author.Id) as IGuildUser;
+                IRole moderators = Helpers.ReturnRole(context.Guild, UtilityRoles.Moderator);
+                var mutedRole = Helpers.ReturnRole(context.Guild, UtilityRoles.Muted);
+                ITextChannel adminlogchannel = context.Guild.GetChannel(Config.AuditChannel) as ITextChannel;
+
+                await targetUser.AddRoleAsync(mutedRole);
+                await context.Channel.SendMessageAsync($"stay small {messageAfter.Author.Mention}, no spam in my server you little shitter");
+                await adminlogchannel.SendMessageAsync($"{targetUser.Username}#{targetUser.DiscriminatorValue} has been auto muted for mass mention, please investigate {moderators.Mention}");
             }
             if (messageAfter.Content.Contains("😃"))
             {

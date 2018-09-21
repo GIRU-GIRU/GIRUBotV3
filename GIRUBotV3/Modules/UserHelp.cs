@@ -17,8 +17,7 @@ namespace GIRUBotV3.Modules
         {
             await Context.Channel.SendMessageAsync("dont be so fucking WEAK");
         }
-
-        
+      
         public static async Task UserJoined(SocketGuildUser guildUser)
         {
             // casting
@@ -54,30 +53,16 @@ namespace GIRUBotV3.Modules
 
             //log it
             ITextChannel logChannel = guildUser.Guild.GetChannel(492381877630402572) as ITextChannel;
-            string userJoinedDate = "{Date unavailable}";
-            if (guildUser.JoinedAt.HasValue)
-            {
-                string[] dateArray = guildUser.JoinedAt.GetValueOrDefault().ToString("dd/MM/yyyy hh:mm").Split(" ");
-                userJoinedDate = dateArray[0] + ", at " + dateArray[1];
-            }
-            await logChannel.SendMessageAsync($"{guildUser.Username}#{guildUser.Discriminator} joined Melee Slasher on {userJoinedDate}. UserID = {guildUser.Id}");
+            await logChannel.SendMessageAsync($"{guildUser.Username}#{guildUser.Discriminator} joined Melee Slasher. UserID = {guildUser.Id}");
 
         }
 
         [Command("say")]
+        [RequireUserPermission(GuildPermission.ViewAuditLog)]
         private async Task SayInMain([Remainder]string message)
         {
-            var user = Context.User as IGuildUser;
-            if (Helpers.IsRole(Models.UtilityRoles.God, Context.User as SocketGuildUser) || user.GuildPermissions.ViewAuditLog)
-            {
                 var chnl = Context.Guild.GetTextChannel(Config.MeleeSlasherMainChannel);
                 await chnl.SendMessageAsync(message);
-                return;
-            }
-            else
-            {
-                return;
-            }
         }
 
  
