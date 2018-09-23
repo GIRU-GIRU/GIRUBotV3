@@ -93,7 +93,7 @@ namespace GIRUBotV3
 
             int argPos = 0;
             //does the message start with ! ? || is someone tagged in message at start ?
-            if (message.HasStringPrefix("!", ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
+            if (message.HasStringPrefix(".", ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
             {
                 var context = new SocketCommandContext(_client, message);
                 //execute commands, pass in context and and look for cmd prefix, inject dependancies

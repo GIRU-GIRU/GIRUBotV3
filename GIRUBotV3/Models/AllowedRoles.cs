@@ -58,6 +58,7 @@ namespace GIRUBotV3.Models
             ["Liar"] = "Liar",
             ["Crybaby"] = "Crybaby",
             ["Loser"] = "Loser",
+            ["Shitter"] = "SHITTER",
             ["Alcoholic"] = "Alcoholic",
             ["Slut"] = "Slut",
             ["Snake"] = "🐍"
