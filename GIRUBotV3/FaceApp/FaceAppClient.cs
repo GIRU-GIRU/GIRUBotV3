@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using GIRUBotV3.Personality;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -70,7 +71,7 @@ namespace FaceApp
                 string errorCode = null;
                 if (response.Headers.TryGetValues("X-FaceApp-ErrorCode", out var codes))
                     errorCode = codes.First();
-                var exp = HandleException(errorCode);
+                var exp = await HandleException(errorCode);
                 throw exp;
             }
             return await response.Content.ReadAsStreamAsync();           
@@ -102,7 +103,7 @@ namespace FaceApp
                     if (response.Headers.TryGetValues("X-FaceApp-ErrorCode", out var codes))
                         errorCode = codes.First();
                     var exp = HandleException(errorCode);
-                    throw exp;
+                    throw await exp;
                 }
                 return JObject.Parse(jsonStr)["code"].ToString();              
             }
@@ -136,29 +137,22 @@ namespace FaceApp
                     string errorCode = null;
                     if (response.Headers.TryGetValues("X-FaceApp-ErrorCode", out var codes))
                         errorCode = codes.First();
-                    var exp = HandleException(errorCode);
+                    var exp = await HandleException(errorCode);
                     throw exp;
                 }
                 return JObject.Parse(jsonStr)["code"].ToString();
             }
         }
 
-        public FaceException HandleException(string errorCode)
+        public async Task<FaceException> HandleException(string errorCode)
         {
+            var insult = await Insults.GetInsult();
             switch (errorCode)
             {
-                case "device_id_required":
-                    return new FaceException(ExceptionType.NoDeviceIdFound, "No device id was found.");
-                case "photo_no_file_content":
-                    return new FaceException(ExceptionType.NoImageUploaded, "Image payload has an empty body.");
-                case "photos_no_faces":
-                    return new FaceException(ExceptionType.NoFacesDetected, "This image has no faces.");
-                case "bad_filter_id":
-                    return new FaceException(ExceptionType.BadFilter, "The filter specified was not valid");
-                case "photo_not_found":
-                    return new FaceException(ExceptionType.ImageNotFound, "No image found matching the provided image code.");
+                case "photo_no_faces":
+                    return new FaceException(ExceptionType.NoFacesDetected, "i dont see a face in that pic " + insult);
                 default:
-                    return new FaceException(ExceptionType.Unknown, "Unknown error occured."); 
+                    return new FaceException(ExceptionType.Unknown, "think we got banned boys."); 
             }
         }
         //Something only a madman would do. :^)

@@ -41,16 +41,16 @@ namespace GIRUBotV3.Modules
 
             using (Context.Channel.EnterTypingState())
             {
-                await Context.Message.Channel.TriggerTypingAsync();
-                input = "+" + input;
+                await Context.Message.Channel.TriggerTypingAsync();          
                 var inputArray = Context.Message.Content.Split(" ");
-                var type = inputArray[1].TrimStart('+');
+                var type = inputArray[1];
 
                 foreach (var item in FilterTypes.GetMorphTypes())
                 {
                     if (item.ToLower() == type.ToLower())
                     {
                         typeAvailable = true;
+                        break;
                     }
                 }
 
@@ -101,7 +101,7 @@ namespace GIRUBotV3.Modules
                     }
                     catch (FaceException ex)
                     {
-                        await Context.Channel.SendMessageAsync("Face not recognized, or Bot has been banned from the API");
+                        await Context.Channel.SendMessageAsync(ex.Message);
                         return;
                     }
                 }
