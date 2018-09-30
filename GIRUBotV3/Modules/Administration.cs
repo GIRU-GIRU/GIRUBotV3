@@ -109,7 +109,7 @@ namespace GIRUBotV3.Modules
         bool existingBan;
         string bannedUserName;
         [Command("unban")]
-        [RequireBotPermission(GuildPermission.Administrator)]
+        [RequireBotPermission(GuildPermission.BanMembers)]
         [RequireUserPermission(GuildPermission.ViewAuditLog)]
         private async Task UnbanUser(ulong userID)
         {
