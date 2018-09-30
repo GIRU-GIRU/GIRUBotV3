@@ -388,13 +388,18 @@ namespace GIRUBotV3.Modules
             return;
         }
 
+        string currentName;
         [Command("name")]
         [RequireUserPermission(GuildPermission.ViewAuditLog)]
         [RequireBotPermission(GuildPermission.ChangeNickname)]
         private async Task SetNick(IGuildUser user, [Remainder]string newName)
         {
             var userSocket = user as SocketGuildUser;
-            var currentName = user.Nickname;
+            currentName = user.Nickname;
+            if (string.IsNullOrEmpty(user.Nickname))
+            {
+                currentName = user.Username;
+            }
             await user.ModifyAsync(x => x.Nickname = newName);
             await Context.Message.DeleteAsync();
 
