@@ -41,8 +41,13 @@ namespace GIRUBotV3.Modules
 
             using (Context.Channel.EnterTypingState())
             {
+                var insult = await Insults.GetInsult();
                 await Context.Message.Channel.TriggerTypingAsync();          
                 var inputArray = Context.Message.Content.Split(" ");
+                if (inputArray.Length > 3)
+                {
+                    await Context.Channel.SendMessageAsync("what kind of url is that u " + insult);
+                }
                 var type = inputArray[1];
 
                 foreach (var item in FilterTypes.GetMorphTypes())
@@ -56,7 +61,6 @@ namespace GIRUBotV3.Modules
 
                 if (!typeAvailable)
                 {
-                    var insult = await Insults.GetInsult();
                     await Context.Channel.SendMessageAsync("not a valid type you fucking " + insult + ", use !morphtypes");
                     return;
                 }

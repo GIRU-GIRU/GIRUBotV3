@@ -149,6 +149,8 @@ namespace FaceApp
             var insult = await Insults.GetInsult();
             switch (errorCode)
             {
+                case "photo_bad_type":
+                     return new FaceException(ExceptionType.BadImageType, "the shit api wont acccept image in that format");
                 case "photo_no_faces":
                     return new FaceException(ExceptionType.NoFacesDetected, "i dont see a face in that pic " + insult);
                 default:
