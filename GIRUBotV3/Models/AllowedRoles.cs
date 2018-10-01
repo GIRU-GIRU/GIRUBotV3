@@ -61,7 +61,8 @@ namespace GIRUBotV3.Models
             ["Shitter"] = "SHITTER",
             ["Alcoholic"] = "Alcoholic",
             ["Slut"] = "Slut",
-            ["Snake"] = "🐍"
+            ["Snake"] = "🐍",
+            ["Gay"] = "Homosexual"
 
         };
     }
