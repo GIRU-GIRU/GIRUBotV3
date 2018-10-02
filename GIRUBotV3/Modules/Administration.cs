@@ -178,12 +178,12 @@ namespace GIRUBotV3.Modules
             //remove regional roles from bulk add           
             foreach (var item in Models.ExclusiveRoles.Exclusive_roles)
             {
-                succesfullyMatchingList.Remove(item);
+                succesfullyMatchingList.Remove(item.ToLower());
             }
 
             if (succesfullyMatchingList.Count == 0)
             {
-                await Context.Channel.SendMessageAsync($"no valid roles, {insult}");
+                await Context.Channel.SendMessageAsync($"not gonna let you give that you {insult}");
                 return;
             }
 
