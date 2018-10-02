@@ -25,14 +25,13 @@ namespace GIRUBotV3.Modules
             var guildUserIGuildUser = guildUser as IGuildUser;
             var guildMainChannel = guildUser.Guild.GetChannel(Config.MeleeSlasherMainChannel);
             var chnl = guildMainChannel as ITextChannel;
+            // assigning noob role
+            var noobRole = Helpers.FindRole(guildUser, "noob");
+            await guildUser.AddRoleAsync(noobRole);
+
 
             if (CommandToggles.WelcomeMessages)
             {
-
-                // assigning noob role
-                var noobRole = Helpers.FindRole(guildUser, "noob");
-                await guildUser.AddRoleAsync(noobRole);
-
                 // welcoming
                 var insult = await Insults.GetInsult();
                 Random rnd = new Random();
