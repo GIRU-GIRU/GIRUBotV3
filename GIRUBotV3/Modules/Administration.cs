@@ -35,7 +35,6 @@ namespace GIRUBotV3.Modules
 
             var embed = new EmbedBuilder();
             embed.WithTitle($"✅     {Context.User.Username} _booted_ {kickTargetName}");
-
             embed.WithDescription($"reason: **{reason}**");
             embed.WithColor(new Color(0, 255, 0));
             await Context.Channel.SendMessageAsync("", false, embed.Build());
@@ -232,10 +231,7 @@ namespace GIRUBotV3.Modules
             var userCurrentRoles = user.RoleIds;
             string insult = await Insults.GetInsult();
 
-
-            //is it an allowed role ?
-  
-
+            //is it an allowed role ? 
             foreach (var item in AllowedRoles.AllowedRolesDictionary)
             {
                 if (roleSearch.ToLower() == item.Key.ToLower())
@@ -257,14 +253,11 @@ namespace GIRUBotV3.Modules
                 return;
             }
 
-            //user cant have these roles together, finding role to rmeove
-
+            //user cant have these roles together, finding role to remove
             List<string> exclusive_roles = Models.ExclusiveRoles.Exclusive_roles;
-
             for (int i = 0; i < exclusive_roles.Count; i++)
             {
                 currentRoleExclusive = Helpers.IsRoleReturn(exclusive_roles[i], userSocket);
-                //  if (currentRoleExclusive == roleToAssign)
                 if (exclusive_roles.Contains(roleToAssign.Name) && currentRoleExclusive != null)
                 {
                     var embedReplaceRemovedRole = new EmbedBuilder();
@@ -541,8 +534,6 @@ namespace GIRUBotV3.Modules
                 thePurgeEmbed.WithColor(new Color(255, 0, 0));
             await Context.Channel.SendMessageAsync("", false, thePurgeEmbed.Build());
             return;
-
-
         }
     }
 }

@@ -10,6 +10,7 @@ using Discord.Net;
 
 namespace GIRUBotV3.Modules
 {
+
     public class UserHelp : ModuleBase<SocketCommandContext>
     {
         [Command("help")]
@@ -17,39 +18,39 @@ namespace GIRUBotV3.Modules
         {
             await Context.Channel.SendMessageAsync("dont be so fucking WEAK");
         }
-      
+
         public static async Task UserJoined(SocketGuildUser guildUser)
         {
             // casting
             var guildUserIGuildUser = guildUser as IGuildUser;
-            var channelID = guildUserIGuildUser.Guild.DefaultChannelId;
-            var guildMainChannel = guildUser.Guild.GetChannel(channelID);
+            var guildMainChannel = guildUser.Guild.GetChannel(Config.MeleeSlasherMainChannel);
             var chnl = guildMainChannel as ITextChannel;
 
-            Console.WriteLine($"{guildUser} {guildUser.Id}  joined the server");
-
-            // assigning noob role
-            var noobRole = Helpers.FindRole(guildUser, "noob");
-            await guildUser.AddRoleAsync(noobRole);
-
-            // welcoming
-            var insult = await Insults.GetInsult();
-            Random rnd = new Random();
-            string[] welcomeArray = new string[]
+            if (CommandToggles.WelcomeMessages)
             {
-               $"{guildUser.Mention} has joined Melee Slasher, everybody welcome this {insult}",
-               $"{guildUser.Mention} has joined the server",
-               $"what's up {guildUser.Mention} ",
-               $"hi {insult}!😃 {guildUser.Mention} ",
-               $"{guildUser.Mention} join server guys 😃😃😃 ",
-               $"welcome {guildUser.Mention}",
-               $"{guildUser.Mention} has just joined the server ",
+
+                // assigning noob role
+                var noobRole = Helpers.FindRole(guildUser, "noob");
+                await guildUser.AddRoleAsync(noobRole);
+
+                // welcoming
+                var insult = await Insults.GetInsult();
+                Random rnd = new Random();
+                string[] welcomeArray = new string[]
+                {
+               $"{guildUser.Mention} has joined Melee Slasher, the {insult} is sitting in the shitter lobby",
+               $"{guildUser.Mention} has joined the server, they are now waiting in the noob gate",
+               $"{guildUser.Mention} is now waiting in the noob gate",
+               $"{guildUser.Mention} join server guys 😃😃😃, they now wait in the noob gate",
+               $"some {insult} called {guildUser.Mention} is now sitting in the noob gate",
+               $"{guildUser.Mention} has just joined the server, waiting in the noob gate for attending to",
                $"{guildUser.Mention} has connected to the server",
 
-            };
-            int pull = rnd.Next(welcomeArray.Length);
-            string welcomeMessage = welcomeArray[pull].ToString(); 
-            await chnl.SendMessageAsync(welcomeMessage);
+                };
+                int pull = rnd.Next(welcomeArray.Length);
+                string welcomeMessage = welcomeArray[pull].ToString();
+                await chnl.SendMessageAsync(welcomeMessage);
+            }
 
             //log it
             ITextChannel logChannel = guildUser.Guild.GetChannel(492381877630402572) as ITextChannel;
@@ -61,17 +62,17 @@ namespace GIRUBotV3.Modules
         [RequireUserPermission(GuildPermission.ViewAuditLog)]
         private async Task SayInMain([Remainder]string message)
         {
-                var chnl = Context.Guild.GetTextChannel(Config.MeleeSlasherMainChannel);
-                await chnl.SendMessageAsync(message);
+            var chnl = Context.Guild.GetTextChannel(Config.MeleeSlasherMainChannel);
+            await chnl.SendMessageAsync(message);
         }
 
- 
+
         //[Command("saytest")]
         //private async Task SaTest([Remainder]string message)
         //{
         //    var guildUser = Context.User as IGuildUser;
         //    ITextChannel logChannel = await guildUser.Guild.GetChannelAsync(492381877630402572) as ITextChannel;
-            
+
         //    if (guildUser.JoinedAt.HasValue)
         //    {
         //        string[] dateArray = guildUser.JoinedAt.GetValueOrDefault().ToString("dd/MM/yyyy hh:mm").Split(" ");
@@ -125,5 +126,5 @@ namespace GIRUBotV3.Modules
             embed.WithColor(new Color(0, 255, 0));
             await Context.Channel.SendMessageAsync("", false, embed.Build());
         }
-    } 
+    }
 }
