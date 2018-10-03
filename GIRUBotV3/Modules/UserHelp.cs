@@ -43,7 +43,7 @@ namespace GIRUBotV3.Modules
                $"{guildUser.Mention} join server guys 😃😃😃, they now wait in the noob gate",
                $"some {insult} called {guildUser.Mention} is now sitting in the noob gate",
                $"{guildUser.Mention} has just joined the server, waiting in the noob gate for attending to",
-               $"{guildUser.Mention} has connected to the server",
+               $"{guildUser.Mention} has connected to the server, they're now sat in the noob gate",
 
                 };
                 int pull = rnd.Next(welcomeArray.Length);

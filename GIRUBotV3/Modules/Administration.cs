@@ -199,7 +199,7 @@ namespace GIRUBotV3.Modules
                         succesfullyMatchingListValues.Add(item.Value);
                     }
                 }
-          
+
             }
             //grab the IRole objects and populate the return string
             List<IRole> roleList = new List<IRole>();
@@ -278,8 +278,6 @@ namespace GIRUBotV3.Modules
             return;
         }
 
-
-
         List<IRole> RolesToRemove = new List<IRole>();
         List<string> RolesToRemoveNames = new List<string>();
         [Command("del")]
@@ -287,7 +285,7 @@ namespace GIRUBotV3.Modules
         [RequireBotPermission(GuildPermission.ManageRoles)]
         private async Task UnAssign(IGuildUser user, [Remainder]string roleSearch)
         {
-            
+
             var insult = await Insults.GetInsult();
             var userSocket = user as SocketGuildUser;
             var embedReplaceRemovedRole = new EmbedBuilder();
@@ -302,20 +300,20 @@ namespace GIRUBotV3.Modules
                 return;
 
             }
-               var inputRolesArray = roleSearch.ToLower().Split(' ');
-               foreach (var item in inputRolesArray)
-               {
-                  var returnedRole = Helpers.ReturnRole(userSocket.Guild, item);
-                  RolesToRemove.Add(returnedRole);
-                  RolesToRemoveNames.Add(returnedRole.Name);
-               }
+            var inputRolesArray = roleSearch.ToLower().Split(' ');
+            foreach (var item in inputRolesArray)
+            {
+                var returnedRole = Helpers.ReturnRole(userSocket.Guild, item);
+                RolesToRemove.Add(returnedRole);
+                RolesToRemoveNames.Add(returnedRole.Name);
+            }
 
-               var rolesAsString = string.Join(", ", RolesToRemoveNames.ToArray());
-               embedReplaceRemovedRole.WithTitle($"✅   {Context.User.Username} removed {rolesAsString} from {user.Username}");
-               embedReplaceRemovedRole.WithColor(new Color(0, 255, 0));
-               await Context.Channel.SendMessageAsync("", false, embedReplaceRemovedRole.Build());
-               await userSocket.RemoveRolesAsync(RolesToRemove);
-               return;
+            var rolesAsString = string.Join(", ", RolesToRemoveNames.ToArray());
+            embedReplaceRemovedRole.WithTitle($"✅   {Context.User.Username} removed {rolesAsString} from {user.Username}");
+            embedReplaceRemovedRole.WithColor(new Color(0, 255, 0));
+            await Context.Channel.SendMessageAsync("", false, embedReplaceRemovedRole.Build());
+            await userSocket.RemoveRolesAsync(RolesToRemove);
+            return;
         }
 
         [Command("mute")]
@@ -497,44 +495,8 @@ namespace GIRUBotV3.Modules
             return;
         }
 
-        [Command("commencepurge")]
-        [RequireUserPermission(GuildPermission.ManageGuild)]
-        private async Task ThePurge()
-        {
-            var allUsers = Context.Guild.Users;
-            var noobRole = Helpers.ReturnRole(Context.Guild, "noob");
-            int purgeReminderCount = 0;
-            int purgeFinalCount = 0;
-
-            foreach (var user in allUsers)
-            {
-                if (user.Roles.Contains(noobRole))
-                {
-                    await Context.Channel.SendMessageAsync($"{user.Username} has been cleansed");
-                    await user.KickAsync();
-                    purgeReminderCount++;
-                    purgeFinalCount++;
-                }
-                if (purgeReminderCount == 5)
-                {
-                    await Context.Channel.SendMessageAsync($"The Purge is commencing, cleansing all shitters from Melee Slasher");
-                    purgeReminderCount = 0;
-                }
-            }
-
-            if (purgeFinalCount == 0)
-            {
-                await Context.Channel.SendMessageAsync("Melee Slasher is currently clean");
-                return;
-            }
-
-            var thePurgeEmbed = new EmbedBuilder();
-                thePurgeEmbed.WithTitle($"⭕          A total of {purgeFinalCount} shitters were cleansed.        ⭕");
-                thePurgeEmbed.ThumbnailUrl = "https://cdn.discordapp.com/attachments/300832513595670529/469942372034150440/detailed_helmet_discord_embed.png";
-                thePurgeEmbed.WithColor(new Color(255, 0, 0));
-            await Context.Channel.SendMessageAsync("", false, thePurgeEmbed.Build());
-            return;
-        }
     }
 }
+
+
 

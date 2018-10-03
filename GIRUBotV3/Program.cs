@@ -30,6 +30,8 @@ namespace GIRUBotV3
         private OnMessage _onMessage;
         private OnExecutedCommand _onExecutedCommand;
         private IServiceProvider _services;
+        private BotInitialization _botInitialization;
+
         public static TwitchAPI api;
         private TwitchBot _twitchBot;
         private LiveStreamMonitor _liveStreamMonitor;
@@ -52,6 +54,7 @@ namespace GIRUBotV3
             _commands = new CommandService();
             _onMessage = new OnMessage(_client, _FaceAppClient);
             _onExecutedCommand = new OnExecutedCommand(_client);
+            _botInitialization = new BotInitialization(_client);
             
             _services = new ServiceCollection()
                  .AddSingleton(_commands)
@@ -61,8 +64,8 @@ namespace GIRUBotV3
 
             _client.MessageUpdated += _onMessage.UpdatedMessageContainsAsync;         
             _client.UserJoined += UserHelp.UserJoined;
-         
-           
+            _client.Ready += BotInitialization.StartUpMessages;
+
             _client.MessageReceived += _onMessage.MessageContainsAsync;
             _liveStreamMonitor.OnStreamOnline += _twitchBot.NotifyMainOnStreamStart;
 
@@ -74,6 +77,8 @@ namespace GIRUBotV3
             await RegisterCommandAsync();
             await _client.LoginAsync(TokenType.Bot, botToken);
             //starting client and continue forever
+ 
+
             await _client.StartAsync();
             await Task.Delay(-1);
         }
