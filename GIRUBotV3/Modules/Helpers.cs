@@ -30,7 +30,6 @@ namespace GIRUBotV3.Modules
         }
         public static IRole ReturnRole(SocketGuild guild, string role)
         {
-
             var result = from r in guild.Roles
                          where r.Name.ToLower() == role.ToLower()
                          select r.Id;
@@ -109,6 +108,18 @@ namespace GIRUBotV3.Modules
             var list = OnOffUser.TurnedOffUsers;
             var selectedList = list.Select(x => x.Id == msg.Author.Id).ToList();
             return list.Where(x => x.Id == msg.Author.Id).Any();         
+        }
+
+        private static List<string> MentionedUsers = new List<string>();
+        public async static Task<string> GetUsernameListFromIDs(IReadOnlyCollection<ulong> collection, IGuild guild)
+        {
+            foreach (var userID in collection)
+            {
+                var user = await guild.GetUserAsync(userID);
+        
+                MentionedUsers.Add(user.Username);
+            }
+           return String.Join(", ", MentionedUsers.ToArray());
         }
     }
 }

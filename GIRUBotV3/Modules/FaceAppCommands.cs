@@ -38,7 +38,6 @@ namespace GIRUBotV3.Modules
         [Ratelimit(35, 10, Measure.Minutes)]
         public async Task FaceMorph([Remainder]string input)
         {
-
             using (Context.Channel.EnterTypingState())
             {
                 var insult = await Insults.GetInsult();

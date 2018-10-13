@@ -21,7 +21,7 @@ namespace GIRUBotV3.Modules
         [RequireBotPermission(GuildPermission.KickMembers)]
         private async Task KickUser(IGuildUser user, [Remainder]string reason)
         {
-            if (reason.Length < 3)
+            if (reason.Length < 1)
             {
                 reason = "cya";
             }

@@ -98,9 +98,7 @@ namespace GIRUBotV3.Modules
 
             IRole viewerRole = Helpers.ReturnRole(Context.Guild, UtilityRoles.Viewers);
             await viewerRole.ModifyAsync(x => x.Mentionable = true);
-
             await Context.Channel.SendMessageAsync(viewerRole.Mention + ", Stream is now live! https://www.twitch.tv/giru");
-
             await viewerRole.ModifyAsync(x => x.Mentionable = false);
             return;
         }

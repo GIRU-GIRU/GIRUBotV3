@@ -40,23 +40,25 @@ namespace GIRUBotV3.Modules
                 case "RaidProtect":
                     await RaidProtectEmbed(_info, _context, _result);
                     break;
-                case "Pug":
-                    await PugEmbed(_info, _context, _result);
-                    break;
+                //case "Pug":
+                //    await PugEmbed(_info, _context, _result);
+                //    break;
                 default:
                     return;
             }
+
 
             async Task AdministrationEmbed(CommandInfo _info, ICommandContext _context, IResult _result)
             {
                 adminlogchannel = await context.Guild.GetChannelAsync(Config.AuditChannel) as ITextChannel;
                 var dateTimeStamp = context.Message.Timestamp.ToString("yyyy/MM/dd hh:mm");
-
+                var mentionedUsers = await Helpers.GetUsernameListFromIDs(context.Message.MentionedUserIds, context.Guild);
+          
                 var embed = new EmbedBuilder();
                 embed.WithTitle($"🗡 {context.Message.Author.Username} used the \"{info.Module.Name}\" module");
-                embed.AddField("command: ", context.Message.Content, false);
-                embed.AddField("at: ", dateTimeStamp, false);
-                embed.AddField("in: ", context.Message.Channel.Name, false);
+                embed.AddField($"command: ", context.Message.Content, false);
+                embed.AddField("Targeted: ", $"({mentionedUsers})", false);
+                embed.AddField("at:", $"{dateTimeStamp} in {context.Channel.Name}", false);
                 embed.WithColor(new Color(255, 102, 0));
                 await adminlogchannel.SendMessageAsync("", false, embed.Build());
             }
@@ -68,8 +70,7 @@ namespace GIRUBotV3.Modules
                 var embed = new EmbedBuilder();
                 embed.WithTitle($"🗑 {context.Message.Author.Username} used the \"{info.Module.Name}\" module");
                 embed.AddField("command: ", context.Message.Content, false);
-                embed.AddField("at: ", dateTimeStamp, false);
-                embed.AddField("in: ", context.Message.Channel.Name, false);
+                embed.AddField("at: ", $"{dateTimeStamp} in {context.Channel.Name}", false);
                 embed.WithColor(new Color(255, 204, 0));
                 await adminlogchannel.SendMessageAsync("", false, embed.Build());
                 return;
@@ -82,12 +83,13 @@ namespace GIRUBotV3.Modules
                 var embed = new EmbedBuilder();
                 embed.WithTitle($"⭕️ {context.Message.Author.Username} used the \"{info.Module.Name}\" module");
                 embed.AddField("command: ", context.Message.Content, false);
-                embed.AddField("at: ", dateTimeStamp, false);
-                embed.AddField("in: ", context.Message.Channel.Name, false);
+                embed.AddField("at: ", $"{dateTimeStamp} in {context.Channel.Name}", false);
                 embed.WithColor(new Color(255, 0, 0));
                 await adminlogchannel.SendMessageAsync("", false, embed.Build());
                 return;
             }
+
+            //deprecated due to spam
             async Task PugEmbed(CommandInfo _info, ICommandContext _context, IResult _result)
             {
                 adminlogchannel = await context.Guild.GetChannelAsync(Config.AuditChannel) as ITextChannel;
@@ -96,8 +98,7 @@ namespace GIRUBotV3.Modules
                 var embed = new EmbedBuilder();
                 embed.WithTitle($"🎮 {context.Message.Author.Username} used the \"{info.Module.Name}\" module");
                 embed.AddField("command: ", context.Message.Content, false);
-                embed.AddField("at: ", dateTimeStamp, false);
-                embed.AddField("in: ", context.Message.Channel.Name, false);
+                embed.AddField("at: ", $"{dateTimeStamp} in {context.Channel.Name}", false);
                 embed.WithColor(new Color(20, 255, 0));
                 await adminlogchannel.SendMessageAsync("", false, embed.Build());
                 return;
