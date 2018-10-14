@@ -77,14 +77,16 @@ namespace GIRUBotV3.Modules
                 }
                 var rowToRemove = db.Memestore.Where(x => x.Title.ToLower() == title.ToLower()).SingleOrDefault();
                 //needs to be original author or moderator
-                if (rowToRemove.AuthorID != Context.Message.Author.Id || !Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser))
+                if (Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser) || rowToRemove.AuthorID == Context.Message.Author.Id)
+
                 {
-                    await Context.Channel.SendMessageAsync($"only the original author or moderator can delete this");
+                    db.Memestore.Remove(rowToRemove);
+                    db.SaveChanges();
+                    await Context.Channel.SendMessageAsync($"{title} was deleted successfully from the DB");
                     return;
-                }            
-                db.Memestore.Remove(rowToRemove);
-                db.SaveChanges();
-                await Context.Channel.SendMessageAsync($"{title} was deleted successfully from the DB");
+                }
+                await Context.Channel.SendMessageAsync($"only the original author or moderator can delete this");
+                return;
             }
         }
 
@@ -132,17 +134,17 @@ namespace GIRUBotV3.Modules
             {
                 try
                 {
-                   var meme = db.Memestore.Where(x => x.Title.ToLower() == title.ToLower()).FirstOrDefault();
-                    
-                        await Context.Channel.SendMessageAsync($"{title} was created by {meme.Author} on {meme.Date} at {meme.Time}. MemeID = {meme.MemeId}");
-                        return;                   
+                    var meme = db.Memestore.Where(x => x.Title.ToLower() == title.ToLower()).FirstOrDefault();
+
+                    await Context.Channel.SendMessageAsync($"{title} was created by {meme.Author} on {meme.Date} at {meme.Time}. MemeID = {meme.MemeId}");
+                    return;
                 }
                 catch (Exception)
                 {
                     await Context.Channel.SendMessageAsync($"dosen't exist");
                     return;
                 }
-     
+
             }
         }
     }

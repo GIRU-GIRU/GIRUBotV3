@@ -34,7 +34,7 @@ namespace GIRUBotV3.Modules
             {
                 return true;
             }
-            var result = from r in user.Guild.Roles
+            var result = from r in user.Roles
                          where r.Name.ToLower() == Models.UtilityRoles.Moderator.ToLower()
                          select r.Id;
             ulong roleID = result.FirstOrDefault();
