@@ -64,3 +64,11 @@ GIRUBotV3/App.config
 Config.cs
 RunBot.txt
 darknet.txt
+*.db
+GIRUBotV3/Migrations/20181014112516_initialcreate.cs
+GIRUBotV3/Migrations/20181014112516_initialcreate.Designer.cs
+GIRUBotV3/Migrations/20181014113014_MemeStoreAddedTimeField.cs
+GIRUBotV3/Migrations/20181014113014_MemeStoreAddedTimeField.Designer.cs
+GIRUBotV3/Migrations/20181014152539_MemeStoreAuthorID.cs
+GIRUBotV3/Migrations/20181014152539_MemeStoreAuthorID.Designer.cs
+GIRUBotV3/Migrations/MemestorageModelSnapshot.cs
