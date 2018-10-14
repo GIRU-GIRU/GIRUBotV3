@@ -28,6 +28,24 @@ namespace GIRUBotV3.Modules
                 return user.Roles.Contains(targetRole);
             }
         }
+        public static bool IsModeratorOrOwner(SocketGuildUser user)
+        {
+            if (user.Id == user.Guild.OwnerId)
+            {
+                return true;
+            }
+            var result = from r in user.Guild.Roles
+                         where r.Name.ToLower() == Models.UtilityRoles.Moderator.ToLower()
+                         select r.Id;
+            ulong roleID = result.FirstOrDefault();
+            //first or default NEVER returns null
+            if (roleID == 0)
+            {
+                return false;
+            }
+            var targetRole = user.Guild.GetRole(roleID);
+            return user.Roles.Contains(targetRole);
+        }
         public static IRole ReturnRole(SocketGuild guild, string role)
         {
             var result = from r in guild.Roles
@@ -44,15 +62,15 @@ namespace GIRUBotV3.Modules
                          where r.Name.ToLower() == role.ToLower()
                          select r.Id;
             ulong roleID = result.FirstOrDefault();
-          
+
             if (roleID == 0)
             {
-            
+
                 return user.Guild.GetRole(0);
             }
             else
             {
-                
+
                 return user.Guild.GetRole(roleID);
             }
         }
@@ -107,7 +125,7 @@ namespace GIRUBotV3.Modules
             }
             var list = OnOffUser.TurnedOffUsers;
             var selectedList = list.Select(x => x.Id == msg.Author.Id).ToList();
-            return list.Where(x => x.Id == msg.Author.Id).Any();         
+            return list.Where(x => x.Id == msg.Author.Id).Any();
         }
 
         private static List<string> MentionedUsers = new List<string>();
@@ -116,10 +134,10 @@ namespace GIRUBotV3.Modules
             foreach (var userID in collection)
             {
                 var user = await guild.GetUserAsync(userID);
-        
+
                 MentionedUsers.Add(user.Username);
             }
-           return String.Join(", ", MentionedUsers.ToArray());
+            return String.Join(", ", MentionedUsers.ToArray());
         }
     }
 }

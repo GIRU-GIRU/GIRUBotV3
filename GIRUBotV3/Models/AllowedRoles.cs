@@ -63,10 +63,8 @@ namespace GIRUBotV3.Models
             ["Slut"] = "Slut",
             ["Snake"] = "🐍",
             ["Gay"] = "Homosexual"
-
         };
     }
-
 }
 
 
