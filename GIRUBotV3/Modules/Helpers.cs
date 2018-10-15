@@ -128,9 +128,9 @@ namespace GIRUBotV3.Modules
             return list.Where(x => x.Id == msg.Author.Id).Any();
         }
 
-        private static List<string> MentionedUsers = new List<string>();
-        public async static Task<string> GetUsernameListFromIDs(IReadOnlyCollection<ulong> collection, IGuild guild)
+        public static async Task<string> GetUsernameListFromIDs(IReadOnlyCollection<ulong> collection, IGuild guild)
         {
+            List<string> MentionedUsers = new List<string>();
             foreach (var userID in collection)
             {
                 var user = await guild.GetUserAsync(userID);
