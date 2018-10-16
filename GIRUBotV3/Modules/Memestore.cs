@@ -128,6 +128,36 @@ namespace GIRUBotV3.Modules
                 }
             }
         }
+        [Command("rm")]
+        [Alias("randommeme")]
+        private async Task RandomCallMeme()
+        {
+            bool success = false;
+            var insult = await Insults.GetInsult();
+            var rnd = new Random();
+            using (var db = new Memestorage())
+            {
+                while (success == false)
+                {
+                    try
+                    {
+                        var maxID = db.Memestore.Max(x => x.MemeId);
+                        var meme = db.Memestore.Where(x => x.MemeId == rnd.Next(0, maxID)).FirstOrDefault();
+
+                        if (!string.IsNullOrEmpty(meme.Content))
+                        {
+                            await Context.Channel.SendMessageAsync($"Meme#{meme.MemeId}: {meme.Content}");
+                            success = true;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    
+                    }
+                }
+            }
+        }
+
 
         [Command("memecreated")]
         [Alias("mc", "mcreated")]
@@ -149,6 +179,7 @@ namespace GIRUBotV3.Modules
                 }
             }
         }
+
         [Command("memecreated")]
         [Alias("mc", "mcreated")]
         private async Task MemeCreatedDetails(int id)
