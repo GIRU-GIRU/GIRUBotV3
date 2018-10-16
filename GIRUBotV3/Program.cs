@@ -73,11 +73,8 @@ namespace GIRUBotV3
             //_client.UserVoiceStateUpdated += _onExecutedCommand.AdminLogVCMovement;
             _client.Log += Log;
             
-            //register modules and login bot with auth credentials
             await RegisterCommandAsync();
             await _client.LoginAsync(TokenType.Bot, botToken);
-            //starting client and continue forever
- 
 
             await _client.StartAsync();
             await Task.Delay(-1);
@@ -89,24 +86,23 @@ namespace GIRUBotV3
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly());
         }
 
-        //Handle Commands
         private async Task HandleCommandAsync(SocketMessage arg)
         {
-            //ignore ourselves, check for null
             var message = arg as SocketUserMessage;
             if (message.Author.IsBot) return;
 
             int argPos = 0;
-            //does the message start with ! ? || is someone tagged in message at start ?
             if (message.HasStringPrefix(Config.CommandPrefix, ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
             {
                 var context = new SocketCommandContext(_client, message);
-                //execute commands, pass in context and and look for cmd prefix, inject dependancies
                 var result = await _commands.ExecuteAsync(context, argPos, _services);
                 switch (result.Error)
                 {
-                    case CommandError.UnmetPrecondition: 
-                        await context.Channel.SendMessageAsync(await ErrorReturnStrings.GetNoPerm());
+                    case CommandError.UnmetPrecondition:
+                        if (result.ErrorReason != "DisableMessage")
+                        {
+                            await context.Channel.SendMessageAsync(await ErrorReturnStrings.GetNoPerm());
+                        }
                         break;
                     case CommandError.ParseFailed:
                         await context.Channel.SendMessageAsync(await ErrorReturnStrings.GetParseFailed());

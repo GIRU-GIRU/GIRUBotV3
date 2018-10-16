@@ -9,11 +9,13 @@ using GIRUBotV3.Data;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Text.RegularExpressions;
+using GIRUBotV3.Preconditions;
 
 namespace GIRUBotV3.Modules
 {
     public class Memestore : ModuleBase<SocketCommandContext>
     {
+        [MemestoreToggle]
         [Command("storememe")]
         [Alias("smeme", "addmeme")]
         private async Task StoreMeme([Remainder]string input)
@@ -55,6 +57,7 @@ namespace GIRUBotV3.Modules
             }
         }
 
+        [MemestoreToggle]
         [Command("delmeme")]
         [Alias("deletememe", "dmeme")]
         private async Task DeleteMeme([Remainder]string input)
@@ -91,6 +94,7 @@ namespace GIRUBotV3.Modules
             }
         }
 
+        [MemestoreToggle]
         [Command("m")]
         [Alias("meme")]
         private async Task CallMeme(string input)
@@ -110,6 +114,7 @@ namespace GIRUBotV3.Modules
             }
         }
 
+        [MemestoreToggle]
         [Command("m")]
         [Alias("meme")]
         private async Task CallMemeID(int id)
@@ -128,6 +133,8 @@ namespace GIRUBotV3.Modules
                 }
             }
         }
+
+        [MemestoreToggle]
         [Command("rm")]
         [Alias("randommeme")]
         private async Task RandomCallMeme()
@@ -158,7 +165,7 @@ namespace GIRUBotV3.Modules
             }
         }
 
-
+        [MemestoreToggle]
         [Command("memecreated")]
         [Alias("mc", "mcreated")]
         private async Task MemeCreatedDetails(string title)
@@ -180,6 +187,7 @@ namespace GIRUBotV3.Modules
             }
         }
 
+        [MemestoreToggle]
         [Command("memecreated")]
         [Alias("mc", "mcreated")]
         private async Task MemeCreatedDetails(int id)
@@ -201,6 +209,7 @@ namespace GIRUBotV3.Modules
             }
         }
 
+        [MemestoreToggle]
         [Command("editmeme")]
         [Alias("changememe")]
         private async Task EditMeme([Remainder]string input)
@@ -239,6 +248,7 @@ namespace GIRUBotV3.Modules
             }
         }
 
+        [MemestoreToggle]
         [Command("mymemestore")]
         private async Task MyMemeStore()
         {

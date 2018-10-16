@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using GIRUBotV3.Modules;
 
 namespace GIRUBotV3.Preconditions
 
@@ -157,6 +158,23 @@ namespace GIRUBotV3.Preconditions
         public static CommandFailure FromSuccess(string reason = null) =>
             new CommandFailure(null, reason);
     }
+
+    // Inherit from PreconditionAttribute
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    public class MemestoreToggle : PreconditionAttribute
+    {
+        // Override the CheckPermissions method
+        public async override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
+        {
+
+            if (CommandToggles.Memestore)
+                return PreconditionResult.FromSuccess();
+            // Since it wasn't, fail
+            else
+                return PreconditionResult.FromError("DisableMessage");
+        }
+    }
+
 }
 
 

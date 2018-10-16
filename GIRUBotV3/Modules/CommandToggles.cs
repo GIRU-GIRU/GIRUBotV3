@@ -19,6 +19,7 @@ namespace GIRUBotV3.Modules
     public static class CommandToggles
     {
         public static bool WelcomeMessages = true;
+        public static bool Memestore = true;
     }
 
     public class Toggles : ModuleBase<SocketCommandContext>
@@ -35,6 +36,19 @@ namespace GIRUBotV3.Modules
         {
             CommandToggles.WelcomeMessages = false;
             await Context.Channel.SendMessageAsync("Welcome messages turned off");
+        }
+        [Command("memestore on")]
+        private async Task memestoreOn()
+        {
+            CommandToggles.Memestore = true;
+            await Context.Channel.SendMessageAsync("Memestore turned on");
+        }
+
+        [Command("memestore off")]
+        private async Task memestoreOff()
+        {
+            CommandToggles.Memestore = false;
+            await Context.Channel.SendMessageAsync("Memestore turned off");
         }
 
     }
