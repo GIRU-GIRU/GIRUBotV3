@@ -167,11 +167,10 @@ namespace GIRUBotV3.Preconditions
         public async override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {
 
-            if (CommandToggles.Memestore)
-                return PreconditionResult.FromSuccess();
-            // Since it wasn't, fail
-            else
+            if (!CommandToggles.Memestore || context.Channel.Id == Config.EliteDiscourseChannel)
                 return PreconditionResult.FromError("DisableMessage");
+            else
+                return PreconditionResult.FromSuccess();
         }
     }
 

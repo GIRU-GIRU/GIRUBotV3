@@ -43,7 +43,7 @@ namespace GIRUBotV3.Modules
         [Command("ban")]
         [RequireUserPermission(GuildPermission.ViewAuditLog)]
         [RequireBotPermission(GuildPermission.BanMembers)]
-        private async Task BanUser(IGuildUser user, string reason = "cya")
+        private async Task BanUser(IGuildUser user, [Remainder]string reason)
         {
             string kickTargetName = user.Username;
             if (Helpers.IsRole(UtilityRoles.Moderator, (SocketGuildUser)user))
@@ -62,7 +62,7 @@ namespace GIRUBotV3.Modules
         [Command("bancleanse")]
         [RequireUserPermission(GuildPermission.ViewAuditLog)]
         [RequireBotPermission(GuildPermission.BanMembers)]
-        private async Task BanUserAndClean(IGuildUser user, string reason = "cya")
+        private async Task BanUserAndClean(IGuildUser user, [Remainder]string reason)
         {
             string kickTargetName = user.Username;
             if (Helpers.IsRole(UtilityRoles.Moderator, (SocketGuildUser)user))
