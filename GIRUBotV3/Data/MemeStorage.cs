@@ -25,8 +25,8 @@ namespace GIRUBotV3.Data
         public ulong AuthorID { get; set; }
         public string Date { get; set; }
         public string Time { get; set; }
-
     }
+
 }
 
 

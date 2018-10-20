@@ -42,7 +42,7 @@ namespace GIRUBotV3.Modules
                     return;
                 }
 
-                db.Memestore.Add(new MemeStoreModel
+                await db.Memestore.AddAsync(new MemeStoreModel
                 {
                     Author = Context.Message.Author.Username,
                     AuthorID = Context.Message.Author.Id,
@@ -52,7 +52,7 @@ namespace GIRUBotV3.Modules
                     Time = DateTime.Now.ToShortTimeString()
                 });
 
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 await Context.Channel.SendMessageAsync($"{title} was successfully created!");
             }
         }
@@ -85,7 +85,7 @@ namespace GIRUBotV3.Modules
 
                 {
                     db.Memestore.Remove(rowToRemove);
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
                     await Context.Channel.SendMessageAsync($"{title} was deleted successfully from the DB");
                     return;
                 }
@@ -159,7 +159,7 @@ namespace GIRUBotV3.Modules
                     }
                     catch (Exception)
                     {
-                    
+
                     }
                 }
             }
@@ -238,7 +238,7 @@ namespace GIRUBotV3.Modules
                     if (Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser) || meme.AuthorID == Context.Message.Author.Id)
                     {
                         meme.Content = contentOfMessage;
-                        db.SaveChanges();
+                        await db.SaveChangesAsync();
 
                         await Context.Channel.SendMessageAsync($"{title} was successfully updated");
                         return;

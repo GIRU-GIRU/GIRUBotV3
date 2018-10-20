@@ -31,6 +31,7 @@ namespace GIRUBotV3
         private OnExecutedCommand _onExecutedCommand;
         private IServiceProvider _services;
         private BotInitialization _botInitialization;
+        private Administration _administration;
 
         public static TwitchAPI api;
         private TwitchBot _twitchBot;
@@ -55,6 +56,7 @@ namespace GIRUBotV3
             _onMessage = new OnMessage(_client, _FaceAppClient);
             _onExecutedCommand = new OnExecutedCommand(_client);
             _botInitialization = new BotInitialization(_client);
+            _administration = new Administration(_client);
             
             _services = new ServiceCollection()
                  .AddSingleton(_commands)
