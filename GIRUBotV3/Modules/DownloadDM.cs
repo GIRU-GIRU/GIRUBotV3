@@ -49,6 +49,7 @@ namespace GIRUBotV3.Modules
 
                 if (i > 1)
                 {
+                    File.Delete(dir);
                     await Context.Channel.SendFileAsync(dir, $"here is the direct messages for {dms.Recipient}");
                     return;
                 }
