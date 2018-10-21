@@ -130,7 +130,14 @@ namespace GIRUBotV3.Modules
             await Context.Channel.SendMessageAsync("", false, embed.Build());
 
             try
-     
+            {
+                var storeRoles = new StoreRoleMethods();
+                await storeRoles.StoreUserRoles(Context, user as SocketGuildUser);
+            }
+            catch (Exception)
+            {
+                await Context.Channel.SendMessageAsync("couldn't be arsed storing their roles b4 i kicked");
+            }
         }
 
         [Command("hackban")]
