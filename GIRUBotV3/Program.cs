@@ -24,15 +24,13 @@ namespace GIRUBotV3
             bot.Wait();   
         }
 
-
         public DiscordSocketClient _client;
         private CommandService _commands;
         private OnMessage _onMessage;
         private OnExecutedCommand _onExecutedCommand;
         private IServiceProvider _services;
         private BotInitialization _botInitialization;
-        private Administration _administration;
-
+        private DownloadDM _experiment;
         public static TwitchAPI api;
         private TwitchBot _twitchBot;
         private LiveStreamMonitor _liveStreamMonitor;
@@ -40,7 +38,8 @@ namespace GIRUBotV3
         private FaceAppClient _FaceAppClient;
         public async Task RunBotAsync()
         {
-            string botToken = Config.BotToken;
+
+
             api = new TwitchAPI();
             api.Settings.ClientId = Config.TwitchClientId;
             api.Settings.AccessToken = Config.TwitchAccessToken;
@@ -54,14 +53,14 @@ namespace GIRUBotV3
             _client = new DiscordSocketClient();
             _commands = new CommandService();
             _onMessage = new OnMessage(_client, _FaceAppClient);
-            _onExecutedCommand = new OnExecutedCommand(_client);
+            _onExecutedCommand = new OnExecutedCommand(_client);          
             _botInitialization = new BotInitialization(_client);
-            _administration = new Administration(_client);
             
             _services = new ServiceCollection()
                  .AddSingleton(_commands)
                  .AddSingleton(_FaceAppClient)
                  .AddSingleton(_twitchBot)
+                 .AddSingleton(_client)
                  .BuildServiceProvider();
 
             _client.MessageUpdated += _onMessage.UpdatedMessageContainsAsync;         
@@ -72,13 +71,13 @@ namespace GIRUBotV3
             _liveStreamMonitor.OnStreamOnline += _twitchBot.NotifyMainOnStreamStart;
 
              _commands.CommandExecuted += _onExecutedCommand.AdminLog;
-            //_client.UserVoiceStateUpdated += _onExecutedCommand.AdminLogVCMovement;
             _client.Log += Log;
             
             await RegisterCommandAsync();
-            await _client.LoginAsync(TokenType.Bot, botToken);
-
+            await _client.LoginAsync(TokenType.Bot, Config.BotToken);
+           
             await _client.StartAsync();
+            _experiment = new DownloadDM(_client);
             await Task.Delay(-1);
         }
 

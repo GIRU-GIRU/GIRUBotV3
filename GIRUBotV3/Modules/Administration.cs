@@ -17,12 +17,6 @@ namespace GIRUBotV3.Modules
 {
     public class Administration : ModuleBase<SocketCommandContext>
     {
-        private static DiscordSocketClient _client;
-        public Administration(DiscordSocketClient client)
-        {
-            _client = client;
-        }
-
         [Command("kick")]
         [RequireUserPermission(GuildPermission.ViewAuditLog)]
         [RequireBotPermission(GuildPermission.KickMembers)]
@@ -140,38 +134,38 @@ namespace GIRUBotV3.Modules
             }
         }
 
-        [Command("hackban")]
-        [RequireUserPermission(GuildPermission.ViewAuditLog)]
-        [RequireBotPermission(GuildPermission.BanMembers)]
-        private async Task HackBanUser(string input)
-        {
-            ulong userID = Convert.ToUInt64(input);
-            try
-            {
-                if (Helpers.IsRole(UtilityRoles.Moderator, Context.Guild.GetUser(userID)))
-                {
-                    await Context.Channel.SendMessageAsync("stop fighting urselves u retards");
-                    return;
-                }
-            }
-            catch (Exception)
-            { }
+        //[Command("hackban")]
+        //[RequireUserPermission(GuildPermission.ViewAuditLog)]
+        //[RequireBotPermission(GuildPermission.BanMembers)]
+        //private async Task HackBanUser(string input)
+        //{
+        //    ulong userID = Convert.ToUInt64(input);
+        //    try
+        //    {
+        //        if (Helpers.IsRole(UtilityRoles.Moderator, Context.Guild.GetUser(userID)))
+        //        {
+        //            await Context.Channel.SendMessageAsync("stop fighting urselves u retards");
+        //            return;
+        //        }
+        //    }
+        //    catch (Exception)
+        //    { }
 
-            try
-            {
-              var targetedUser =  _client.GetUser(userID);
-                await Context.Guild.AddBanAsync(userID);
-                var embed = new EmbedBuilder();
-                embed.WithTitle($"✅     {Context.User.Username} hackbanned {targetedUser.Username +"#"+ targetedUser.Discriminator}");
-                embed.WithColor(new Color(0, 255, 0));
-                await Context.Channel.SendMessageAsync("", false, embed.Build());
-            }
-            catch (Exception)
-            {
-                await Context.Channel.SendMessageAsync("Invalid userID");
-                throw;
-            }
-        }
+        //    try
+        //    {
+        //      var targetedUser =  _client.GetUser(userID);
+        //        await Context.Guild.AddBanAsync(userID);
+        //        var embed = new EmbedBuilder();
+        //        embed.WithTitle($"✅     {Context.User.Username} hackbanned {targetedUser.Username +"#"+ targetedUser.Discriminator}");
+        //        embed.WithColor(new Color(0, 255, 0));
+        //        await Context.Channel.SendMessageAsync("", false, embed.Build());
+        //    }
+        //    catch (Exception)
+        //    {
+        //        await Context.Channel.SendMessageAsync("Invalid userID");
+        //        throw;
+        //    }
+        //}
 
         bool existingBan;
         string bannedUserName;

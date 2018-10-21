@@ -11,7 +11,8 @@ using System.Collections.Generic;
 
 namespace GIRUBotV3.Modules
 {
-    public class OnMessage
+    public class OnMessage : ModuleBase<SocketCommandContext>
+         
     {
         private static DiscordSocketClient _client;
         private FaceAppClient _FaceAppClient;
@@ -106,6 +107,6 @@ namespace GIRUBotV3.Modules
                     await context.Channel.SendMessageAsync("😃");
                 }
             }
-        }
+        }    
     }
 }

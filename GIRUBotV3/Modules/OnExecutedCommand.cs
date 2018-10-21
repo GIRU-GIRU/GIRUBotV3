@@ -105,20 +105,6 @@ namespace GIRUBotV3.Modules
             }
 
         }
-        //public async Task AdminLogVCMovement(SocketUser user, SocketVoiceState voiceBefore, SocketVoiceState voiceAfter)
-        //{
-        //    adminlogchannel = await context.Guild.GetChannelAsync(Config.AuditChannel) as ITextChannel;
-
-           
-        //    var embed = new EmbedBuilder();
-        //    embed.WithTitle($"🎮 {_context.Message.Author.Username} used the \"{state.}\" module");
-        //    embed.AddField("command: ", context.Message.Content, false);
-        //    embed.AddField("at: ", dateTimeStamp, false);
-        //    embed.AddField("in: ", context.Message.Channel.Name, false);
-        //    embed.WithColor(new Color(20, 255, 0));
-        //    await adminlogchannel.SendMessageAsync("", false, embed.Build());
-        //    return;
-        //}
     }
 }
 
