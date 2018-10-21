@@ -72,3 +72,13 @@ GIRUBotV3/Migrations/20181014113014_MemeStoreAddedTimeField.Designer.cs
 GIRUBotV3/Migrations/20181014152539_MemeStoreAuthorID.cs
 GIRUBotV3/Migrations/20181014152539_MemeStoreAuthorID.Designer.cs
 GIRUBotV3/Migrations/MemestorageModelSnapshot.cs
+GIRUBotV3/Migrations/RestorerolesMigrations/RestorerolesModelSnapshot.cs
+GIRUBotV3/Migrations/RestorerolesMigrations/20181020042109_RestoreRolesInitial.Designer.cs
+GIRUBotV3/Migrations/RestorerolesMigrations/20181020042109_RestoreRolesInitial.cs
+GIRUBotV3/Migrations/20181020042051_MemeStorageInitial.Designer.cs
+GIRUBotV3/Migrations/20181020042051_MemeStorageInitial.cs
+GIRUBotV3/@Das Juden#7325.txt
+.vs/GIRUBotV3/v15/Server/sqlite3/storage.ide-wal
+.vs/GIRUBotV3/v15/Server/sqlite3/storage.ide-shm
+.vs/GIRUBotV3/v15/Server/sqlite3/storage.ide
+.vs/GIRUBotV3/v15/.suo

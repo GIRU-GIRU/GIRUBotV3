@@ -27,9 +27,8 @@ namespace GIRUBotV3.Modules
             try
             {
                 var dms = await user.GetOrCreateDMChannelAsync();
-
                 var allMessagesFlattened = await dms.GetMessagesAsync(300).FlattenAsync();
-                string dir = $@"F:\donloads\girubotDMs\{dms.Name}.txt";
+                string dir = $@"{System.Environment.CurrentDirectory}/{dms.Name}.txt";
 
                 if (File.Exists(dir))
                 {
