@@ -26,6 +26,7 @@ namespace GIRUBotV3.Modules
             if (user.Id != Context.Message.Author.Id)
             {
                 await Context.Channel.SendMessageAsync("u have to ask them if they want their DMs posted publicly (gay privacy laws)");
+                return;
             }
             try
             {
