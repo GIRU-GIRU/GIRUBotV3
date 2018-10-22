@@ -69,7 +69,7 @@ namespace GIRUBotV3.Modules
                 var nounTestTask = new RollRandom();
                 await nounTestTask.NounTest(noun, message);
             }
-            if (regexInviteLinkDiscord.Match(message.Content).Success & !Helpers.IsRole("Moderator", message.Author as SocketGuildUser))
+            if (regexInviteLinkDiscord.Match(message.Content).Success & !Helpers.IsModeratorOrOwner(message.Author as SocketGuildUser))
             {
 
                 var insult = await Insults.GetInsult();
@@ -81,7 +81,7 @@ namespace GIRUBotV3.Modules
         {
             var messageAfter = after as SocketUserMessage;
             var context = new SocketCommandContext(_client, messageAfter);
-            if (messageAfter.Author.IsBot || Helpers.IsRole("Moderator", context.User as SocketGuildUser)) return;
+            if (messageAfter.Author.IsBot || Helpers.IsModeratorOrOwner(context.User as SocketGuildUser)) return;
             if (regexInviteLinkDiscord.Match(messageAfter.Content).Success)
             {
                 var insult = await Insults.GetInsult();

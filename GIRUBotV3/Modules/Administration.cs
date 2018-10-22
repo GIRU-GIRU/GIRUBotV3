@@ -190,7 +190,7 @@ namespace GIRUBotV3.Modules
                 }
             }
 
-            if (existingBan != true)
+            if (existingBan == false)
             {
                 await Context.Channel.SendMessageAsync("that's not a valid ID " + insult);
             }
@@ -243,8 +243,6 @@ namespace GIRUBotV3.Modules
             await user.ModifyAsync(x => x.Nickname = user.Username);
             await Context.Channel.SendMessageAsync("name reset 👍");
         }
-
-
 
         [Command("off")]
         [RequireUserPermission(GuildPermission.ViewAuditLog)]
