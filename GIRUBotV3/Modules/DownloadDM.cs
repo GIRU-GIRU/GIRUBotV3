@@ -20,10 +20,13 @@ namespace GIRUBotV3.Modules
         }
      
         private IDMChannel dms;
-        [RequireUserPermission(GuildPermission.Administrator)]
         [Command("download")]
         private async Task Download(SocketUser user)
         {
+            if (user.Id != Context.Message.Author.Id)
+            {
+                await Context.Channel.SendMessageAsync("u have to ask them if they want their DMs posted publicly (gay privacy laws)");
+            }
             try
             {
                 var dms = await user.GetOrCreateDMChannelAsync();
