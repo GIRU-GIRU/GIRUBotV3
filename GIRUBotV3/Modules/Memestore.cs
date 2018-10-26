@@ -280,6 +280,26 @@ namespace GIRUBotV3.Modules
             }
         }
 
+        [MemestoreToggle]
+        [Command("memecount")]
+        private async Task MemeStoreCount()
+        {
+            using (var db = new Memestorage())
+            {
+                try
+                {
+                    var memestoreCount = db.Memestore.Where(x => x.Content != null).Count();
+                    await Context.Channel.SendMessageAsync($"there are currently {memestoreCount} active memes in the database.");
+                    return;
+                }
+                catch (Exception)
+                {
+                    await Context.Channel.SendMessageAsync($"waet, somethin broken");
+                    return;
+                }
+            }
+        }
+
     }
 
 }
