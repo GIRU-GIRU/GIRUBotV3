@@ -18,7 +18,7 @@ namespace GIRUBotV3.Modules
         IResult _result;
         ITextChannel adminlogchannel;
 
-        private static DiscordSocketClient _client;
+        private DiscordSocketClient _client;
         public OnExecutedCommand(DiscordSocketClient client)
         {
             _client = client;

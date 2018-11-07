@@ -19,6 +19,9 @@ namespace GIRUBotV3.Modules
             await Context.Channel.SendMessageAsync("dont be so fucking WEAK");
         }
 
+
+
+
         public static async Task UserJoined(SocketGuildUser guildUser)
         {
             // casting

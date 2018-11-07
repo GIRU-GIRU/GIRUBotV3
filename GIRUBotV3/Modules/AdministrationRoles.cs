@@ -17,7 +17,6 @@ namespace GIRUBotV3.Modules
 {
     public class AdministrationRoles : ModuleBase<SocketCommandContext>
     {     
-
         List<string> RolesNamesList = new List<string>();
         List<IRole> RolesToAdd = new List<IRole>();
         [Command("give")]
@@ -25,14 +24,12 @@ namespace GIRUBotV3.Modules
         [RequireBotPermission(GuildPermission.ManageRoles)]
         private async Task AssignMultiple(IGuildUser user, [Remainder]string inputRoles)
         {
+            string insult = await Insults.GetInsult();
             var userSocket = user as SocketGuildUser;
             var userCurrentRoles = user.RoleIds;
-            string insult = await Insults.GetInsult();
-
-            //turn message into role array
+           
             var inputRolesArray = inputRoles.ToLower().Split(' ');
 
-            //convert allowedroles dictionary to array
             List<string> allowedRolesList = new List<string>();
             foreach (var item in AllowedRoles.AllowedRolesDictionary)
             {

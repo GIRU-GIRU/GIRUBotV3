@@ -65,7 +65,7 @@ namespace GIRUBotV3.Modules
         [RequireBotPermission(GuildPermission.KickMembers)]
         private async Task BanUser(IGuildUser user)
         {
-            await Context.Channel.SendMessageAsync("write more shit for the log retard");
+            await Context.Channel.SendMessageAsync("write more shit for the retard");
         }
         [Command("ban")]
         [RequireUserPermission(GuildPermission.ViewAuditLog)]

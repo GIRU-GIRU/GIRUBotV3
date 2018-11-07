@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="%40Ian#2222.txt" />
     <None Remove="tsconfig1.json" />
   </ItemGroup>
 
