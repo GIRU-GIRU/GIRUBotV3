@@ -38,15 +38,14 @@ namespace GIRUBotV3.Data
         public async Task StoreRequestedInvites(SocketCommandContext context)
         {
             using (var db = new InviteRegulationStorage())
-            {  
+            {
                 await db.AddAsync(new InviteRegulationStore
                 {
                     UserID = context.Message.Author.Id,
                     Username = context.Message.Author.Username,
                     DateInserted = DateTime.Now.ToShortDateString(),
                     Time = DateTime.Now.ToShortTimeString(),
-                }
-                     );
+                });
                 await db.SaveChangesAsync();
             }
         }

@@ -7,7 +7,6 @@ namespace GIRUBotV3.Data
     public class Memestorage : DbContext
     {
         public DbSet<MemeStoreModel> Memestore { get; set; }
-        //public DbSet<Post> Posts { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -25,6 +24,7 @@ namespace GIRUBotV3.Data
         public ulong AuthorID { get; set; }
         public string Date { get; set; }
         public string Time { get; set; }
+        public int MemeUses { get; set; }
     }
 
 }

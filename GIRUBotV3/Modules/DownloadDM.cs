@@ -19,7 +19,6 @@ namespace GIRUBotV3.Modules
             _client = client;
         }
      
-        private IDMChannel dms;
         [Command("mydmswithgirubot")]
         private async Task Download()
         {

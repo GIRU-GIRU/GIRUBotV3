@@ -15,6 +15,8 @@ namespace GIRUBotV3.Data
     {
         public DbSet<TimerStore> TimerStore { get; set; }
 
+        //unused
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source=MeleeSlasher.db");
@@ -52,6 +54,7 @@ namespace GIRUBotV3.Data
                         UserID = target.Id,
                         TimeInserted = DateTime.Now,
                         TimeRemoval = processedDuration,
+   
                         AdminID = context.Message.Author.Id,
                         CaseEnum = caseType,
                         CaseType = caseType.ToString()
@@ -59,7 +62,7 @@ namespace GIRUBotV3.Data
                     });
                     await db.SaveChangesAsync();
 
-                    //test
+      
                     db.TimerStore.Where(x => x.TimeRemoval > DateTime.Now)
                                                 .OrderBy(x => x.TimeRemoval)
                                                    .First();
@@ -114,77 +117,6 @@ namespace GIRUBotV3.Data
 
 
     
-
-
-
-
-
-
-
-//    catch (Exception ex)
-//    {
-//        await context.Channel.SendMessageAsync($"store roles table is fucked atm sry kid: {ex.Message}");
-//    }
-//}
-//private void RestoreRoleModelRemoveExisting(SocketCommandContext context, SocketGuildUser target, Restoreroles db)
-//{
-//    var existingUser = db.RoleModelRolesStore.Where(x => x.UserID == target.Id);
-//    if (existingUser.Any())
-//    {
-//        foreach (var item in existingUser)
-//        {
-//            if (RoleToStoreIsNotValid(context.Guild.GetRole(item.RoleID), context))
-//            {
-//                continue;
-//            }
-//            db.RoleModelRolesStore.Remove(item);
-//        }
-//    }
-//}
-//private bool RoleToStoreIsNotValid(SocketRole role, SocketCommandContext context)
-//{
-//    if (role.Id == context.Guild.EveryoneRole.Id)
-//    {
-//        return true;
-//    }
-//    return false;
-//}
-
-
-
-
-//public async Task RestoreUserRoles(SocketCommandContext context, SocketGuildUser target)
-//{
-//    try
-//    {
-//        using (var db = new Restoreroles())
-//        {
-
-
-//            var IRoleCollection = new List<IRole>();
-//            foreach (var item in db.RoleModelRolesStore.Where(x => x.UserID == target.Id))
-//            {
-//                IRoleCollection.Add(context.Guild.GetRole(item.RoleID));
-//            }
-//            await target.AddRolesAsync(IRoleCollection);
-//        }
-//    }
-//    catch (Exception ex)
-//    {
-//        await context.Channel.SendMessageAsync($"restore user roles table is fucked atm sry kid {ex.Message}");
-//    }
-//}
-//private void RestoreRolesRemoveExisting(SocketCommandContext context, SocketGuildUser target, Restoreroles db)
-//{
-//    var existingUser = db.RestoreRoles.Where(x => x.UserID == target.Id);
-//    if (existingUser.Any())
-//    {
-//        foreach (var item in existingUser)
-//        {
-//            db.RestoreRoles.Remove(item);
-//        }
-//    }
-//}
 
 
 

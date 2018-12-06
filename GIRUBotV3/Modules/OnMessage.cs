@@ -22,7 +22,6 @@ namespace GIRUBotV3.Modules
             _FaceAppClient = FaceAppClient;
         }
 
-        private static Regex regexNounTest = new Regex(@"^\![^ ]+test");
         private static Regex regexInviteLinkDiscord = new Regex(@"(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]");
         public async Task MessageContainsAsync(SocketMessage arg)
         {
@@ -53,21 +52,6 @@ namespace GIRUBotV3.Modules
                 await targetUser.AddRoleAsync(mutedRole);
                 await context.Channel.SendMessageAsync($"stay small {message.Author.Mention}, no spam in my server you little shitter");            
                 await adminlogchannel.SendMessageAsync($"{targetUser.Username}#{targetUser.DiscriminatorValue} has been auto muted for mass mention, please investigate {moderators.Mention}");
-            }
-            //if (message.Content.Contains("help"))
-            //{
-            //    var r = new Random();
-            //    if (r.Next(1, 15) <= 2)
-            //    {
-            //        string insultHelp = await Insults.GetInsult();
-            //        await context.Channel.SendMessageAsync("stop crying for help " + insultHelp);
-            //    }
-            //}
-            if (regexNounTest.Match(message.Content).Success)
-            {
-                var noun = regexNounTest.Match(message.Content).Groups[2].ToString();
-                var nounTestTask = new RollRandom();
-                await nounTestTask.NounTest(noun, message);
             }
             if (regexInviteLinkDiscord.Match(message.Content).Success & !Helpers.IsModeratorOrOwner(message.Author as SocketGuildUser))
             {

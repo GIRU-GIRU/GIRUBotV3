@@ -7,7 +7,7 @@ using System.Text;
 namespace GIRUBotV3.Models
 {
 
-    public static class AllowedRoles
+    public static class UserRoles
     {
 
         public static Dictionary<string, string> AllowedRolesDictionary { get; private set; } = new Dictionary<string, string>
@@ -64,6 +64,18 @@ namespace GIRUBotV3.Models
             ["Snake"] = "🐍",
             ["Gay"] = "Homosexual"
         };
+
+        public static Dictionary<string, string> ExclusiveRolesDictionary { get; private set; } = new Dictionary<string, string>
+        {
+            ["EU"] = "EU",
+            ["NA"] = "NA",
+            ["RU"] = "RU",
+            ["SA"] = "SA",
+            ["OCE"] = "OCE",
+            ["ZA"] = "ZA",
+            ["noob"] = "noob"
+        };
+
     }
 }
 

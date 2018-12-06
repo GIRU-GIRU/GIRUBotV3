@@ -9,9 +9,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using FaceApp;
 using System.Net.Http;
-using TwitchLib.Api.Services;
-using TwitchLib.Api.Interfaces;
-using TwitchLib.Api;
 
 namespace GIRUBotV3
 {
@@ -21,65 +18,63 @@ namespace GIRUBotV3
         {
             var program = new Program();
             var bot = program.RunBotAsync();
-            bot.Wait();   
+            bot.Wait();
         }
 
         public DiscordSocketClient _client;
         private CommandService _commands;
+        private IServiceProvider _services;
         private OnMessage _onMessage;
         private OnExecutedCommand _onExecutedCommand;
-        private IServiceProvider _services;
         private BotInitialization _botInitialization;
-        private DownloadDM _experiment;
-        public static TwitchAPI api;
-        private TwitchBot _twitchBot;
-        private LiveStreamMonitor _liveStreamMonitor;
-
+        private DownloadDM _DownloadDM;
+        private OnDeletedMessage _OnDeletedMessage;
         private FaceAppClient _FaceAppClient;
+
         public async Task RunBotAsync()
         {
-
-
-            api = new TwitchAPI();
-            api.Settings.ClientId = Config.TwitchClientId;
-            api.Settings.AccessToken = Config.TwitchAccessToken;
-            _liveStreamMonitor = new LiveStreamMonitor(api, 60, true, false);
-
             var _HttpClient = new HttpClient();
-
-            _twitchBot = new TwitchBot(api);
-            
             _FaceAppClient = new FaceAppClient(_HttpClient);
-            _client = new DiscordSocketClient();
-            _commands = new CommandService();
-            _onMessage = new OnMessage(_client, _FaceAppClient);
-            _onExecutedCommand = new OnExecutedCommand(_client);          
-            _botInitialization = new BotInitialization(_client);
+
+            DiscordSocketConfig botConfig = new DiscordSocketConfig()
+            {
+                MessageCacheSize = 5000
+            };
+            _client = new DiscordSocketClient(botConfig);
+
+            CommandServiceConfig CommandServiceConfig = new CommandServiceConfig()
+            {
+                DefaultRunMode = RunMode.Async
+            };
+            _commands = new CommandService(CommandServiceConfig);
             
+            _onExecutedCommand = new OnExecutedCommand(_client);
+            _botInitialization = new BotInitialization(_client);
+            _OnDeletedMessage = new OnDeletedMessage();
+
             _services = new ServiceCollection()
                  .AddSingleton(_commands)
                  .AddSingleton(_FaceAppClient)
-                 .AddSingleton(_twitchBot)
                  .AddSingleton(_client)
                  .BuildServiceProvider();
 
-            _client.MessageUpdated += _onMessage.UpdatedMessageContainsAsync;         
-            _client.UserJoined += UserHelp.UserJoined;
+
+            _client.MessageUpdated += _onMessage.UpdatedMessageContainsAsync;
             _client.Ready += BotInitialization.StartUpMessages;
+            _client.MessageDeleted += _OnDeletedMessage.DeletedMessageStore;
 
-            _client.MessageReceived += _onMessage.MessageContainsAsync;
-            _liveStreamMonitor.OnStreamOnline += _twitchBot.NotifyMainOnStreamStart;
-
-             _commands.CommandExecuted += _onExecutedCommand.AdminLog;
+            _commands.CommandExecuted += _onExecutedCommand.AdminLog;
             _client.Log += Log;
-            
+
             await RegisterCommandAsync();
             await _client.LoginAsync(TokenType.Bot, Config.BotToken);
-           
             await _client.StartAsync();
-            _experiment = new DownloadDM(_client);
+            _DownloadDM = new DownloadDM(_client);
+            _onMessage = new OnMessage(_client, _FaceAppClient);
+
             await Task.Delay(-1);
         }
+
 
         public async Task RegisterCommandAsync()
         {
@@ -91,11 +86,15 @@ namespace GIRUBotV3
         {
             var message = arg as SocketUserMessage;
             if (message.Author.IsBot) return;
+           
 
+            _ = Task.Run(() => _client.MessageReceived += _onMessage.MessageContainsAsync);
             int argPos = 0;
             if (message.HasStringPrefix(Config.CommandPrefix, ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
             {
                 var context = new SocketCommandContext(_client, message);
+                if (Models.BlacklistUser.BlackListedUser.Contains(context.Message.Author)) return;
+
                 var result = await _commands.ExecuteAsync(context, argPos, _services);
                 switch (result.Error)
                 {
@@ -109,16 +108,16 @@ namespace GIRUBotV3
                         await context.Channel.SendMessageAsync(await ErrorReturnStrings.GetParseFailed());
                         break;
                     default:
-                       Console.WriteLine(result.ErrorReason);
+                        Console.WriteLine(result.ErrorReason);
                         break;
-                }                   
-            }   
+                }
+            }
         }
         private Task Log(LogMessage arg)
         {
             Console.WriteLine(arg);
             return Task.CompletedTask;
         }
-  
+
     }
 }

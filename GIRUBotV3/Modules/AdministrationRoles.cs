@@ -16,131 +16,120 @@ using GIRUBotV3.Data;
 namespace GIRUBotV3.Modules
 {
     public class AdministrationRoles : ModuleBase<SocketCommandContext>
-    {     
-        List<string> RolesNamesList = new List<string>();
-        List<IRole> RolesToAdd = new List<IRole>();
+    {
         [Command("give")]
+        [Alias("add")]
         [RequireUserPermission(GuildPermission.ViewAuditLog)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
-        private async Task AssignMultiple(IGuildUser user, [Remainder]string inputRoles)
+        private async Task AssignRoles(SocketGuildUser user, [Remainder]string inputRoles)
         {
-            string insult = await Insults.GetInsult();
-            var userSocket = user as SocketGuildUser;
-            var userCurrentRoles = user.RoleIds;
-           
-            var inputRolesArray = inputRoles.ToLower().Split(' ');
-
-            List<string> allowedRolesList = new List<string>();
-            foreach (var item in AllowedRoles.AllowedRolesDictionary)
+            var insult = await Insults.GetInsult();
+            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser))
             {
-                allowedRolesList.Add(item.Key.ToLower());
+                await Context.Channel.SendMessageAsync($"fuck off u {insult}");
+                return;
             }
 
-            //validate matching roles
-            var succesfullyMatchingList = inputRolesArray.Where(x => allowedRolesList.Contains(x, StringComparer.InvariantCultureIgnoreCase)).ToList();
+            string[] rolesArray = ReturnValidatedRoles(inputRoles, user);
+            IRole roleToRemove = FindExistingExclusiveRoles(user);
 
-            //remove regional roles from bulk add           
-            foreach (var item in Models.ExclusiveRoles.Exclusive_roles)
+            if (rolesArray.Count() == 0 && inputRoles.Count() > 0)
             {
-                succesfullyMatchingList.Remove(item.ToLower());
+                await Context.Channel.SendMessageAsync($"none of those roles are valid u fucking {insult}");
+                return;
             }
-
-            if (succesfullyMatchingList.Count == 0)
+            else if (rolesArray.Count() == 0)
             {
-                await Context.Channel.SendMessageAsync($"not gonna let you give that you {insult}");
+                await Context.Channel.SendMessageAsync($"not a valid role u {insult}");
                 return;
             }
 
 
-            List<string> succesfullyMatchingListValues = new List<string>();
-            //grab role values rahter than alias
-            foreach (var item in AllowedRoles.AllowedRolesDictionary)
+            List<IRole> iroleCollection = new List<IRole>();
+            List<string> roleNameCollection = new List<string>();
+            foreach (var role in rolesArray)
             {
-                for (int i = 0; i < succesfullyMatchingList.Count; i++)
-                {
-                    if (item.Key.ToLower() == succesfullyMatchingList[i].ToLower())
-                    {
-                        succesfullyMatchingListValues.Add(item.Value);
-                    }
-                }
-
+                var roleObject = Helpers.ReturnRole(Context.Guild as SocketGuild, role);
+                iroleCollection.Add(roleObject);
+                roleNameCollection.Add(roleObject.Name);
             }
-            //grab the IRole objects and populate the return string
-            List<IRole> roleList = new List<IRole>();
-            for (int i = 0; i < succesfullyMatchingListValues.Count; i++)
+            string roleNames = String.Join(", ", roleNameCollection.ToArray());
+
+            var embed = new EmbedBuilder();
+            embed.WithTitle($"✅   {Context.Message.Author.Username} granted {roleNames} to {user.Username}");
+            if (roleToRemove != null)
             {
-                var returnedRole = Helpers.ReturnRole(Context.Guild, succesfullyMatchingListValues[i]);
-                roleList.Add(returnedRole);
-                RolesNamesList.Add(returnedRole.Name);
+                await user.RemoveRoleAsync(roleToRemove);
+                embed.AddField("Removed: ", roleToRemove.Name, true);
             }
-
-            var rolesAsString = string.Join(", ", RolesNamesList.ToArray());
-            var embedReplace = new EmbedBuilder();
-            embedReplace.WithTitle($"✅   {Context.User.Username} granted {rolesAsString} to {user.Username}");
-            embedReplace.WithColor(new Color(0, 255, 0));
-            await Context.Channel.SendMessageAsync("", false, embedReplace.Build());
-            await userSocket.AddRolesAsync(roleList);
+            embed.WithColor(new Color(0, 255, 0));
+            await Context.Channel.SendMessageAsync("", false, embed.Build());
+            await user.AddRolesAsync(iroleCollection);
             return;
         }
 
-        private IRole currentRoleExclusive;
-        private IRole roleToAssign;
 
-        [Command("add")]
-        [RequireUserPermission(GuildPermission.ViewAuditLog)]
-        [RequireBotPermission(GuildPermission.ManageRoles)]
-        private async Task Assign(IGuildUser user, string roleSearch)
+
+        private IRole FindExistingExclusiveRoles(SocketGuildUser user)
         {
-            var userSocket = user as SocketGuildUser;
-            var userCurrentRoles = user.RoleIds;
-            string insult = await Insults.GetInsult();
-
-            //is it an allowed role ? 
-            foreach (var item in AllowedRoles.AllowedRolesDictionary)
+            var multiDimensionExclusiveRoles = UserRoles.ExclusiveRolesDictionary.ToArray();
+            List<string> singleDimensionExclusiveRoles = new List<string>();
+            foreach (var item in multiDimensionExclusiveRoles)
             {
-                if (roleSearch.ToLower() == item.Key.ToLower())
-                {
-                    roleToAssign = Helpers.ReturnRole(Context.Guild, item.Value);
-                    break;
-                }
+                singleDimensionExclusiveRoles.Add(item.Key.ToLower());
             }
 
-            if (roleToAssign is null)
-            {
-                await Context.Channel.SendMessageAsync($"not a valid role, {insult}");
-                return;
-            }
+            var foundExclusiveRole = user.Roles.Select(x => x.Name.ToLower())
+                     .Intersect(singleDimensionExclusiveRoles)
+                        .FirstOrDefault();
 
-            if (Helpers.IsRole(roleSearch, userSocket))
-            {
-                await Context.Channel.SendMessageAsync($"nice? they alrdy have that role {insult}");
-                return;
-            }
-
-            //user cant have these roles together, finding role to remove
-            List<string> exclusive_roles = Models.ExclusiveRoles.Exclusive_roles;
-            for (int i = 0; i < exclusive_roles.Count; i++)
-            {
-                currentRoleExclusive = Helpers.IsRoleReturn(exclusive_roles[i], userSocket);
-                if (exclusive_roles.Contains(roleToAssign.Name) && currentRoleExclusive != null)
-                {
-                    var embedReplaceRemovedRole = new EmbedBuilder();
-                    embedReplaceRemovedRole.WithTitle($"✅   {Context.User.Username} granted {roleToAssign.Name} to {user.Username}");
-                    embedReplaceRemovedRole.WithDescription($"replaced **{currentRoleExclusive.Name}** role");
-                    embedReplaceRemovedRole.WithColor(new Color(0, 255, 0));
-                    await Context.Channel.SendMessageAsync("", false, embedReplaceRemovedRole.Build());
-                    await userSocket.RemoveRoleAsync(currentRoleExclusive);
-                    await userSocket.AddRoleAsync(roleToAssign);
-                    return;
-                }
-            }
-            var embedReplace = new EmbedBuilder();
-            embedReplace.WithTitle($"✅   {Context.User.Username} granted {roleToAssign.Name} to {user.Username}");
-            embedReplace.WithColor(new Color(0, 255, 0));
-            await Context.Channel.SendMessageAsync("", false, embedReplace.Build());
-            await userSocket.AddRoleAsync(roleToAssign);
-            return;
+            return Helpers.ReturnRole(user.Guild, foundExclusiveRole);
         }
+
+
+
+        private string[] ReturnValidatedRoles(string inputRoles, SocketGuildUser user)
+        {
+            string[] inputRolesArray = inputRoles.ToLower().Split(' ');
+            KeyValuePair<string, string>[] multiDimensionAllowedRoles = UserRoles.AllowedRolesDictionary.ToArray();
+            //extract allowed roles from the user input
+            List<string> singleDimensionAllowedRoles = new List<string>();
+            foreach (var item in multiDimensionAllowedRoles)
+            {
+                singleDimensionAllowedRoles.Add(item.Key.ToLower());
+            }
+            var resultantRoles = inputRolesArray.Intersect(singleDimensionAllowedRoles).ToArray();
+
+
+            //user input to now only contains one exclusive role
+            var multiDimensionExclusiveRoles = UserRoles.ExclusiveRolesDictionary.ToArray();
+            List<string> singleDimensionExclusiveRoles = new List<string>();
+            foreach (var item in multiDimensionExclusiveRoles)
+            {
+                singleDimensionExclusiveRoles.Add(item.Key.ToLower());
+            }
+
+            var matchedExclusiveRoles = resultantRoles.Intersect(singleDimensionExclusiveRoles).ToArray();
+            if (matchedExclusiveRoles.Count() > 1)
+            {
+                string[] rolesToRemove = matchedExclusiveRoles.Skip(1).ToArray();
+                return resultantRoles = rolesToRemove.Except(resultantRoles).ToArray();
+            }
+            return resultantRoles;
+          
+        }
+
+
+
+
+        //    }
+        //    var embedReplace = new EmbedBuilder();
+        //    embedReplace.WithTitle($"✅   {Context.User.Username} granted {roleToAssign.Name} to {user.Username}");
+        //    embedReplace.WithColor(new Color(0, 255, 0));
+        //    await Context.Channel.SendMessageAsync("", false, embedReplace.Build());
+        //    await userSocket.AddRoleAsync(roleToAssign);
+        //    return;
+        //}
 
         List<IRole> RolesToRemove = new List<IRole>();
         List<string> RolesToRemoveNames = new List<string>();
@@ -241,7 +230,7 @@ namespace GIRUBotV3.Modules
             await userSocket.RemoveRoleAsync(mutedRole);
             return;
         }
-       
+
         [Command("cant")]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         [RequireBotPermission(GuildPermission.ManageRoles)]

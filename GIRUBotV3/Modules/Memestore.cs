@@ -13,6 +13,7 @@ using GIRUBotV3.Preconditions;
 
 namespace GIRUBotV3.Modules
 {
+
     public class Memestore : ModuleBase<SocketCommandContext>
     {
         [MemestoreToggle]
@@ -106,6 +107,8 @@ namespace GIRUBotV3.Modules
                 {
                     var meme = db.Memestore.Where(x => x.Title.ToLower() == input.ToLower()).FirstOrDefault();
                     await Context.Channel.SendMessageAsync($"{meme.Content}");
+                    meme.MemeUses = meme.MemeUses + 1;
+                    await db.SaveChangesAsync();
                 }
                 catch (Exception)
                 {
@@ -125,6 +128,8 @@ namespace GIRUBotV3.Modules
                 try
                 {
                     var meme = db.Memestore.Where(x => x.MemeId == id).FirstOrDefault();
+                    meme.MemeUses += meme.MemeUses++;
+                    await db.SaveChangesAsync();
                     await Context.Channel.SendMessageAsync($"{meme.Content}");
                 }
                 catch (Exception)
@@ -157,9 +162,9 @@ namespace GIRUBotV3.Modules
                             success = true;
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-
+                        await Context.Channel.SendMessageAsync("smth went wrong ... " + ex.Message);
                     }
                 }
             }
@@ -176,12 +181,19 @@ namespace GIRUBotV3.Modules
                 {
                     var meme = db.Memestore.Where(x => x.Title.ToLower() == title.ToLower()).FirstOrDefault();
 
-                    await Context.Channel.SendMessageAsync($"{title} was created by {meme.Author} on {meme.Date} at {meme.Time}. MemeID = {meme.MemeId}");
+                    var embed = new EmbedBuilder();
+                    embed.WithTitle($"{title}#{meme.MemeId}");
+                    embed.AddField("Creator: ", meme.Author, true);
+                    embed.AddField("On: ", meme.Date + " " + meme.Time, true);
+                    embed.AddField("Uses: ", meme.MemeUses.ToString(), true);
+                    embed.WithFooter($"{meme.Content}");
+                    embed.WithColor(new Color(104, 66, 244));
+                    await Context.Channel.SendMessageAsync("", false, embed.Build());
                     return;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    await Context.Channel.SendMessageAsync($"dosen't exist");
+                    await Context.Channel.SendMessageAsync($"that doesn't exist");
                     return;
                 }
             }
@@ -203,7 +215,7 @@ namespace GIRUBotV3.Modules
                 }
                 catch (Exception)
                 {
-                    await Context.Channel.SendMessageAsync($"dosen't exist");
+                    await Context.Channel.SendMessageAsync($"doesn't exist");
                     return;
                 }
             }
@@ -244,7 +256,7 @@ namespace GIRUBotV3.Modules
                         return;
                     }
                 }
-                await Context.Channel.SendMessageAsync($"nah ur not allowed nice try tho lmfao");
+                await Context.Channel.SendMessageAsync($"nah ur not allowed nice try tho lmfao {insult}");
             }
         }
 
@@ -281,6 +293,41 @@ namespace GIRUBotV3.Modules
         }
 
         [MemestoreToggle]
+        [Command("topmemes")]
+        private async Task MemeStoreMostPopular()
+        {
+            using (var db = new Memestorage())
+            {
+                try
+                {
+                    var collectionTopMemes = db.Memestore.OrderByDescending(x => x.MemeUses).Take(10);
+                    List<string> topMemeAuthors = new List<string>();
+                    topMemeAuthors.AddRange(collectionTopMemes.Select(x => x.Author));
+
+                    List<string> topMemetitles = new List<string>();
+                    topMemetitles.AddRange(collectionTopMemes.Select(x => x.MemeId + "#" + x.Title.Substring(0, 15)));
+
+                    List<int> topMemeUses = new List<int>();
+                    topMemeUses.AddRange(collectionTopMemes.Select(x => x.MemeUses));
+
+                    //List<string> topMemeDates = new List<string>();
+                    //topMemeDates.AddRange(collectionTopMemes.Select(x => x.Date + ": " + x.Time));
+
+                    var embed = new EmbedBuilder();
+                    embed.WithTitle($"Top memes in Melee Slasher");
+                    embed.AddField("Number and Name: ", string.Join("\n", topMemetitles), true);
+                    embed.AddField("Author: ", string.Join("\n", topMemeAuthors), true);
+                    embed.AddField("Uses: ", string.Join("\n", topMemeUses), true);
+                    await Context.Channel.SendMessageAsync("", false, embed.Build());
+                }
+                catch (Exception ex)
+                {
+                    await Context.Channel.SendMessageAsync("problem... " + ex.Message);
+                }
+            }
+        }
+
+        [MemestoreToggle]
         [Command("memecount")]
         private async Task MemeStoreCount()
         {
@@ -301,5 +348,6 @@ namespace GIRUBotV3.Modules
         }
 
     }
+
 
 }

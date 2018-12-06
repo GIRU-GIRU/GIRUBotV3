@@ -44,7 +44,6 @@ namespace GIRUBotV3.Modules
             string avatarURL = Context.User.GetAvatarUrl();
             var user = Context.User as IGuildUser;
             var callerSocketGuild = Context.User as SocketGuildUser;
-            // string userGame = callerSocketGuild.Game.ToString();
             var userSocketGuild = user as SocketGuildUser;
             string userAvatarURL = user.GetAvatarUrl(png, 1024);
             string userStatus = user.Status.ToString();
@@ -90,7 +89,6 @@ namespace GIRUBotV3.Modules
             embed.WithColor(new Color(0, 204, 255));
             await Context.Channel.SendMessageAsync("", false, embed.Build());
         }
-
         [Command("stream")]
         [RequireUserPermission(GuildPermission.MoveMembers)]
         private async Task StreamAnnounce()
