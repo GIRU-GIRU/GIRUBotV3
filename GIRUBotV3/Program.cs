@@ -51,6 +51,7 @@ namespace GIRUBotV3
             _onExecutedCommand = new OnExecutedCommand(_client);
             _botInitialization = new BotInitialization(_client);
             _OnDeletedMessage = new OnDeletedMessage();
+            _onMessage = new OnMessage(_client, _FaceAppClient);
 
             _services = new ServiceCollection()
                  .AddSingleton(_commands)
@@ -70,7 +71,7 @@ namespace GIRUBotV3
             await _client.LoginAsync(TokenType.Bot, Config.BotToken);
             await _client.StartAsync();
             _DownloadDM = new DownloadDM(_client);
-            _onMessage = new OnMessage(_client, _FaceAppClient);
+            
 
             await Task.Delay(-1);
         }
