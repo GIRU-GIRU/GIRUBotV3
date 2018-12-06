@@ -24,16 +24,6 @@ namespace GIRUBotV3.Modules
            var chnl = _client.GetChannel(Config.MeleeSlasherMainChannel) as ITextChannel;
             await chnl.SendMessageAsync("GIRUBotV3 starting...");
             Task.Delay(500).Wait();
-
-            if (CommandToggles.WelcomeMessages)
-            {
-                await chnl.SendMessageAsync("Welcome messages are currently on");
-            }
-            else
-            {
-                await chnl.SendMessageAsync("Welcome messages are currently off");
-            }
-
             await chnl.SendMessageAsync("Online");
 
         }      
