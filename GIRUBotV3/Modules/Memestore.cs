@@ -18,7 +18,7 @@ namespace GIRUBotV3.Modules
     {
         [MemestoreToggle]
         [Command("storememe")]
-        [Alias("smeme", "addmeme")]
+        [Alias("sm", "smeme", "addmeme")]
         private async Task StoreMeme([Remainder]string input)
         {
             var inputAsArray = input.Split(" ");
