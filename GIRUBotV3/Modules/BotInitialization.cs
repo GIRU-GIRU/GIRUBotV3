@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace GIRUBotV3.Modules
 {
-  public class BotInitialization : ModuleBase<SocketCommandContext>
+    public class BotInitialization : ModuleBase<SocketCommandContext>
     {
         private static DiscordSocketClient _client;
 
@@ -21,12 +21,22 @@ namespace GIRUBotV3.Modules
 
         public static async Task StartUpMessages()
         {
-           var chnl = _client.GetChannel(Config.MeleeSlasherMainChannel) as ITextChannel;
-            await chnl.SendMessageAsync("GIRUBotV3 starting...");
-            Task.Delay(500).Wait();
-            await chnl.SendMessageAsync("Online");
+            //var chnl = _client.GetChannel(Config.MeleeSlasherMainChannel) as ITextChannel;
+            // await chnl.SendMessageAsync("GIRUBotV3 starting...");
+            // Task.Delay(500).Wait();
 
-        }      
+            // if (CommandToggles.WelcomeMessages)
+            // {
+            //     await chnl.SendMessageAsync("Welcome messages are currently on");
+            // }
+            // else
+            // {
+            //     await chnl.SendMessageAsync("Welcome messages are currently off");
+            // }
+
+            // await chnl.SendMessageAsync("Online");
+
+        }
     }
-    
+
 }

@@ -134,7 +134,6 @@ namespace GIRUBotV3.Modules
                 await Context.Channel.SendMessageAsync("unable to ban user ! " + ex.Message);
             }
 
-
             try
             {
                 var storeRoles = new StoreRoleMethods();

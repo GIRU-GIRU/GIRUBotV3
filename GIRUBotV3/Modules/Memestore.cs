@@ -32,17 +32,22 @@ namespace GIRUBotV3.Modules
             }
             if (title.Where(x => Char.IsDigit(x)).Any())
             {
-                await Context.Channel.SendMessageAsync($"the meme title can't contain numbers or weird shit, sry bitch");
-                return;
+              
             }
             using (var db = new Memestorage())
             {
+                if (db.Memestore.Where(x => x.AuthorID == Context.Message.Author.Id).Count() >= 25)
+                {
+                    await Context.Channel.SendMessageAsync($"fucking greedy fuck {insult} bastard u cannot make over 25 memes");
+                    return;
+                }
+        
                 if (db.Memestore.Where(x => x.Title.ToLower() == title.ToLower()).Any())
                 {
                     await Context.Channel.SendMessageAsync($"that alrdy exists u {insult}");
                     return;
                 }
-
+              
                 await db.Memestore.AddAsync(new MemeStoreModel
                 {
                     Author = Context.Message.Author.Username,
@@ -209,7 +214,6 @@ namespace GIRUBotV3.Modules
                 try
                 {
                     var meme = db.Memestore.Where(x => x.MemeId == id).FirstOrDefault();
-
                     await Context.Channel.SendMessageAsync($"{meme.Title} was created by {meme.Author} on {meme.Date} at {meme.Time}. MemeID = {meme.MemeId}");
                     return;
                 }
@@ -309,9 +313,6 @@ namespace GIRUBotV3.Modules
 
                     List<int> topMemeUses = new List<int>();
                     topMemeUses.AddRange(collectionTopMemes.Select(x => x.MemeUses));
-
-                    //List<string> topMemeDates = new List<string>();
-                    //topMemeDates.AddRange(collectionTopMemes.Select(x => x.Date + ": " + x.Time));
 
                     var embed = new EmbedBuilder();
                     embed.WithTitle($"Top memes in Melee Slasher");
