@@ -32,7 +32,7 @@ namespace GIRUBotV3.Modules
             }
             if (title.Where(x => Char.IsDigit(x)).Any())
             {
-              
+
             }
             using (var db = new Memestorage())
             {
@@ -41,13 +41,13 @@ namespace GIRUBotV3.Modules
                     await Context.Channel.SendMessageAsync($"fucking greedy fuck {insult} bastard u cannot make over 25 memes");
                     return;
                 }
-        
+
                 if (db.Memestore.Where(x => x.Title.ToLower() == title.ToLower()).Any())
                 {
                     await Context.Channel.SendMessageAsync($"that alrdy exists u {insult}");
                     return;
                 }
-              
+
                 await db.Memestore.AddAsync(new MemeStoreModel
                 {
                     Author = Context.Message.Author.Username,
@@ -154,23 +154,23 @@ namespace GIRUBotV3.Modules
             var rnd = new Random();
             using (var db = new Memestorage())
             {
-                while (success == false)
+                try
                 {
-                    try
+                    while (success == false)
                     {
                         var maxID = db.Memestore.Max(x => x.MemeId);
                         var meme = db.Memestore.Where(x => x.MemeId == rnd.Next(0, maxID)).FirstOrDefault();
-
-                        if (!string.IsNullOrEmpty(meme.Content))
+                        
+                        if (meme != null && !string.IsNullOrEmpty(meme.Content))
                         {
                             await Context.Channel.SendMessageAsync($"Meme#{meme.MemeId}: {meme.Content}");
                             success = true;
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        await Context.Channel.SendMessageAsync("smth went wrong ... " + ex.Message);
-                    }
+                }
+                catch (Exception ex)
+                {
+                    await Context.Channel.SendMessageAsync("smth went wrong ... " + ex.Message);
                 }
             }
         }
