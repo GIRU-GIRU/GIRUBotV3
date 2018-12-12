@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using FaceApp;
 using System.Net.Http;
+using GIRUBotV3.Logging;
 
 namespace GIRUBotV3
 {
@@ -94,31 +95,18 @@ namespace GIRUBotV3
             if (message.HasStringPrefix(Config.CommandPrefix, ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
             {
                 var context = new SocketCommandContext(_client, message);
-                if (Models.BlacklistUser.BlackListedUser.Contains(context.Message.Author)) return;
 
+                if (Models.BlacklistUser.BlackListedUser.Contains(context.Message.Author)) return;
                 var result = await _commands.ExecuteAsync(context, argPos, _services);
-                switch (result.Error)
-                {
-                    case CommandError.UnmetPrecondition:
-                        if (result.ErrorReason != "DisableMessage")
-                        {
-                            await context.Channel.SendMessageAsync(await ErrorReturnStrings.GetNoPerm());
-                        }
-                        break;
-                    case CommandError.ParseFailed:
-                        await context.Channel.SendMessageAsync(await ErrorReturnStrings.GetParseFailed());
-                        break;
-                    default:
-                        Console.WriteLine(result.ErrorReason);
-                        break;
-                }
+                await Logger.LogToConsole(result, context);
+               
             }
         }
         private Task Log(LogMessage arg)
         {
-            Console.WriteLine(arg);
+             Console.WriteLine(arg);
             return Task.CompletedTask;
-        }
+         }
 
     }
 }

@@ -50,6 +50,7 @@ namespace GIRUBotV3.Modules
 
             async Task AdministrationEmbed(CommandInfo _info, ICommandContext _context, IResult _result)
             {
+
                 adminlogchannel = await context.Guild.GetChannelAsync(Config.AuditChannel) as ITextChannel;
                 var dateTimeStamp = context.Message.Timestamp.ToString("yyyy/MM/dd hh:mm");
                 var mentionedUsers = await Helpers.GetUsernameListFromIDs(context.Message.MentionedUserIds, context.Guild);

@@ -60,7 +60,7 @@ namespace GIRUBotV3.Modules
             if (roleToRemove != null)
             {
                 await user.RemoveRoleAsync(roleToRemove);
-                embed.AddField("Removed: ", roleToRemove.Name, true);
+                embed.AddField($"Replaced: ", roleToRemove.Name, true);
             }
             embed.WithColor(new Color(0, 255, 0));
             await Context.Channel.SendMessageAsync("", false, embed.Build());
@@ -118,18 +118,6 @@ namespace GIRUBotV3.Modules
             return resultantRoles;
           
         }
-
-
-
-
-        //    }
-        //    var embedReplace = new EmbedBuilder();
-        //    embedReplace.WithTitle($"✅   {Context.User.Username} granted {roleToAssign.Name} to {user.Username}");
-        //    embedReplace.WithColor(new Color(0, 255, 0));
-        //    await Context.Channel.SendMessageAsync("", false, embedReplace.Build());
-        //    await userSocket.AddRoleAsync(roleToAssign);
-        //    return;
-        //}
 
         List<IRole> RolesToRemove = new List<IRole>();
         List<string> RolesToRemoveNames = new List<string>();

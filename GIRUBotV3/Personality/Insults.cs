@@ -10,7 +10,6 @@ namespace GIRUBotV3.Personality
 {
     public static class Insults
     {
-
         public static async Task<string> GetInsult()
         {
            Random rnd = new Random();
@@ -44,7 +43,7 @@ namespace GIRUBotV3.Personality
            };
                int pull = rnd.Next(insultsArray.Length);
                string insult = insultsArray[pull].ToString();
-            return insult;
+               return insult;
         }
 
         public static async Task<string> GetWarning()
@@ -72,9 +71,7 @@ namespace GIRUBotV3.Personality
             };
             int pull = rnd.Next(warnArray.Length);
             string warning = warnArray[pull].ToString();
-             return warning;
-
+            return warning;
         }
-
     }
 }
