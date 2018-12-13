@@ -19,19 +19,16 @@ namespace GIRUBotV3.Modules
     {
         [Command("give")]
         [Alias("add")]
-        [RequireUserPermission(GuildPermission.ViewAuditLog)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         private async Task AssignRoles(SocketGuildUser user, [Remainder]string inputRoles)
         {
+            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
             var insult = await Insults.GetInsult();
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser))
-            {
-                await Context.Channel.SendMessageAsync($"fuck off u {insult}");
-                return;
-            }
+            IRole roleToRemove = null;
 
             string[] rolesArray = ReturnValidatedRoles(inputRoles, user);
-            IRole roleToRemove = FindExistingExclusiveRoles(user);
+            bool roleNeedsRemoving = CheckIfMultipleExclusiveRoles(rolesArray, user);
+            if (roleNeedsRemoving) { roleToRemove = FindExistingExclusiveRoles(user); }
 
             if (rolesArray.Count() == 0 && inputRoles.Count() > 0)
             {
@@ -68,7 +65,27 @@ namespace GIRUBotV3.Modules
             return;
         }
 
+        private bool CheckIfMultipleExclusiveRoles(string[] rolesArray, SocketGuildUser user)
+         {
+            var multiDimensionExclusiveRoles = UserRoles.ExclusiveRolesDictionary.ToArray();
+            List<string> singleDimensionExclusiveRoles = new List<string>();
+            foreach (var item in multiDimensionExclusiveRoles)
+            {
+                singleDimensionExclusiveRoles.Add(item.Key.ToLower());
+            }
 
+            bool test = user.Roles.Select(x => x.Name.ToLower())
+            .Intersect(singleDimensionExclusiveRoles)
+            .Any();
+
+            if (test)
+            {
+                return singleDimensionExclusiveRoles
+                                .Intersect(rolesArray)
+                                   .Any();
+            }
+            return false;     
+        }
 
         private IRole FindExistingExclusiveRoles(SocketGuildUser user)
         {
@@ -83,7 +100,15 @@ namespace GIRUBotV3.Modules
                      .Intersect(singleDimensionExclusiveRoles)
                         .FirstOrDefault();
 
-            return Helpers.ReturnRole(user.Guild, foundExclusiveRole);
+            try
+            {
+                return Helpers.ReturnRole(user.Guild, foundExclusiveRole);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            
         }
 
 
@@ -122,10 +147,11 @@ namespace GIRUBotV3.Modules
         List<IRole> RolesToRemove = new List<IRole>();
         List<string> RolesToRemoveNames = new List<string>();
         [Command("del")]
-        [RequireUserPermission(GuildPermission.ViewAuditLog)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         private async Task UnAssign(IGuildUser user, [Remainder]string roleSearch)
         {
+            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+
             var insult = await Insults.GetInsult();
             var userSocket = user as SocketGuildUser;
             var embedReplaceRemovedRole = new EmbedBuilder();
@@ -157,10 +183,11 @@ namespace GIRUBotV3.Modules
         }
 
         [Command("mute")]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         private async Task Mute(IGuildUser user)
         {
+            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+
             var userSocket = user as SocketGuildUser;
             var mutedRole = Helpers.FindRole(userSocket, UtilityRoles.Muted);
             if (mutedRole is null)
@@ -188,10 +215,11 @@ namespace GIRUBotV3.Modules
         }
 
         [Command("unmute")]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         private async Task UnMute(IGuildUser user)
         {
+            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+
             var userSocket = user as SocketGuildUser;
             var mutedRole = Helpers.FindRole(userSocket, UtilityRoles.Muted);
             if (mutedRole is null)
@@ -220,10 +248,11 @@ namespace GIRUBotV3.Modules
         }
 
         [Command("cant")]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         private async Task CantPostPics(IGuildUser user)
         {
+            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+
             var userSocket = user as SocketGuildUser;
             var picsRole = Helpers.FindRole(userSocket, UtilityRoles.PicPermDisable);
             if (picsRole is null)
@@ -251,10 +280,11 @@ namespace GIRUBotV3.Modules
         }
 
         [Command("can")]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
         private async Task CanPostPics(IGuildUser user)
         {
+            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+
             var userSocket = user as SocketGuildUser;
             var picsRole = Helpers.FindRole(userSocket, UtilityRoles.PicPermDisable);
             if (picsRole is null)
@@ -281,9 +311,13 @@ namespace GIRUBotV3.Modules
             await userSocket.RemoveRoleAsync(picsRole);
             return;
         }
+
+
         [Command("storeroles")]
         private async Task StoreRoles(SocketGuildUser target)
         {
+            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+
             try
             {
                 var storeRoles = new StoreRoleMethods();
@@ -298,6 +332,8 @@ namespace GIRUBotV3.Modules
         [Command("storeroles")]
         private async Task StoreRoles(ulong ID)
         {
+            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+
             try
             {
                 SocketGuildUser target = Context.Guild.GetUser(ID);
@@ -314,6 +350,8 @@ namespace GIRUBotV3.Modules
         [Command("restoreroles")]
         private async Task RestoreRoles(SocketGuildUser target)
         {
+            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+
             try
             {
                 var restoreRoles = new StoreRoleMethods();

@@ -108,7 +108,7 @@ namespace GIRUBotV3.Modules
                 await user.SendMessageAsync(warningMessage);
                 await Context.Channel.SendMessageAsync($"⚠      *** {user.Username} has received a warning.      ⚠***");
             }
-            catch (HttpException ex)
+            catch (HttpException)
             {
                 await Context.Channel.SendMessageAsync(user.Mention + ", " + warningMessage);
             }

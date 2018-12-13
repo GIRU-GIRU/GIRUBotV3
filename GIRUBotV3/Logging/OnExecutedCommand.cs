@@ -91,19 +91,19 @@ namespace GIRUBotV3.Modules
             }
 
             //deprecated due to spam
-            async Task PugEmbed(CommandInfo _info, ICommandContext _context, IResult _result)
-            {
-                adminlogchannel = await context.Guild.GetChannelAsync(Config.AuditChannel) as ITextChannel;
-                var dateTimeStamp = context.Message.Timestamp.ToString("yyyy/MM/dd hh:mm");
+            //async Task PugEmbed(CommandInfo _info, ICommandContext _context, IResult _result)
+            //{
+            //    adminlogchannel = await context.Guild.GetChannelAsync(Config.AuditChannel) as ITextChannel;
+            //    var dateTimeStamp = context.Message.Timestamp.ToString("yyyy/MM/dd hh:mm");
 
-                var embed = new EmbedBuilder();
-                embed.WithTitle($"🎮 {context.Message.Author.Username} used the \"{info.Module.Name}\" module");
-                embed.AddField("command: ", context.Message.Content, false);
-                embed.AddField("at: ", $"{dateTimeStamp} in {context.Channel.Name}", false);
-                embed.WithColor(new Color(20, 255, 0));
-                await adminlogchannel.SendMessageAsync("", false, embed.Build());
-                return;
-            }
+            //    var embed = new EmbedBuilder();
+            //    embed.WithTitle($"🎮 {context.Message.Author.Username} used the \"{info.Module.Name}\" module");
+            //    embed.AddField("command: ", context.Message.Content, false);
+            //    embed.AddField("at: ", $"{dateTimeStamp} in {context.Channel.Name}", false);
+            //    embed.WithColor(new Color(20, 255, 0));
+            //    await adminlogchannel.SendMessageAsync("", false, embed.Build());
+            //    return;
+            //}
 
         }
     }
