@@ -29,7 +29,6 @@ namespace GIRUBotV3
         private OnExecutedCommand _onExecutedCommand;
         private BotInitialization _botInitialization;
         private DownloadDM _DownloadDM;
-        private OnDeletedMessage _OnDeletedMessage;
         private FaceAppClient _FaceAppClient;
 
         public async Task RunBotAsync()
@@ -51,7 +50,6 @@ namespace GIRUBotV3
             
             _onExecutedCommand = new OnExecutedCommand(_client);
             _botInitialization = new BotInitialization(_client);
-            _OnDeletedMessage = new OnDeletedMessage();
             _onMessage = new OnMessage(_client, _FaceAppClient);
 
             _services = new ServiceCollection()
@@ -63,7 +61,6 @@ namespace GIRUBotV3
 
             _client.MessageUpdated += _onMessage.UpdatedMessageContainsAsync;
             _client.Ready += BotInitialization.StartUpMessages;
-            _client.MessageDeleted += _OnDeletedMessage.DeletedMessageStore;
 
             _commands.CommandExecuted += _onExecutedCommand.AdminLog;
             _client.Log += Log;
