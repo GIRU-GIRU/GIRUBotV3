@@ -85,7 +85,7 @@ namespace GIRUBotV3
         }
 
         private async Task HandleCommandAsync(SocketMessage arg)
-        {
+         {
             var message = arg as SocketUserMessage;
             if (message.Author.IsBot) return;
            

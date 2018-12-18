@@ -32,7 +32,8 @@ namespace GIRUBotV3.Modules
             }
             if (title.Where(x => Char.IsDigit(x)).Any())
             {
-
+                await Context.Channel.SendMessageAsync($"the meme title can't contain numbers or weird shit, sry bitch");
+                return;
             }
             using (var db = new Memestorage())
             {

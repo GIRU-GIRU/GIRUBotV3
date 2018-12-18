@@ -140,8 +140,7 @@ namespace GIRUBotV3.Modules
                 string[] rolesToRemove = matchedExclusiveRoles.Skip(1).ToArray();
                 return resultantRoles = rolesToRemove.Except(resultantRoles).ToArray();
             }
-            return resultantRoles;
-          
+            return resultantRoles;        
         }
 
         List<IRole> RolesToRemove = new List<IRole>();

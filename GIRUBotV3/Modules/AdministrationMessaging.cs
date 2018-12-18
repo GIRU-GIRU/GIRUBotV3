@@ -36,12 +36,8 @@ namespace GIRUBotV3.Modules
         private async Task searchBan([Remainder]string input = null)
         {
             if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
-
-            if (input == null)
-            {
-                return;
-            }
-
+            if (input == null) return;
+            
             var bans = await Context.Guild.GetBansAsync();
             List<Discord.Rest.RestBan> matchedBans = new List<Discord.Rest.RestBan>();
             foreach (var ban in bans)
