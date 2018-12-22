@@ -46,7 +46,9 @@ namespace GIRUBotV3.Modules
             List<string> roleNameCollection = new List<string>();
             foreach (var role in rolesArray)
             {
-                var roleObject = Helpers.ReturnRole(Context.Guild as SocketGuild, role);
+
+                var roleObject = 
+                    Helpers.ReturnRole(Context.Guild as SocketGuild, UserRoles.AllowedRolesDictionary[role]);
                 iroleCollection.Add(roleObject);
                 roleNameCollection.Add(roleObject.Name);
             }

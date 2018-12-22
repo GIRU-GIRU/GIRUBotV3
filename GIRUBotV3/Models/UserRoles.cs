@@ -10,7 +10,7 @@ namespace GIRUBotV3.Models
     public static class UserRoles
     {
 
-        public static Dictionary<string, string> AllowedRolesDictionary { get; private set; } = new Dictionary<string, string>
+        public static Dictionary<string, string> AllowedRolesDictionary { get; private set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
             ["Viewers"] = "Viewers",
             ["PugEU"] = "PugEU",
@@ -62,7 +62,8 @@ namespace GIRUBotV3.Models
             ["Alcoholic"] = "Alcoholic",
             ["Slut"] = "Slut",
             ["Snake"] = "🐍",
-            ["Gay"] = "Homosexual"
+            ["Gay"] = "Homosexual",
+            ["Atlas"] = "Atlas 🌏"
         };
 
         public static Dictionary<string, string> ExclusiveRolesDictionary { get; private set; } = new Dictionary<string, string>
