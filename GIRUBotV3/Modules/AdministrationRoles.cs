@@ -159,7 +159,7 @@ namespace GIRUBotV3.Modules
 
             if (!roleSearch.Contains(' '))
             {
-                var roleToRemove = Helpers.ReturnRole(userSocket.Guild, roleSearch);
+                var roleToRemove = Helpers.ReturnRole(userSocket.Guild, UserRoles.AllowedRolesDictionary[roleSearch]);
                 embedReplaceRemovedRole.WithTitle($"✅   {Context.User.Username} removed {roleToRemove.Name} from {user.Username}");
                 embedReplaceRemovedRole.WithColor(new Color(0, 255, 0));
                 await Context.Channel.SendMessageAsync("", false, embedReplaceRemovedRole.Build());
@@ -170,7 +170,7 @@ namespace GIRUBotV3.Modules
             var inputRolesArray = roleSearch.ToLower().Split(' ');
             foreach (var item in inputRolesArray)
             {
-                var returnedRole = Helpers.ReturnRole(userSocket.Guild, item);
+                var returnedRole = Helpers.ReturnRole(userSocket.Guild, UserRoles.AllowedRolesDictionary[item]);
                 RolesToRemove.Add(returnedRole);
                 RolesToRemoveNames.Add(returnedRole.Name);
             }

@@ -12,27 +12,30 @@ using System.Collections.Generic;
 namespace GIRUBotV3.Modules
 {
     public class OnMessage : ModuleBase<SocketCommandContext>
-         
+
     {
         private static DiscordSocketClient _client;
         private FaceAppClient _FaceAppClient;
+        private MassMentionControl _massMentionControl;
+        private InviteLinkPreventation _inviteLinkPreventation;
+        private Nountest _nounTest;
         public OnMessage(DiscordSocketClient client, FaceAppClient FaceAppClient)
         {
             _client = client;
             _FaceAppClient = FaceAppClient;
+            _massMentionControl = new MassMentionControl();
+            _inviteLinkPreventation = new InviteLinkPreventation();
+            _nounTest = new Nountest();
         }
 
         private static Regex regexInviteLinkDiscord = new Regex(@"(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]");
         public async Task MessageContainsAsync(SocketMessage arg)
         {
-            //ignore ourselves, check for null
             var message = arg as SocketUserMessage;
             var context = new SocketCommandContext(_client, message);
-
-            if (message.Author.IsBot || Helpers.IsRole("Moderator", context.User as SocketGuildUser)) return;
-            if (Helpers.OnOffExecution(context.Message) == true)
+            if (Nountest.CheckForNountest(message.Content.Split(" ")[0]))
             {
-                await context.Message.DeleteAsync();
+                await _nounTest.PostNounTest(context);
             }
             if (message.Content.Contains("😃"))
             {
@@ -42,47 +45,26 @@ namespace GIRUBotV3.Modules
                     await context.Channel.SendMessageAsync("😃");
                 }
             }
-            if (message.MentionedUsers.Count > 8)
-            {
-                IGuildUser targetUser = context.Guild.GetUser(message.Author.Id) as IGuildUser;
-                IRole moderators = Helpers.ReturnRole(context.Guild, UtilityRoles.Moderator);
-                var mutedRole = Helpers.ReturnRole(context.Guild, UtilityRoles.Muted);
-                ITextChannel adminlogchannel = context.Guild.GetChannel(Config.AuditChannel) as ITextChannel;
 
-                await targetUser.AddRoleAsync(mutedRole);
-                await context.Channel.SendMessageAsync($"stay small {message.Author.Mention}, no spam in my server you little shitter");            
-                await adminlogchannel.SendMessageAsync($"{targetUser.Username}#{targetUser.DiscriminatorValue} has been auto muted for mass mention, please investigate {moderators.Mention}");
-            }
+
+            if (message.Author.IsBot || Helpers.IsModeratorOrOwner(message.Author as SocketGuildUser)) return;
+
+            if (Helpers.OnOffExecution(context.Message) == true) await context.Message.DeleteAsync();
+
+
+            if (message.MentionedUsers.Count > 8) await _massMentionControl.MassMentionMute(context, message);
+
             if (regexInviteLinkDiscord.Match(message.Content).Success & !Helpers.IsModeratorOrOwner(message.Author as SocketGuildUser))
             {
-
-                var insult = await Insults.GetInsult();
-                await context.Message.DeleteAsync();
-                await context.Channel.SendMessageAsync($"{context.User.Mention}, don't post invite links {insult}");
+                await _inviteLinkPreventation.DeleteInviteLinkWarn(context);
             }
+
         }
+
         public async Task UpdatedMessageContainsAsync(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
         {
             var messageAfter = after as SocketUserMessage;
             var context = new SocketCommandContext(_client, messageAfter);
-            if (messageAfter.Author.IsBot || Helpers.IsModeratorOrOwner(context.User as SocketGuildUser)) return;
-            if (regexInviteLinkDiscord.Match(messageAfter.Content).Success)
-            {
-                var insult = await Insults.GetInsult();
-                await context.Message.DeleteAsync();
-                await context.Channel.SendMessageAsync($"{context.User.Mention}, don't post invite links {insult}");
-            }
-            if (messageAfter.MentionedUsers.Count > 8)
-            {
-                IGuildUser targetUser = context.Guild.GetUser(messageAfter.Author.Id) as IGuildUser;
-                IRole moderators = Helpers.ReturnRole(context.Guild, UtilityRoles.Moderator);
-                var mutedRole = Helpers.ReturnRole(context.Guild, UtilityRoles.Muted);
-                ITextChannel adminlogchannel = context.Guild.GetChannel(Config.AuditChannel) as ITextChannel;
-
-                await targetUser.AddRoleAsync(mutedRole);
-                await context.Channel.SendMessageAsync($"stay small {messageAfter.Author.Mention}, no spam in my server you little shitter");
-                await adminlogchannel.SendMessageAsync($"{targetUser.Username}#{targetUser.DiscriminatorValue} has been auto muted for mass mention, please investigate {moderators.Mention}");
-            }
             if (messageAfter.Content.Contains("😃"))
             {
                 var r = new Random();
@@ -91,6 +73,16 @@ namespace GIRUBotV3.Modules
                     await context.Channel.SendMessageAsync("😃");
                 }
             }
-        }    
+
+
+            if (messageAfter.Author.IsBot || Helpers.IsModeratorOrOwner(context.User as SocketGuildUser)) return;
+            if (regexInviteLinkDiscord.Match(messageAfter.Content).Success)
+            {
+                await _inviteLinkPreventation.DeleteInviteLinkWarn(context);
+            }
+            if (messageAfter.MentionedUsers.Count > 8) await _massMentionControl.MassMentionMute(context, messageAfter);
+
+
+        }
     }
 }

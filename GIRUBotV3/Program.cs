@@ -86,7 +86,6 @@ namespace GIRUBotV3
             var message = arg as SocketUserMessage;
             if (message.Author.IsBot) return;
            
-
             _ = Task.Run(() => _onMessage.MessageContainsAsync(arg));
             int argPos = 0;
             if (message.HasStringPrefix(Config.CommandPrefix, ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos))

@@ -14,7 +14,7 @@ namespace FaceApp
 {
     public class FaceAppClient
     {
-        private const string BaseUrl = "https://node-01.faceapp.io/api/v2.9/photos";
+        private const string BaseUrl = "https://node-01.faceapp.io/api/v3.0/photos";
         private const string UserAgent = "FaceApp/1.0.229 (Linux; Android 4.4)";
         private const int IdLength = 8;
 
@@ -46,6 +46,8 @@ namespace FaceApp
             _client = client;
             _deviceId = GenerateDeviceId();
         }
+
+
        
         /// <summary>
         /// Applies the filter type provided using the image code.
