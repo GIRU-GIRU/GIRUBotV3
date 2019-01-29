@@ -37,7 +37,7 @@ namespace GIRUBotV3.Modules
         {
             if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
             if (input == null) return;
-            
+
             var bans = await Context.Guild.GetBansAsync();
             List<Discord.Rest.RestBan> matchedBans = new List<Discord.Rest.RestBan>();
             foreach (var ban in bans)
@@ -74,18 +74,20 @@ namespace GIRUBotV3.Modules
         [Command("warn")]
         private async Task WarnUserCustom(IGuildUser user, [Remainder]string warningMessage)
         {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
-            if (!Helpers.IsSonya(Context.Message.Author as SocketGuildUser)) return;
-
-            try
+            if (Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)
+                || Helpers.IsSonya(Context.Message.Author as SocketGuildUser))
             {
-                await user.SendMessageAsync("You have been warned in Melee Slasher for: " + warningMessage);
-                await Context.Channel.SendMessageAsync($"⚠      *** {user.Username} has received a warning.      ⚠***");
+                try
+                {
+                    await user.SendMessageAsync("You have been warned in Melee Slasher for: " + warningMessage);
+                    await Context.Channel.SendMessageAsync($"⚠      *** {user.Username} has received a warning.      ⚠***");
+                }
+                catch (HttpException ex)
+                {
+                    await Context.Channel.SendMessageAsync($"{user.Mention}, {warningMessage}");
+                }
             }
-            catch (HttpException ex)
-            {
-                await Context.Channel.SendMessageAsync($"{user.Mention}, {warningMessage}");
-            }
+            return;
         }
 
         [Command("say")]
@@ -99,19 +101,21 @@ namespace GIRUBotV3.Modules
         [Command("warn")]
         private async Task WarnUser(IGuildUser user)
         {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
-            if (!Helpers.IsSonya(Context.Message.Author as SocketGuildUser)) return;
-
-            string warningMessage = await Insults.GetWarning();
-            try
+            if (Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)
+                || Helpers.IsSonya(Context.Message.Author as SocketGuildUser))
             {
-                await user.SendMessageAsync(warningMessage);
-                await Context.Channel.SendMessageAsync($"⚠      *** {user.Username} has received a warning.      ⚠***");
+                string warningMessage = await Insults.GetWarning();
+                try
+                {
+                    await user.SendMessageAsync(warningMessage);
+                    await Context.Channel.SendMessageAsync($"⚠      *** {user.Username} has received a warning.      ⚠***");
+                }
+                catch (HttpException)
+                {
+                    await Context.Channel.SendMessageAsync(user.Mention + ", " + warningMessage);
+                }
             }
-            catch (HttpException)
-            {
-                await Context.Channel.SendMessageAsync(user.Mention + ", " + warningMessage);
-            }
+            return;
         }
         [Command("bancleanse")]
         [RequireBotPermission(GuildPermission.BanMembers)]

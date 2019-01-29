@@ -99,7 +99,7 @@ namespace GIRUBotV3.Modules
 
         public static bool IsSonya(SocketGuildUser user)
         {
-            return user.Id == 509967681563262987;
+            return user.Roles.Where(x => x.Name == "Sonya").Any();
         }
 
         public static async Task<string> GetUsernameListFromIDs(IReadOnlyCollection<ulong> collection, IGuild guild)
