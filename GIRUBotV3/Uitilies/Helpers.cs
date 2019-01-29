@@ -97,6 +97,11 @@ namespace GIRUBotV3.Modules
             return list.Where(x => x.Id == msg.Author.Id).Any();
         }
 
+        public static bool IsSonya(SocketGuildUser user)
+        {
+            return user.Id == 509967681563262987;
+        }
+
         public static async Task<string> GetUsernameListFromIDs(IReadOnlyCollection<ulong> collection, IGuild guild)
         {
             List<string> MentionedUsers = new List<string>();

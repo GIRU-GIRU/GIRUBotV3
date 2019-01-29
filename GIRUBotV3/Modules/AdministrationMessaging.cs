@@ -72,9 +72,11 @@ namespace GIRUBotV3.Modules
             await Context.Channel.SendMessageAsync("write more shit for the retard");
         }
         [Command("warn")]
-        [RequireUserPermission(GuildPermission.MoveMembers)]
         private async Task WarnUserCustom(IGuildUser user, [Remainder]string warningMessage)
         {
+            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+            if (!Helpers.IsSonya(Context.Message.Author as SocketGuildUser)) return;
+
             try
             {
                 await user.SendMessageAsync("You have been warned in Melee Slasher for: " + warningMessage);
@@ -95,9 +97,11 @@ namespace GIRUBotV3.Modules
         }
 
         [Command("warn")]
-        [RequireUserPermission(GuildPermission.MoveMembers)]
         private async Task WarnUser(IGuildUser user)
         {
+            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+            if (!Helpers.IsSonya(Context.Message.Author as SocketGuildUser)) return;
+
             string warningMessage = await Insults.GetWarning();
             try
             {
