@@ -225,6 +225,41 @@ namespace GIRUBotV3.Modules
             await Context.Channel.SendMessageAsync($"*{user.Mention} turned back on*");
             return;
         }
+
+        [Command("colour")]
+        private async Task ChangeSonyaRoleColour(string inputColour)
+        {
+            try
+            {
+                var user = Context.User as SocketGuildUser;
+                if (!user.Roles.Where(x => x.Name.ToLower() == "sonya").Any()) return;
+
+                var sonyaRole = Helpers.ReturnRole(Context.Guild, "sonya");
+                string conversion = "0x" + inputColour.Replace("#", "");
+
+                var colorHex = Convert.ToUInt32(conversion, 16);
+                var color = new Discord.Color(colorHex);
+
+                if (colorHex != 0)
+                {
+                    await sonyaRole.ModifyAsync(x =>
+                    {
+                        x.Color = color;
+                    });
+                    await Context.Channel.SendMessageAsync($"Colour successfully changed to {inputColour}");
+                }
+                else
+                {
+                    var insult = await Personality.Insults.GetInsult();
+                    await Context.Channel.SendMessageAsync($"what the FUCK is that supposed to be? retard {insult}");
+                }
+            }
+            catch (Exception ex)
+            {
+                await Context.Channel.SendMessageAsync($"uhh.. {ex.Message}");
+                throw;
+            }
+        }
     }
 }
 
