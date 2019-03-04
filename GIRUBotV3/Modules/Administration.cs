@@ -137,38 +137,40 @@ namespace GIRUBotV3.Modules
             }
         }
 
-        //[Command("hackban")]
-        //[RequireUserPermission(GuildPermission.ViewAuditLog)]
-        //[RequireBotPermission(GuildPermission.BanMembers)]
-        //private async Task HackBanUser(string input)
-        //{
-        //    ulong userID = Convert.ToUInt64(input);
-        //    try
-        //    {
-        //        if (Helpers.IsRole(UtilityRoles.Moderator, Context.Guild.GetUser(userID)))
-        //        {
-        //            await Context.Channel.SendMessageAsync("stop fighting urselves u retards");
-        //            return;
-        //        }
-        //    }
-        //    catch (Exception)
-        //    { }
+        [Command("hackban")]
+        [RequireBotPermission(GuildPermission.BanMembers)]
+        private async Task HackBanUser([Remainder]string input)
+        {
+            try
+            {
+                if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+                if (!input.Contains(' '))
+                {
+                    var insult = await Personality.Insults.GetInsult();
+                    await Context.Channel.SendMessageAsync($"syntax is \"{Config.CommandPrefix}hackban uintID reason\" you fucking {insult}");
+                    return;
+                }
 
-        //    try
-        //    {
-        //      var targetedUser =  _client.GetUser(userID);
-        //        await Context.Guild.AddBanAsync(userID);
-        //        var embed = new EmbedBuilder();
-        //        embed.WithTitle($"✅     {Context.User.Username} hackbanned {targetedUser.Username +"#"+ targetedUser.Discriminator}");
-        //        embed.WithColor(new Color(0, 255, 0));
-        //        await Context.Channel.SendMessageAsync("", false, embed.Build());
-        //    }
-        //    catch (Exception)
-        //    {
-        //        await Context.Channel.SendMessageAsync("Invalid userID");
-        //        throw;
-        //    }
-        //}
+                string[] inputArray = input.Split(' ');
+
+                if (!ulong.TryParse(inputArray[0], out ulong targetID))
+                {
+                    var insult = await Personality.Insults.GetInsult();
+                    await Context.Channel.SendMessageAsync($"Unable to parse that ID {insult} cunt");
+                    return;
+                }
+             
+                string reason = string.Join(' ', inputArray.Skip(1));
+
+                await Context.Guild.AddBanAsync(targetID, 0, reason);
+                await Context.Channel.SendMessageAsync($"Banned userID {targetID}, reason: {reason}");
+            }
+            catch (Exception ex)
+            {
+                await Context.Channel.SendMessageAsync($"uhhh, somethign went wrong: {ex.Message}");
+                throw;
+            }
+        }
 
         private bool existingBan;
         private string bannedUserName;
@@ -232,7 +234,7 @@ namespace GIRUBotV3.Modules
             try
             {
                 var user = Context.User as SocketGuildUser;
-                if (!user.Roles.Where(x => x.Name.ToLower() == "sonya").Any()) return;
+                if (user.Roles.FirstOrDefault(x => x.Name.ToLower() == "sonya") != null) return;
 
                 var sonyaRole = Helpers.ReturnRole(Context.Guild, "sonya");
                 string conversion = "0x" + inputColour.Replace("#", "");

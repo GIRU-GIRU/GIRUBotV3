@@ -16,9 +16,10 @@ namespace GIRUBotV3.Modules
         [Command("cleanse")]
         [Alias("purge", "prune")]
         [RequireBotPermission(GuildPermission.ManageMessages)]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
         private async Task CleanChatAmount(int amount)
         {
+            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+
             var messages = await Context.Channel.GetMessagesAsync(amount + 1).FlattenAsync();
             var chnl = Context.Channel as ITextChannel;
             await chnl.DeleteMessagesAsync(messages);
@@ -28,9 +29,10 @@ namespace GIRUBotV3.Modules
         [Command("cleanse")]
         [Alias("purge", "prune")]
         [RequireBotPermission(GuildPermission.ManageMessages)]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
         private async Task CleanChat()
         {
+            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+
             int amount = 2;
 
             var messages = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
@@ -42,9 +44,10 @@ namespace GIRUBotV3.Modules
         [Command("cleanse")]
         [Alias("purge", "prune")]
         [RequireBotPermission(GuildPermission.ManageMessages)]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
         private async Task CleanChatUser(SocketGuildUser user)
         {
+            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+
             var usersocket = user as SocketGuildUser;
             int amount = 300;
             var msgsCollection = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
@@ -63,9 +66,10 @@ namespace GIRUBotV3.Modules
         [Command("cleanse")]
         [Alias("purge", "prune")]
         [RequireBotPermission(GuildPermission.ManageMessages)]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
         private async Task CleanChatUserAmount(SocketGuildUser user, int amountToDelete)
         {
+            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+
             var usersocket = user as SocketGuildUser;
             int amount = 900;
             var msgsCollection = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
