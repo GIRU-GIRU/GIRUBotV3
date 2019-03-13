@@ -234,7 +234,7 @@ namespace GIRUBotV3.Modules
             try
             {
                 var user = Context.User as SocketGuildUser;
-                if (user.Roles.FirstOrDefault(x => x.Name.ToLower() == "sonya") != null) return;
+                if (!user.Roles.Where(x => x.Name.ToLower() == "sonya").Any()) return;
 
                 var sonyaRole = Helpers.ReturnRole(Context.Guild, "sonya");
                 string conversion = "0x" + inputColour.Replace("#", "");
