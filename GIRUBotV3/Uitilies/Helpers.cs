@@ -45,7 +45,9 @@ namespace GIRUBotV3.Modules
 
         public static IRole ReturnRole(SocketGuild guild, string role)
         {
-            return guild.GetRole(guild.Roles.Where(x => x.Name.ToLower() == role.ToLower()).FirstOrDefault().Id);
+           return guild.GetRole(guild.Roles.Where(x => x.Name.ToLower() == role.ToLower()).FirstOrDefault().Id);
+
+            
         }
 
         public static string FindEmoji(SocketGuildUser user, string emojiName)
@@ -99,7 +101,7 @@ namespace GIRUBotV3.Modules
 
         public static bool IsSonya(SocketGuildUser user)
         {
-            return user.Roles.Where(x => x.Name == "Sonya").Any();
+            return user.Roles.Where(x => x.Name.ToLower() == "sonya").Any();
         }
 
         public static async Task<string> GetUsernameListFromIDs(IReadOnlyCollection<ulong> collection, IGuild guild)

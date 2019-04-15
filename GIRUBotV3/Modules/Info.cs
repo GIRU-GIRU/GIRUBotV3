@@ -93,7 +93,7 @@ namespace GIRUBotV3.Modules
         [RequireUserPermission(GuildPermission.MoveMembers)]
         private async Task StreamAnnounce()
         {
-
+            if (!Helpers.IsSonya(Context.Message.Author as SocketGuildUser)) return;
             IRole viewerRole = Helpers.ReturnRole(Context.Guild, UtilityRoles.Viewers);
             await viewerRole.ModifyAsync(x => x.Mentionable = true);
             await Context.Channel.SendMessageAsync(viewerRole.Mention + ", Stream is now live! https://www.twitch.tv/giru");

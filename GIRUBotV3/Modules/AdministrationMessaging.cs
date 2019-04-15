@@ -21,6 +21,8 @@ namespace GIRUBotV3.Modules
         [RequireBotPermission(GuildPermission.KickMembers)]
         private async Task BanUserAndClean(SocketGuildUser user)
         {
+   
+
             if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
             await Context.Channel.SendMessageAsync("write more shit for the log retard");
         }
@@ -105,7 +107,7 @@ namespace GIRUBotV3.Modules
                 || Helpers.IsSonya(Context.Message.Author as SocketGuildUser))
             {
                 string warningMessage = await Insults.GetWarning();
-                try
+                try 
                 {
                     await user.SendMessageAsync(warningMessage);
                     await Context.Channel.SendMessageAsync($"⚠      *** {user.Username} has received a warning.      ⚠***");
