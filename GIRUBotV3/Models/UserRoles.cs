@@ -63,7 +63,8 @@ namespace GIRUBotV3.Models
             ["Slut"] = "Slut",
             ["Snake"] = "🐍",
             ["Gay"] = "Homosexual",
-            ["Atlas"] = "Atlas 🌏"
+            ["Atlas"] = "Atlas 🌏",
+            ["Organizer"] = "Organizer"
         };
 
         public static Dictionary<string, string> ExclusiveRolesDictionary { get; private set; } = new Dictionary<string, string>
