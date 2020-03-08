@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using FaceApp;
 using System.Net.Http;
 using GIRUBotV3.Logging;
 
@@ -29,12 +28,10 @@ namespace GIRUBotV3
         private OnExecutedCommand _onExecutedCommand;
         private BotInitialization _botInitialization;
         private DownloadDM _DownloadDM;
-        private FaceAppClient _FaceAppClient;
 
         public async Task RunBotAsync()
         {
             var _HttpClient = new HttpClient();
-            _FaceAppClient = new FaceAppClient(_HttpClient);
 
             DiscordSocketConfig botConfig = new DiscordSocketConfig()
             {
@@ -50,14 +47,12 @@ namespace GIRUBotV3
             
             _onExecutedCommand = new OnExecutedCommand(_client);
             _botInitialization = new BotInitialization(_client);
-            _onMessage = new OnMessage(_client, _FaceAppClient);
+            _onMessage = new OnMessage(_client);
 
             _services = new ServiceCollection()
                  .AddSingleton(_commands)
-                 .AddSingleton(_FaceAppClient)
                  .AddSingleton(_client)
                  .BuildServiceProvider();
-
 
             _client.MessageUpdated += _onMessage.UpdatedMessageContainsAsync;
             _client.Ready += BotInitialization.StartUpMessages;

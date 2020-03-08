@@ -15,8 +15,6 @@ namespace GIRUBotV3.Data
     {
         public DbSet<TimerStore> TimerStore { get; set; }
 
-        //unused
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source=MeleeSlasher.db");

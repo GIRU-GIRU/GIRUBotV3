@@ -6,7 +6,6 @@ using GIRUBotV3.Personality;
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using FaceApp;
 using System.Collections.Generic;
 
 namespace GIRUBotV3.Modules
@@ -15,14 +14,12 @@ namespace GIRUBotV3.Modules
 
     {
         private static DiscordSocketClient _client;
-        private FaceAppClient _FaceAppClient;
         private MassMentionControl _massMentionControl;
         private InviteLinkPreventation _inviteLinkPreventation;
         private Nountest _nounTest;
-        public OnMessage(DiscordSocketClient client, FaceAppClient FaceAppClient)
+        public OnMessage(DiscordSocketClient client)
         {
             _client = client;
-            _FaceAppClient = FaceAppClient;
             _massMentionControl = new MassMentionControl();
             _inviteLinkPreventation = new InviteLinkPreventation();
             _nounTest = new Nountest();
@@ -46,6 +43,8 @@ namespace GIRUBotV3.Modules
                 }
             }
 
+            if (await WordFilter.CheckForNaughtyWords(message.Content)) await WordFilter.PunishNaughtyWord(context);
+          
 
             if (message.Author.IsBot || Helpers.IsModeratorOrOwner(message.Author as SocketGuildUser)) return;
 
@@ -58,6 +57,8 @@ namespace GIRUBotV3.Modules
             {
                 await _inviteLinkPreventation.DeleteInviteLinkWarn(context);
             }
+
+       
 
         }
 

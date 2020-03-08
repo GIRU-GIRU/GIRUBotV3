@@ -26,6 +26,14 @@ namespace GIRUBotV3.Models
         {
             get { return "Organizer"; }
         }
+        public static string VK
+        {
+            get { return "VK"; }
+        }
+        public static string VKB
+        {
+            get { return "VK-B"; }
+        }
 
     }
 }

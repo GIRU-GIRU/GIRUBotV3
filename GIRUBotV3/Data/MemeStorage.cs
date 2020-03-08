@@ -26,7 +26,6 @@ namespace GIRUBotV3.Data
         public string Time { get; set; }
         public int MemeUses { get; set; }
     }
-
 }
 
 

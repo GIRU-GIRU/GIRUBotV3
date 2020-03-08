@@ -47,7 +47,7 @@ namespace GIRUBotV3.Modules
             foreach (var role in rolesArray)
             {
 
-                var roleObject = 
+                var roleObject =
                     Helpers.ReturnRole(Context.Guild as SocketGuild, UserRoles.AllowedRolesDictionary[role]);
                 iroleCollection.Add(roleObject);
                 roleNameCollection.Add(roleObject.Name);
@@ -64,11 +64,10 @@ namespace GIRUBotV3.Modules
             embed.WithColor(new Color(0, 255, 0));
             await Context.Channel.SendMessageAsync("", false, embed.Build());
             await user.AddRolesAsync(iroleCollection);
-            return;
         }
 
         private bool CheckIfMultipleExclusiveRoles(string[] rolesArray, SocketGuildUser user)
-         {
+        {
             var multiDimensionExclusiveRoles = UserRoles.ExclusiveRolesDictionary.ToArray();
             List<string> singleDimensionExclusiveRoles = new List<string>();
             foreach (var item in multiDimensionExclusiveRoles)
@@ -76,17 +75,17 @@ namespace GIRUBotV3.Modules
                 singleDimensionExclusiveRoles.Add(item.Key.ToLower());
             }
 
-            bool test = user.Roles.Select(x => x.Name.ToLower())
+            bool matching = user.Roles.Select(x => x.Name.ToLower())
             .Intersect(singleDimensionExclusiveRoles)
             .Any();
 
-            if (test)
+            if (matching)
             {
                 return singleDimensionExclusiveRoles
                                 .Intersect(rolesArray)
                                    .Any();
             }
-            return false;     
+            return false;
         }
 
         private IRole FindExistingExclusiveRoles(SocketGuildUser user)
@@ -110,7 +109,6 @@ namespace GIRUBotV3.Modules
             {
                 return null;
             }
-            
         }
 
 
@@ -142,7 +140,7 @@ namespace GIRUBotV3.Modules
                 string[] rolesToRemove = matchedExclusiveRoles.Skip(1).ToArray();
                 return resultantRoles = rolesToRemove.Except(resultantRoles).ToArray();
             }
-            return resultantRoles;        
+            return resultantRoles;
         }
 
         List<IRole> RolesToRemove = new List<IRole>();

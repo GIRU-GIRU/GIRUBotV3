@@ -21,7 +21,7 @@ namespace GIRUBotV3.Modules
         [RequireBotPermission(GuildPermission.KickMembers)]
         private async Task BanUserAndClean(SocketGuildUser user)
         {
-   
+
 
             if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
             await Context.Channel.SendMessageAsync("write more shit for the log retard");
@@ -93,12 +93,28 @@ namespace GIRUBotV3.Modules
         }
 
         [Command("say")]
-        [RequireUserPermission(GuildPermission.ViewAuditLog)]
-        private async Task SayInMain([Remainder]string message)
+        private async Task SayCustomMessage([Remainder]string input)
         {
-            var chnl = Context.Guild.GetTextChannel(Config.MeleeSlasherMainChannel);
-            await chnl.SendMessageAsync(message);
+            try
+            {
+                if (Context.Message.MentionedChannels.Count == 0)
+                {
+                    await Context.Channel.SendMessageAsync("You must mention the channel: (#channel_name)");
+                    return;
+                }
+
+                var targetChannel = Context.Message.MentionedChannels.FirstOrDefault() as ITextChannel;
+                var targetChannelAsString = $"<#{targetChannel.Id}>";
+                var sanitizedInput = input.Replace(targetChannelAsString, string.Empty);
+
+                await targetChannel.SendMessageAsync(sanitizedInput);
+            }
+            catch (Exception ex)
+            {
+                await Context.Channel.SendMessageAsync(ex.Message);
+            }
         }
+
 
         [Command("warn")]
         private async Task WarnUser(IGuildUser user)
@@ -107,7 +123,7 @@ namespace GIRUBotV3.Modules
                 || Helpers.IsSonya(Context.Message.Author as SocketGuildUser))
             {
                 string warningMessage = await Insults.GetWarning();
-                try 
+                try
                 {
                     await user.SendMessageAsync(warningMessage);
                     await Context.Channel.SendMessageAsync($"⚠      *** {user.Username} has received a warning.      ⚠***");
@@ -186,14 +202,58 @@ namespace GIRUBotV3.Modules
 
             try
             {
-                var userSocket = user as SocketGuildUser;
-                var currentName = user.Nickname;
                 await user.ModifyAsync(x => x.Nickname = user.Username);
                 await Context.Channel.SendMessageAsync("name reset 👍");
             }
             catch (Exception)
             {
                 await Context.Channel.SendMessageAsync("no");
+            }
+
+        }
+
+        [Command("resetallname")]
+        [RequireBotPermission(GuildPermission.ChangeNickname)]
+        private async Task MassChangeNicknames([Remainder]string input)
+        {
+            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+
+            try
+            {
+                await Context.Channel.SendMessageAsync($"Changing all names like {input}");
+
+                var users = await Context.Channel.GetUsersAsync(CacheMode.AllowDownload).FlattenAsync();
+                var socketGuildUsers = new List<SocketGuildUser>();
+
+                foreach (var user in users)
+                {
+                    var socketGuildUser = user as SocketGuildUser;
+
+                    if (socketGuildUser != null)
+                    {
+                        if (!string.IsNullOrEmpty(socketGuildUser.Nickname))
+                        {
+                            if (socketGuildUser.Nickname.ToLower().Contains(input.ToLower()))
+                            {
+                                socketGuildUsers.Add(socketGuildUser);
+                            }
+                        }
+                    }
+                }
+
+
+                foreach (var u in socketGuildUsers)
+                {
+                    await u.ModifyAsync(x => x.Nickname = u.Username);
+                    await Context.Channel.SendMessageAsync($"Reset {u.Username}");
+                }
+
+                await Context.Channel.SendMessageAsync("Finished resetting names");
+
+            }
+            catch (Exception ex)
+            {
+                await Context.Channel.SendMessageAsync($"no, {ex.Message}");
             }
 
         }

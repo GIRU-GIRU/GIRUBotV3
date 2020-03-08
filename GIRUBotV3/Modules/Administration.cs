@@ -57,7 +57,7 @@ namespace GIRUBotV3.Modules
                 await Context.Channel.SendMessageAsync("couldn't be arsed storing their roles b4 i kicked");
             }
         }
-       
+
         [Command("ban")]
         [RequireBotPermission(GuildPermission.BanMembers)]
         private async Task BanUser(SocketGuildUser user, [Remainder]string reason)
@@ -97,7 +97,7 @@ namespace GIRUBotV3.Modules
             }
         }
 
-        
+
         [Command("bancleanse")]
         [RequireBotPermission(GuildPermission.BanMembers)]
         private async Task BanUserAndClean(SocketGuildUser user, [Remainder]string reason)
@@ -159,7 +159,7 @@ namespace GIRUBotV3.Modules
                     await Context.Channel.SendMessageAsync($"Unable to parse that ID {insult} cunt");
                     return;
                 }
-             
+
                 string reason = string.Join(' ', inputArray.Skip(1));
 
                 await Context.Guild.AddBanAsync(targetID, 0, reason);
@@ -262,6 +262,77 @@ namespace GIRUBotV3.Modules
                 throw;
             }
         }
+
+
+
+        [Command("vcmove")]
+        private async Task VCMove(SocketGuildUser user, [Remainder]string chnlName)
+        {
+            try
+            {
+                if (!Helpers.IsVKOrModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+                if (Context.Message.Author.Id == 161176590028505089) return;
+
+                var insult = await Personality.Insults.GetInsult();
+                IVoiceChannel targetChannel = null;
+
+                if (user.Id == Context.Message.Author.Id)
+                {
+                    await Context.Channel.SendMessageAsync($"yeah nice try retard {insult}");
+                    return;
+                }
+
+                if (user.VoiceChannel != null)
+                {
+
+                    var sortedVoiceList = Context.Guild.VoiceChannels.OrderBy(x => x.Position).ToArray();
+
+                    foreach (var vc in sortedVoiceList)
+                    {
+                        if (vc.Name.ToLower() == chnlName.ToLower()
+                            || vc.Name.ToLower().Contains(chnlName.ToLower()))
+                        {
+                            targetChannel = vc as IVoiceChannel;
+                            break;
+                        }
+                    }
+
+                    if (targetChannel == null)
+                    {
+                        await Context.Channel.SendMessageAsync($"thats not a real channel {insult}");
+                        return;
+                    }
+
+                    var channel = Optional.Create<IVoiceChannel>(targetChannel);
+
+                    var newChannel = channel.Value as IVoiceChannel;
+                    var oldChannel = user.VoiceChannel as IVoiceChannel;
+
+                    if (newChannel.Id == oldChannel.Id)
+                    {
+                        await Context.Channel.SendMessageAsync($"why would i move him to the same channel you fucking {insult}");
+                        return;
+                    }
+
+                    await user.ModifyAsync(x =>
+                    {
+                        x.Channel = channel;
+                    });
+
+                    await Context.Channel.SendMessageAsync($"{user.Mention} moved from \"{oldChannel.Name}\" to \"{newChannel.Name}\"");
+                    return;
+
+                };
+
+                await Context.Channel.SendMessageAsync($"{user.Mention} needs to connect to a voice channel to be moved");
+
+            }
+            catch (Exception ex)
+            {
+                await Context.Channel.SendMessageAsync($"Move failed.. {ex.Message}");
+            }
+        }
+
     }
 }
 

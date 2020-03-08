@@ -6,11 +6,13 @@ using Discord.Commands;
 using Discord.WebSocket;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace GIRUBotV3.Modules
 {
     public static class Helpers
     {
+        private static readonly Regex pingRgx = new Regex("(<@!?[0-9]+>)");
         public static bool IsRole(string role, SocketGuildUser user)
         {
             var result = from r in user.Guild.Roles
@@ -33,6 +35,22 @@ namespace GIRUBotV3.Modules
         {
             if (user.Id == user.Guild.OwnerId) return true;
             return user.Roles.Where(x => x.Name.ToLower() == Models.UtilityRoles.Moderator.ToLower()).Any();
+
+        }
+
+        public static bool IsVKOrModeratorOrOwner(SocketGuildUser user)
+        {
+            bool userHasRole = false;
+
+            if (user.Id == user.Guild.OwnerId
+                || user.Roles.Where(x => x.Name.ToLower() == Models.UtilityRoles.Moderator.ToLower()).Any()
+                || user.Roles.Where(x => x.Name.ToLower() == Models.UtilityRoles.VK.ToLower()).Any()
+                || user.Roles.Where(x => x.Name.ToLower() == Models.UtilityRoles.VKB.ToLower()).Any())
+            {
+                userHasRole = true;
+            }
+
+            return userHasRole;
         }
 
         public static bool IsOrganizerOrAbove(SocketGuildUser user)
@@ -45,9 +63,9 @@ namespace GIRUBotV3.Modules
 
         public static IRole ReturnRole(SocketGuild guild, string role)
         {
-           return guild.GetRole(guild.Roles.Where(x => x.Name.ToLower() == role.ToLower()).FirstOrDefault().Id);
+            return guild.GetRole(guild.Roles.Where(x => x.Name.ToLower() == role.ToLower()).FirstOrDefault().Id);
 
-            
+
         }
 
         public static string FindEmoji(SocketGuildUser user, string emojiName)
@@ -114,6 +132,19 @@ namespace GIRUBotV3.Modules
                 MentionedUsers.Add(user.Username);
             }
             return String.Join(", ", MentionedUsers.ToArray());
+        }
+
+        internal static bool CheckForUserMention(string content)
+        {
+            try
+            {
+                return pingRgx.Match(content).Success;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
     }
 }
