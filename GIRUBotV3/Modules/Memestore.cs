@@ -25,6 +25,7 @@ namespace GIRUBotV3.Modules
             var title = inputAsArray[0].ToString(); title = Regex.Replace(title, @"\t|\n|\r", "");
             var contentOfMessage = String.Join(" ", inputAsArray.Skip(1));
             var insult = await Insults.GetInsult();
+            
             if (contentOfMessage.Length < 2)
             {
                 await Context.Channel.SendMessageAsync($"what the fuck are you actually doing you fucking {insult}, why are you trying to make an empty meme ? r u legit fucking autist or what, fuckign dumb {insult} cunt");
@@ -35,6 +36,14 @@ namespace GIRUBotV3.Modules
                 await Context.Channel.SendMessageAsync($"the meme title can't contain numbers or weird shit, sry bitch");
                 return;
             }
+
+            
+            if (await WordFilter.CheckForNaughtyWords(contentOfMessage) || await WordFilter.CheckForNaughtyWords(title))
+            {
+                await Context.Channel.SendMessageAsync($"dont put nasty language in the memestore {insult}");
+                return;
+            }
+
             using (var db = new Memestorage())
             {
                 if (db.Memestore.Where(x => x.AuthorID == Context.Message.Author.Id).Count() >= 25)

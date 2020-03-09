@@ -51,11 +51,29 @@ namespace GIRUBotV3.Modules
 
         static string[] naughtyWordsArray = new string[]
             {
-            "nigger",
-            "nig",
-            "fag",
-            "faggot",
-            "chink",
-            };
+                " nig ",
+                "nigger",
+                "faggot",
+                "nigga",
+                "fag",
+                "kneeger",
+                "niggers",
+                "niggerz",
+                "kneegers",
+                "niqqa",
+                "n_i_g_g_a",
+                "n.i.g.g.a",
+                "n,i,g,g,a",
+                "n-i-g-g-a",
+                "n=i=g=g=a",
+                "n+i+g+g+a",
+                "nigga",
+                "n/i/g/g/a",
+                "kike",
+                "coon",
+                "gook",
+                "chink",
+                "bastardo",
+          };
     }
 }
