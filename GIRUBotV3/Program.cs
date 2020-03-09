@@ -98,11 +98,8 @@ namespace GIRUBotV3
             }
             catch (Exception ex)
             {
-
-                Console.WriteLine(ex.Message);
-                
-            }
-           
+                Console.WriteLine(ex.Message);              
+            }          
         }
         private Task Log(LogMessage arg)
         {

@@ -53,6 +53,7 @@ namespace GIRUBotV3.Modules
             {
                 " nig ",
                 "nigger",
+                "nıgger",
                 "faggot",
                 "nigga",
                 "fag",
