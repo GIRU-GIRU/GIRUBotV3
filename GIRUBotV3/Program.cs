@@ -31,42 +31,49 @@ namespace GIRUBotV3
 
         public async Task RunBotAsync()
         {
-            var _HttpClient = new HttpClient();
-
-            DiscordSocketConfig botConfig = new DiscordSocketConfig()
+            try
             {
-                MessageCacheSize = 5000
-            };
-            _client = new DiscordSocketClient(botConfig);
+                var _HttpClient = new HttpClient();
 
-            CommandServiceConfig CommandServiceConfig = new CommandServiceConfig()
+                DiscordSocketConfig botConfig = new DiscordSocketConfig()
+                {
+                    MessageCacheSize = 5000
+                };
+                _client = new DiscordSocketClient(botConfig);
+
+                CommandServiceConfig CommandServiceConfig = new CommandServiceConfig()
+                {
+                    DefaultRunMode = RunMode.Async
+                };
+                _commands = new CommandService(CommandServiceConfig);
+
+                _onExecutedCommand = new OnExecutedCommand(_client);
+                _botInitialization = new BotInitialization(_client);
+                _onMessage = new OnMessage(_client);
+
+                _services = new ServiceCollection()
+                     .AddSingleton(_commands)
+                     .AddSingleton(_client)
+                     .BuildServiceProvider();
+
+                _client.MessageUpdated += _onMessage.UpdatedMessageContainsAsync;
+                _client.Ready += BotInitialization.StartUpMessages;
+
+                _commands.CommandExecuted += _onExecutedCommand.AdminLog;
+                _client.Log += Log;
+
+                await RegisterCommandAsync();
+                await _client.LoginAsync(TokenType.Bot, Config.BotToken);
+                await _client.StartAsync();
+                _DownloadDM = new DownloadDM(_client);
+
+
+                await Task.Delay(-1);
+            }
+            catch (Exception ex)
             {
-                DefaultRunMode = RunMode.Async
-            };
-            _commands = new CommandService(CommandServiceConfig);
-            
-            _onExecutedCommand = new OnExecutedCommand(_client);
-            _botInitialization = new BotInitialization(_client);
-            _onMessage = new OnMessage(_client);
-
-            _services = new ServiceCollection()
-                 .AddSingleton(_commands)
-                 .AddSingleton(_client)
-                 .BuildServiceProvider();
-
-            _client.MessageUpdated += _onMessage.UpdatedMessageContainsAsync;
-            _client.Ready += BotInitialization.StartUpMessages;
-
-            _commands.CommandExecuted += _onExecutedCommand.AdminLog;
-            _client.Log += Log;
-
-            await RegisterCommandAsync();
-            await _client.LoginAsync(TokenType.Bot, Config.BotToken);
-            await _client.StartAsync();
-            _DownloadDM = new DownloadDM(_client);
-            
-
-            await Task.Delay(-1);
+                Console.WriteLine("Error running bot.. ", ex.Message);
+            }
         }
 
 
@@ -104,7 +111,7 @@ namespace GIRUBotV3
         private Task Log(LogMessage arg)
         {
              Console.WriteLine(arg);
-            return Task.CompletedTask;
+             return Task.CompletedTask;
          }
 
     }

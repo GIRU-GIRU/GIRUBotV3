@@ -43,8 +43,8 @@ namespace GIRUBotV3.Modules
                 }
             }
 
-          
-          
+            if (await WordFilter.CheckForNaughtyWords(message.Content)) await WordFilter.PunishNaughtyWord(context);
+
 
             if (message.Author.IsBot || Helpers.IsModeratorOrOwner(message.Author as SocketGuildUser)) return;
 
@@ -57,9 +57,6 @@ namespace GIRUBotV3.Modules
             {
                 await _inviteLinkPreventation.DeleteInviteLinkWarn(context);
             }
-
-       
-
         }
 
         public async Task UpdatedMessageContainsAsync(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
