@@ -78,20 +78,31 @@ namespace GIRUBotV3
 
         private async Task HandleCommandAsync(SocketMessage arg)
          {
-            var message = arg as SocketUserMessage;
-            if (message.Author.IsBot) return;
-           
-            _ = Task.Run(() => _onMessage.MessageContainsAsync(arg));
-            int argPos = 0;
-            if (message.HasStringPrefix(Config.CommandPrefix, ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
+            try
             {
-                var context = new SocketCommandContext(_client, message);
+                var message = arg as SocketUserMessage;
+                if (message.Author.IsBot) return;
 
-                if (Models.BlacklistUser.BlackListedUser.Contains(context.Message.Author)) return;
-                var result = await _commands.ExecuteAsync(context, argPos, _services);
-                await Logger.LogToConsole(result, context);
-               
+                _ = Task.Run(() => _onMessage.MessageContainsAsync(arg));
+                int argPos = 0;
+                if (message.HasStringPrefix(Config.CommandPrefix, ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
+                {
+                    var context = new SocketCommandContext(_client, message);
+
+                    if (await WordFilter.CheckForNaughtyWords(message.Content)) await WordFilter.PunishNaughtyWord(context);
+                    if (Models.BlacklistUser.BlackListedUser.Contains(context.Message.Author)) return;
+                    var result = await _commands.ExecuteAsync(context, argPos, _services);
+                    await Logger.LogToConsole(result, context);
+
+                }
             }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+                
+            }
+           
         }
         private Task Log(LogMessage arg)
         {

@@ -43,7 +43,7 @@ namespace GIRUBotV3.Modules
                 }
             }
 
-            if (await WordFilter.CheckForNaughtyWords(message.Content)) await WordFilter.PunishNaughtyWord(context);
+          
           
 
             if (message.Author.IsBot || Helpers.IsModeratorOrOwner(message.Author as SocketGuildUser)) return;
