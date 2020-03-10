@@ -44,7 +44,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await context.Channel.SendMessageAsync($"unable to delete message.. {ex.Message}");
+                //await context.Channel.SendMessageAsync($"unable to delete message.. {ex.Message}");
                 throw ex;
             }
         }
@@ -54,6 +54,9 @@ namespace GIRUBotV3.Modules
                 " nig ",
                 "nigger",
                 "nıgger",
+                "n1gger",
+                "nıgg3r",
+                "nıgg3r",
                 "faggot",
                 "nigga",
                 "fag",
