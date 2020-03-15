@@ -7,6 +7,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace GIRUBotV3.Modules
 {
@@ -88,7 +89,7 @@ namespace GIRUBotV3.Modules
             catch (Exception ex)
             {
 
-                await context.Message.Channel.SendMessageAsync($"Error in {System.Reflection.MethodBase.GetCurrentMethod()}: {ex.Message}");
+                await context.Message.Channel.SendMessageAsync($"Error in {GetAsyncMethodName()}: {ex.Message}");
             }
 
         }
@@ -105,7 +106,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await context.Message.Channel.SendMessageAsync($"Error in {System.Reflection.MethodBase.GetCurrentMethod()}: {ex.Message}");
+                await context.Message.Channel.SendMessageAsync($"Error in {GetAsyncMethodName()}: {ex.Message}");
             }
         }
 
@@ -117,7 +118,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await context.Message.Channel.SendMessageAsync($"Error in {System.Reflection.MethodBase.GetCurrentMethod()}: {ex.Message}");
+                await context.Message.Channel.SendMessageAsync($"Error in {GetAsyncMethodName()}: {ex.Message}");
             }
 
         }
@@ -130,7 +131,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await context.Message.Channel.SendMessageAsync($"Error in {System.Reflection.MethodBase.GetCurrentMethod()}: {ex.Message}");
+                await context.Message.Channel.SendMessageAsync($"Error in {GetAsyncMethodName()}: {ex.Message}");
             }
         }
 
@@ -146,7 +147,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await context.Message.Channel.SendMessageAsync($"Error in {System.Reflection.MethodBase.GetCurrentMethod()}: {ex.Message}");
+                await context.Message.Channel.SendMessageAsync($"Error in {GetAsyncMethodName()}: {ex.Message}");
             }
         }
 
@@ -165,7 +166,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await context.Message.Channel.SendMessageAsync($"Error in {System.Reflection.MethodBase.GetCurrentMethod()}: {ex.Message}");
+                await context.Message.Channel.SendMessageAsync($"Error in {GetAsyncMethodName()}: {ex.Message}");
             }
 
         }
@@ -181,12 +182,14 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await context.Message.Channel.SendMessageAsync($"Error in {System.Reflection.MethodBase.GetCurrentMethod()}: {ex.Message}");
+                await context.Message.Channel.SendMessageAsync($"Error in {GetAsyncMethodName()}: {ex.Message}");
             }
 
 
         }
 
+
+        static string GetAsyncMethodName([CallerMemberName]string name = "unknown") => name;
     }
 }
 
