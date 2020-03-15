@@ -30,70 +30,159 @@ namespace GIRUBotV3.Modules
         {
             var message = arg as SocketUserMessage;
             var context = new SocketCommandContext(_client, message);
-            if (Nountest.CheckForNountest(message.Content.Split(" ")[0]))
-            {
-                await _nounTest.PostNounTest(context);
-            }
-            if (message.Content.Contains("😃"))
-            {
-                var r = new Random();
-                if (r.Next(1, 15) <= 2)
-                {
-                    await context.Channel.SendMessageAsync("😃");
-                }
-            }
 
-            if (await WordFilter.CheckForNaughtyWords(message.Content)) await WordFilter.PunishNaughtyWord(context);
+            await NountestCheck(context);
 
-            
+            await AdditionalChatSmileyCheck(context);
+
+            await NaughtyWordFilter(context);
+
 
 
             if (message.Author.IsBot || Helpers.IsModeratorOrOwner(message.Author as SocketGuildUser)) return;
 
-            if (Helpers.OnOffExecution(context.Message) == true) await context.Message.DeleteAsync();
+            await TurnedOffMessagesCheck(context);
 
+            await MassMentionCheck(context);
 
-            if (message.MentionedUsers.Count > 8) await _massMentionControl.MassMentionMute(context, message);
+            await InviteLinkCheck(context);
 
-            if (regexInviteLinkDiscord.Match(message.Content).Success & !Helpers.IsModeratorOrOwner(message.Author as SocketGuildUser))
-            {
-                await _inviteLinkPreventation.DeleteInviteLinkWarn(context);
-            }
-
-            if(message.Author.Id == 215903917630947328)
-            {
-                var rnd = new Random();
-
-                if (rnd.Next(1, 10) <= 2)
-                {
-                    await context.Channel.SendMessageAsync($"kuffsone is a weirdo stalker btw ({message.Author.Mention})");
-                }            
-            }
+            await KuffsoneWeirdoCheck(context);
         }
 
         public async Task UpdatedMessageContainsAsync(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
         {
             var messageAfter = after as SocketUserMessage;
             var context = new SocketCommandContext(_client, messageAfter);
-            if (messageAfter.Content.Contains("😃"))
-            {
-                var r = new Random();
-                if (r.Next(1, 15) <= 2)
-                {
-                    await context.Channel.SendMessageAsync("😃");
-                }
-            }
 
-            if (await WordFilter.CheckForNaughtyWords(after.Content)) await WordFilter.PunishNaughtyWord(context);
+
+            await AdditionalChatSmileyCheck(context);
+
+            await NaughtyWordFilter(context);
+
 
             if (messageAfter.Author.IsBot || Helpers.IsModeratorOrOwner(context.User as SocketGuildUser)) return;
-            if (regexInviteLinkDiscord.Match(messageAfter.Content).Success)
+
+            await InviteLinkCheck(context);
+
+            await MassMentionCheck(context);
+        }
+
+
+
+
+        private async Task KuffsoneWeirdoCheck(SocketCommandContext context)
+        {
+            try
             {
-                await _inviteLinkPreventation.DeleteInviteLinkWarn(context);
+                if (context.Message.Author.Id == 215903917630947328)
+                {
+                    var rnd = new Random();
+
+                    if (rnd.Next(1, 25) <= 2)
+                    {
+                        await context.Channel.SendMessageAsync($"kuffsone is a weirdo stalker btw ({context.Message.Author.Mention})");
+                    }
+                }
             }
-            if (messageAfter.MentionedUsers.Count > 8) await _massMentionControl.MassMentionMute(context, messageAfter);
+            catch (Exception ex)
+            {
+
+                await context.Message.Channel.SendMessageAsync($"Error in {System.Reflection.MethodBase.GetCurrentMethod()}: {ex.Message}");
+            }
+
+        }
+
+        private async Task InviteLinkCheck(SocketCommandContext context)
+        {
+
+            try
+            {
+                if (regexInviteLinkDiscord.Match(context.Message.Content).Success & !Helpers.IsModeratorOrOwner(context.Message.Author as SocketGuildUser))
+                {
+                    await _inviteLinkPreventation.DeleteInviteLinkWarn(context);
+                }
+            }
+            catch (Exception ex)
+            {
+                await context.Message.Channel.SendMessageAsync($"Error in {System.Reflection.MethodBase.GetCurrentMethod()}: {ex.Message}");
+            }
+        }
+
+        private async Task MassMentionCheck(SocketCommandContext context)
+        {
+            try
+            {
+                if (context.Message.MentionedUsers.Count > 8) await _massMentionControl.MassMentionMute(context, context.Message);
+            }
+            catch (Exception ex)
+            {
+                await context.Message.Channel.SendMessageAsync($"Error in {System.Reflection.MethodBase.GetCurrentMethod()}: {ex.Message}");
+            }
+
+        }
+
+        private async Task TurnedOffMessagesCheck(SocketCommandContext context)
+        {
+            try
+            {
+                if (Helpers.OnOffExecution(context.Message) == true) await context.Message.DeleteAsync();
+            }
+            catch (Exception ex)
+            {
+                await context.Message.Channel.SendMessageAsync($"Error in {System.Reflection.MethodBase.GetCurrentMethod()}: {ex.Message}");
+            }
+        }
+
+        private async Task NaughtyWordFilter(SocketCommandContext context)
+        {
+            try
+            {
+                if (await WordFilter.CheckForNaughtyWords(Context.Message.Content)) await WordFilter.PunishNaughtyWord(context);
+            }
+            catch (Exception ex)
+            {
+                await context.Message.Channel.SendMessageAsync($"Error in {System.Reflection.MethodBase.GetCurrentMethod()}: {ex.Message}");
+            }
+        }
+
+        private async Task AdditionalChatSmileyCheck(SocketCommandContext context)
+        {
+            try
+            {
+                if (context.Message.Content.Contains("😃"))
+                {
+                    var r = new Random();
+                    if (r.Next(1, 15) <= 2)
+                    {
+                        await context.Channel.SendMessageAsync("😃");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await context.Message.Channel.SendMessageAsync($"Error in {System.Reflection.MethodBase.GetCurrentMethod()}: {ex.Message}");
+            }
+
+        }
+
+        private async Task NountestCheck(SocketCommandContext context)
+        {
+            try
+            {
+                if (Nountest.CheckForNountest(context.Message.Content.Split(" ")[0]))
+                {
+                    await _nounTest.PostNounTest(context);
+                }
+            }
+            catch (Exception ex)
+            {
+                await context.Message.Channel.SendMessageAsync($"Error in {System.Reflection.MethodBase.GetCurrentMethod()}: {ex.Message}");
+            }
 
 
         }
+
     }
 }
+
