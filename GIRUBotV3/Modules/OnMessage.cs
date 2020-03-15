@@ -138,7 +138,11 @@ namespace GIRUBotV3.Modules
         {
             try
             {
-                if (await WordFilter.CheckForNaughtyWords(Context.Message.Content)) await WordFilter.PunishNaughtyWord(context);
+                if (context.Message.Content != null)
+                {
+                    if (await WordFilter.CheckForNaughtyWords(context.Message.Content)) await WordFilter.PunishNaughtyWord(context);
+                }
+                
             }
             catch (Exception ex)
             {

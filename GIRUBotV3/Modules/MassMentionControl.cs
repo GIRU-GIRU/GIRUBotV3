@@ -13,14 +13,22 @@ namespace GIRUBotV3.Modules
     {
         public async Task MassMentionMute(SocketCommandContext context, SocketUserMessage message)
         {
-            IGuildUser targetUser = context.Guild.GetUser(message.Author.Id) as IGuildUser;
-            IRole moderators = Helpers.ReturnRole(context.Guild, UtilityRoles.Moderator);
-            var mutedRole = Helpers.ReturnRole(context.Guild, UtilityRoles.Muted);
-            ITextChannel adminlogchannel = context.Guild.GetChannel(Config.AuditChannel) as ITextChannel;
+            try
+            {
+                IGuildUser targetUser = context.Guild.GetUser(message.Author.Id) as IGuildUser;
+                IRole moderators = Helpers.ReturnRole(context.Guild, UtilityRoles.Moderator);
+                var mutedRole = Helpers.ReturnRole(context.Guild, "SuperMuted");
+                ITextChannel adminlogchannel = context.Guild.GetChannel(Config.AuditChannel) as ITextChannel;
 
-            await targetUser.AddRoleAsync(mutedRole);
-            await context.Channel.SendMessageAsync($"stay small {message.Author.Mention}, no spam in my server you little shitter");
-            await adminlogchannel.SendMessageAsync($"{targetUser.Username}#{targetUser.DiscriminatorValue} has been auto muted for mass mention, please investigate {moderators.Mention}");
+                await targetUser.AddRoleAsync(mutedRole);
+                await context.Channel.SendMessageAsync($"stay small {message.Author.Mention}, no spam in my server you little shitter");
+                await adminlogchannel.SendMessageAsync($"{targetUser.Username}#{targetUser.DiscriminatorValue} has been auto muted for mass mention, please investigate {moderators.Mention}");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
         }  
     }
 }
