@@ -169,7 +169,6 @@ namespace GIRUBotV3.Modules
 
                 await Context.Channel.SendMessageAsync($"error occured {ex.Message}");
             }
-
         }
     }
 }

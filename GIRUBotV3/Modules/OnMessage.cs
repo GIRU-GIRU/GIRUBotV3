@@ -45,6 +45,8 @@ namespace GIRUBotV3.Modules
 
             if (await WordFilter.CheckForNaughtyWords(message.Content)) await WordFilter.PunishNaughtyWord(context);
 
+            
+
 
             if (message.Author.IsBot || Helpers.IsModeratorOrOwner(message.Author as SocketGuildUser)) return;
 
@@ -56,6 +58,16 @@ namespace GIRUBotV3.Modules
             if (regexInviteLinkDiscord.Match(message.Content).Success & !Helpers.IsModeratorOrOwner(message.Author as SocketGuildUser))
             {
                 await _inviteLinkPreventation.DeleteInviteLinkWarn(context);
+            }
+
+            if(message.Author.Id == 215903917630947328)
+            {
+                var rnd = new Random();
+
+                if (rnd.Next(1, 10) <= 2)
+                {
+                    await context.Channel.SendMessageAsync($"kuffsone is a weirdo stalker btw ({message.Author.Mention})");
+                }            
             }
         }
 
