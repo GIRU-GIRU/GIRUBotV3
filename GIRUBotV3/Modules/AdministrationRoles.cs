@@ -325,7 +325,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await Context.Channel.SendMessageAsync($"smth went wrong {ex.Message}");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
         [Command("storeroles")]
@@ -342,7 +342,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await Context.Channel.SendMessageAsync($"smth went wrong {ex.Message}");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
 
@@ -359,7 +359,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await Context.Channel.SendMessageAsync($"smth went wrong {ex.Message}");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
 

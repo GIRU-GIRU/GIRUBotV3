@@ -111,7 +111,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await Context.Channel.SendMessageAsync(ex.Message);
+                await ExceptionHandler.HandleExceptionPublically(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
 
@@ -188,9 +188,9 @@ namespace GIRUBotV3.Modules
                 embedReplaceRemovedRole.WithColor(new Color(0, 255, 0));
                 await Context.Channel.SendMessageAsync("", false, embedReplaceRemovedRole.Build());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Context.Channel.SendMessageAsync("no");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
 
         }
@@ -253,7 +253,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await Context.Channel.SendMessageAsync($"no, {ex.Message}");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
 
         }

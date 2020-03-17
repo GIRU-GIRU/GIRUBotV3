@@ -57,7 +57,7 @@ namespace GIRUBotV3
                      .BuildServiceProvider();
 
                 _client.MessageUpdated += _onMessage.UpdatedMessageContainsAsync;
-                _client.Ready += BotInitialization.StartUpMessages;
+                _client.Ready += BotInitialization.GIRUBotInitializationTasks;
 
                 _commands.CommandExecuted += _onExecutedCommand.AdminLog;
                 _client.Log += Log;

@@ -19,17 +19,40 @@ namespace GIRUBotV3.Modules
             _client = client;
         }
 
-        public static async Task StartUpMessages()
+        public static async Task GIRUBotInitializationTasks()
         {
-            var chnl = _client.GetChannel(Config.MeleeSlasherMainChannel) as ITextChannel;
-            await chnl.SendMessageAsync("GIRUBotV3 starting...");
-            Task.Delay(500).Wait();
+            try
+            {
+                ITextChannel chnl = null;
 
-            await chnl.SendMessageAsync("Online");
+                while (chnl == null)
+                {
+                    chnl = _client.GetChannel(Config.MeleeSlasherMainChannel) as ITextChannel;
+                    if (chnl != null)
+                    {
+                        await chnl.SendMessageAsync("GIRUBotV3 starting...");
+
+
+                        var exceptionHandlerReady = ExceptionHandler.InitContext(_client);
+                        if (exceptionHandlerReady)
+                        {
+                            await chnl.SendMessageAsync("Reporting systems online");
+                        }
+
+                        await chnl.SendMessageAsync("Online");
+                    }
+
+                    Task.Delay(1000).Wait();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to initialize GIRUBot {ex.Message}");
+                throw ex;
+            }
 
         }
-
-
 
     }
 

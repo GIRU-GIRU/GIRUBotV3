@@ -44,7 +44,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await Context.Channel.SendMessageAsync("unable to kick user ! " + ex.Message);
+                await ExceptionHandler.HandleExceptionPublically(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
 
             try
@@ -123,7 +123,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await Context.Channel.SendMessageAsync("unable to bancleanse user ! " + ex.Message);
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
 
             try
@@ -258,7 +258,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await Context.Channel.SendMessageAsync($"uhh.. {ex.Message}");
+                await ExceptionHandler.HandleExceptionPublically(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
                 throw;
             }
         }
@@ -333,6 +333,9 @@ namespace GIRUBotV3.Modules
             }
         }
 
+
+
+        
     }
 }
 

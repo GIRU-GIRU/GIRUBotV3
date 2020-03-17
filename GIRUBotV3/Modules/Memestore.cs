@@ -298,7 +298,7 @@ namespace GIRUBotV3.Modules
                     await Context.Channel.SendMessageAsync(outputMessage);
                     return;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     await Context.Channel.SendMessageAsync($"u not got any memes that u own lmfao");
                     return;
@@ -333,7 +333,7 @@ namespace GIRUBotV3.Modules
                 }
                 catch (Exception ex)
                 {
-                    await Context.Channel.SendMessageAsync("problem... " + ex.Message);
+                    await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
                 }
             }
         }
@@ -350,9 +350,9 @@ namespace GIRUBotV3.Modules
                     await Context.Channel.SendMessageAsync($"there are currently {memestoreCount} active memes in the database.");
                     return;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    await Context.Channel.SendMessageAsync($"waet, somethin broken");
+                    await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
                     return;
                 }
             }

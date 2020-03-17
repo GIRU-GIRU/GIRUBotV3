@@ -48,7 +48,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await Context.Channel.SendMessageAsync($"Clan kicking user failed, {ex.Message}");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
 
@@ -81,7 +81,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await Context.Channel.SendMessageAsync($"Clan leader assign failed, {ex.Message}");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
 
@@ -110,9 +110,11 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await Context.Channel.SendMessageAsync($"Error recruiting member, {ex.Message}");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
+
+
 
         [Command("clancreate")]
         private async Task CreateNewClan([Remainder]string clanName)
@@ -142,7 +144,7 @@ namespace GIRUBotV3.Modules
             catch (Exception ex)
             {
 
-                await Context.Channel.SendMessageAsync($"Error creating new clan, {ex.Message} ");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
 
@@ -166,8 +168,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-
-                await Context.Channel.SendMessageAsync($"error occured {ex.Message}");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
     }

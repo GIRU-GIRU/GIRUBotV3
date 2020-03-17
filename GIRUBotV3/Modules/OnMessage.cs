@@ -89,7 +89,7 @@ namespace GIRUBotV3.Modules
             catch (Exception ex)
             {
 
-                await context.Message.Channel.SendMessageAsync($"Error in {GetAsyncMethodName()}: {ex.Message}");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
 
         }
@@ -106,7 +106,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await context.Message.Channel.SendMessageAsync($"Error in {GetAsyncMethodName()}: {ex.Message}");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
 
@@ -118,7 +118,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await context.Message.Channel.SendMessageAsync($"Error in {GetAsyncMethodName()}: {ex.Message}");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
 
         }
@@ -131,7 +131,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await context.Message.Channel.SendMessageAsync($"Error in {GetAsyncMethodName()}: {ex.Message}");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
 
@@ -147,7 +147,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await context.Message.Channel.SendMessageAsync($"Error in {GetAsyncMethodName()}: {ex.Message}");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
 
@@ -166,7 +166,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await context.Message.Channel.SendMessageAsync($"Error in {GetAsyncMethodName()}: {ex.Message}");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
 
         }
@@ -186,14 +186,11 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await context.Message.Channel.SendMessageAsync($"Error in {GetAsyncMethodName()}: {ex.Message}");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
-
-
         }
 
 
-        static string GetAsyncMethodName([CallerMemberName]string name = "unknown") => name;
     }
 }
 

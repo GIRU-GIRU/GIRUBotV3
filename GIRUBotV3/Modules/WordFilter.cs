@@ -42,10 +42,14 @@ namespace GIRUBotV3.Modules
             {
                 await context.Message.DeleteAsync();
             }
+            catch (HttpException ex)
+            {
+                //do nothing
+                           
+            }
             catch (Exception ex)
             {
-                //await context.Channel.SendMessageAsync($"unable to delete message.. {ex.Message}");
-                throw ex;
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
 
