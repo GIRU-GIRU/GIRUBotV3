@@ -48,7 +48,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
+                await ExceptionHandler.HandleExceptionPublically(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
 
@@ -61,7 +61,17 @@ namespace GIRUBotV3.Modules
 
                 ClanStorageMethods clanManager = new ClanStorageMethods();
 
-                if (!await clanManager.CheckIfExistingClanLeader(Context.Message.Author.Id))
+                if (!await clanManager.CheckIfExistingClanLeader(user.Id))
+                {
+                    string clanName = await clanManager.GetClanName(user.Id);
+
+                    await Context.Channel.SendMessageAsync($"{user.Mention} is already the clan leader of {clanName}");
+                    return;
+                }
+
+
+
+                if (!await clanManager.CheckIfExistingClanmember(user.Id))
                 {
                     if (await clanManager.AssignNewClanleader(inputClanName, user.Username, user.Id))
                     {
@@ -70,18 +80,13 @@ namespace GIRUBotV3.Modules
                     else
                     {
                         await Context.Channel.SendMessageAsync($"{user.Mention} was unable to be made leader of {inputClanName}");
-                    }                
+                    }
                 }
-                else
-                {
-                    string clanName = await clanManager.GetClanName(user.Id);
 
-                    await Context.Channel.SendMessageAsync($"{user.Mention} is already the clan leader of {clanName}");
-                }
             }
             catch (Exception ex)
             {
-                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
+                await ExceptionHandler.HandleExceptionPublically(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
 
@@ -110,7 +115,7 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
+                await ExceptionHandler.HandleExceptionPublically(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
 
@@ -159,12 +164,12 @@ namespace GIRUBotV3.Modules
 
                 if (await clanManager.DeleteClan(clanName))
                 {
-                   await Context.Channel.SendMessageAsync($"{clanName} was successfully deleted");
+                    await Context.Channel.SendMessageAsync($"{clanName} was successfully deleted");
                 }
                 else
                 {
                     await Context.Channel.SendMessageAsync($"{clanName} was unable be deleted");
-                }              
+                }
             }
             catch (Exception ex)
             {

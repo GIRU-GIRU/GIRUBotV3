@@ -39,7 +39,7 @@ namespace GIRUBotV3.Modules
                             await chnl.SendMessageAsync("Reporting systems online");
                         }
 
-                        await chnl.SendMessageAsync("Online");
+                        await chnl.SendMessageAsync("Ready");
                     }
 
                     Task.Delay(1000).Wait();

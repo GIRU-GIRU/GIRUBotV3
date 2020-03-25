@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GIRUBotV3.Modules;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
@@ -42,9 +43,10 @@ namespace GIRUBotV3.Data
     {
         public async Task<bool> CreateNewClan(Clan clan)
         {
+            bool wasSuccess = false;
+
             try
-            {
-                bool wasSuccess = false;
+            {     
                 using (var db = new ClanStorage())
                 {
                     if (await db.Clan.AnyAsync(x => x.ClanName.ToLower() == clan.ClanName.ToLower()))
@@ -56,22 +58,23 @@ namespace GIRUBotV3.Data
                         await db.Clan.AddAsync(clan);
                         await db.SaveChangesAsync();
                         wasSuccess = true;
-                    }
-
-                    return wasSuccess;
+                    }           
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
+
+            return wasSuccess;
         }
 
         public async Task<bool> AssignNewClanleader(string clanName, string leaderName, ulong leaderID)
         {
+            bool wasSuccess = false;
+
             try
-            {
-                bool wasSuccess = false;
+            {          
                 using (var db = new ClanStorage())
                 {
                     var clan = await db.Clan.FirstOrDefaultAsync(x => x.ClanName.ToLower() == clanName.ToLower());
@@ -83,28 +86,23 @@ namespace GIRUBotV3.Data
                         await db.SaveChangesAsync();
                         wasSuccess = true;
 
-                    }
-                    else
-                    {
-                        wasSuccess = false;
-                    }
-
-                    return wasSuccess;
+                    }              
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
 
+            return wasSuccess;
         }
 
         public async Task<bool> AssignNewClanMember(ulong clanLeaderID, string userName, ulong userID)
         {
-            try
-            {
+            bool wasSuccess = false;
 
-                bool wasSuccess = false;
+            try
+            {        
                 using (var db = new ClanStorage())
                 {
 
@@ -123,24 +121,23 @@ namespace GIRUBotV3.Data
                         await db.SaveChangesAsync();
 
                         wasSuccess = true;
-                    }
-
-                    return wasSuccess;
+                    }              
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
 
+            return wasSuccess;
         }
 
         public async Task<bool> KickClanMember(ulong clanLeaderID, ulong userID)
         {
+            bool wasSuccess = false;
+
             try
             {
-
-                bool wasSuccess = false;
                 using (var db = new ClanStorage())
                 {
 
@@ -156,22 +153,23 @@ namespace GIRUBotV3.Data
                             await db.SaveChangesAsync();
                             wasSuccess = true;
                         }
-                    }
-
-                    return wasSuccess;
+                    }                   
                 }
             }
             catch (Exception ex)
-            {
-                throw ex;
+            {               
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
+
+            return wasSuccess;
         }
 
         public async Task<string> GetClanName(ulong clanLeaderID)
         {
+            string clanName = string.Empty;
+
             try
-            {
-                string clanName = string.Empty;
+            {               
                 using (var db = new ClanStorage())
                 {
 
@@ -182,59 +180,59 @@ namespace GIRUBotV3.Data
                         clanName = clan.ClanName;
                     }
 
-                }
-
-                return clanName;
+                }           
             }
             catch (Exception ex)
             {
-                throw ex;
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);           
             }
 
+            return clanName;
         }
 
         public async Task<bool> CheckIfExistingClanmember(ulong userID)
         {
+            bool wasSuccess = false;
+
             try
             {
-
-                bool wasSuccess = false;
                 using (var db = new ClanStorage())
                 {
-
                     wasSuccess = await db.ClanUser.AnyAsync(x => x.UserID == userID);
-
-                    return wasSuccess;
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);           
             }
+
+            return wasSuccess;
         }
         public async Task<bool> CheckIfExistingClanLeader(ulong clanleaderID)
         {
+            bool userAlreadyClanLeader = false;
+
             try
             {
-                bool userAlreadyClanLeader = false;
                 using (var db = new ClanStorage())
                 {
                     userAlreadyClanLeader = await db.Clan.AnyAsync(x => x.LeaderID == clanleaderID);
                 }
-
-                return userAlreadyClanLeader;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
+
+            return userAlreadyClanLeader;
         }
 
         public async Task<bool> DeleteClan(string clanName)
         {
+            bool wasSuccess = false;
+
             try
             {
-                bool wasSuccess = false;
                 using (var db = new ClanStorage())
                 {
                     var clan = await db.Clan.FirstOrDefaultAsync(x => x.ClanName.ToLower() == clanName);
@@ -246,23 +244,24 @@ namespace GIRUBotV3.Data
                         wasSuccess = true;
                     }
 
-                    return wasSuccess;
+
 
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
+
+            return wasSuccess;
         }
 
         public async Task<bool> CheckIfSameClan(ulong clanleaderID, ulong playerID)
         {
+            bool clanIsSame = false;
+
             try
             {
-                bool clanIsSame = false;
-
                 using (var db = new ClanStorage())
                 {
                     var clanLeaderClan = await db.Clan.FirstOrDefaultAsync(x => x.LeaderID == clanleaderID);
@@ -276,16 +275,14 @@ namespace GIRUBotV3.Data
                             clanIsSame = true;
                         }
                     }
-
                 }
-
-                return clanIsSame;
-
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
+
+            return clanIsSame;
         }
     }
 

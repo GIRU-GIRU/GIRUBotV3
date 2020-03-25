@@ -88,10 +88,8 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-
                 await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
-
         }
 
         private async Task InviteLinkCheck(SocketCommandContext context)
