@@ -273,7 +273,11 @@ namespace GIRUBotV3.Modules
                 try
                 {
                     var meme = db.Memestore.Where(x => x.MemeId == id).FirstOrDefault();
-                    await Context.Channel.SendMessageAsync($"{meme.Title} was created by {meme.Author} on {meme.Date} at {meme.Time}. MemeID = {meme.MemeId}");
+
+                    if (meme != null)
+                    {
+                        await Context.Channel.SendMessageAsync($"{meme.Title} was created by {meme.Author} on {meme.Date} at {meme.Time}. MemeID = {meme.MemeId}");
+                    }
 
                 }
                 catch (Exception ex)
@@ -288,38 +292,48 @@ namespace GIRUBotV3.Modules
         [Alias("changememe")]
         private async Task EditMeme([Remainder]string input)
         {
-            var inputAsArray = input.Split(" ");
-            var title = inputAsArray[0].ToString();
-            var contentOfMessage = String.Join(" ", inputAsArray.Skip(1));
-            var insult = await Insults.GetInsult();
-            if (contentOfMessage.Length < 2)
+            try
             {
-                await Context.Channel.SendMessageAsync($"wat r u tryin to do");
-                return;
-            }
-            if (title.Where(x => Char.IsDigit(x)).Any())
-            {
-                await Context.Channel.SendMessageAsync($"the meme title can't contain numbers or weird shit, sry bitch");
-                return;
-            }
-
-            using (var db = new Memestorage())
-            {
-                if (db.Memestore.Where(x => x.Title.ToLower() == title.ToLower()).Any())
+                var inputAsArray = input.Split(" ");
+                var title = inputAsArray[0].ToString();
+                var contentOfMessage = String.Join(" ", inputAsArray.Skip(1));
+                var insult = await Insults.GetInsult();
+                if (contentOfMessage.Length < 2)
                 {
-                    var meme = db.Memestore.Where(x => x.Title.ToLower() == title.ToLower()).FirstOrDefault();
-                    //is it a valid user ? (mod/original author)
-                    if (Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser) || meme.AuthorID == Context.Message.Author.Id)
-                    {
-                        meme.Content = contentOfMessage;
-                        await db.SaveChangesAsync();
-
-                        await Context.Channel.SendMessageAsync($"{title} was successfully updated");
-                        return;
-                    }
+                    await Context.Channel.SendMessageAsync($"wat r u tryin to do");
+                    return;
                 }
-                await Context.Channel.SendMessageAsync($"nah ur not allowed nice try tho lmfao {insult}");
+                if (title.Where(x => Char.IsDigit(x)).Any())
+                {
+                    await Context.Channel.SendMessageAsync($"the meme title can't contain numbers or weird shit, sry bitch");
+                    return;
+                }
+
+                using (var db = new Memestorage())
+                {
+                    if (db.Memestore.Where(x => x.Title.ToLower() == title.ToLower()).Any())
+                    {
+                        var meme = db.Memestore.Where(x => x.Title.ToLower() == title.ToLower()).FirstOrDefault();
+
+                        //is it a valid user ? (mod/original author)
+                        if (Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser) || meme.AuthorID == Context.Message.Author.Id)
+                        {
+                            meme.Content = contentOfMessage;
+                            await db.SaveChangesAsync();
+
+                            await Context.Channel.SendMessageAsync($"{title} was successfully updated");
+                            return;
+                        }
+                    }
+
+                    await Context.Channel.SendMessageAsync($"nah ur not allowed nice try tho lmfao {insult}");
+                }
             }
+            catch (Exception ex)
+            {
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
+            }
+
         }
 
         [MemestoreToggle]
@@ -406,9 +420,5 @@ namespace GIRUBotV3.Modules
                 }
             }
         }
-
-
-
-
     }
 }
