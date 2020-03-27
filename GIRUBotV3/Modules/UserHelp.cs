@@ -17,6 +17,6 @@ namespace GIRUBotV3.Modules
         public async Task HelpAsync()
         {
             await Context.Channel.SendMessageAsync("dont be so fucking WEAK");
-        }   
+        }
     }
 }

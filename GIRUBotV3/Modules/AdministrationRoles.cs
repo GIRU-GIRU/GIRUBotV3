@@ -355,6 +355,15 @@ namespace GIRUBotV3.Modules
             {
                 var restoreRoles = new StoreRoleMethods();
                 await restoreRoles.RestoreUserRoles(Context, target);
+                var noobRole = Helpers.ReturnRole(Context.Guild, "noob");
+                if (noobRole != null)
+                {
+                    if (target.Roles.Contains(noobRole))
+                    {
+                        await target.RemoveRoleAsync(noobRole);
+                    }
+                }
+
                 await Context.Channel.SendMessageAsync($"FINE..  {target.Username} successfully had their roles restored");
             }
             catch (Exception ex)

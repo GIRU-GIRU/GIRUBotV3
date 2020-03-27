@@ -64,6 +64,9 @@ namespace GIRUBotV3.Models
             ["Snake"] = "🐍",
             ["Gay"] = "Homosexual",
             ["Atlas"] = "Atlas 🌏",
+            ["Oasis"] = "🌴 Last Oasis",
+            ["Last"] = "🌴 Last Oasis",
+            ["LastOasis"] = "🌴 Last Oasis",
             ["Organizer"] = "Organizer"
         };
 

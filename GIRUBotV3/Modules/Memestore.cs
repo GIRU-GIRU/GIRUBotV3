@@ -129,10 +129,9 @@ namespace GIRUBotV3.Modules
         [Alias("meme")]
         private async Task CallMeme(string input)
         {
-            var insult = await Insults.GetInsult();
-            using (var db = new Memestorage())
+            try
             {
-                try
+                using (var db = new Memestorage())
                 {
                     var meme = db.Memestore.Where(x => x.Title.ToLower() == input.ToLower()).FirstOrDefault();
                     if (meme != null)
@@ -157,12 +156,13 @@ namespace GIRUBotV3.Modules
                         await db.SaveChangesAsync();
                     }
                 }
-                catch (Exception ex)
-                {
-                    await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
-                }
+            }
+            catch (Exception ex)
+            {
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
+
 
         [MemestoreToggle]
         [Command("m")]
@@ -420,5 +420,7 @@ namespace GIRUBotV3.Modules
                 }
             }
         }
+
+
     }
 }
