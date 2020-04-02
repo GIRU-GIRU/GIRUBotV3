@@ -11,10 +11,17 @@ namespace GIRUBotV3.Modules
     {
         public async Task DeleteInviteLinkWarn(SocketCommandContext context)
         {
-            var insult = await Insults.GetInsult();
-       
-            await context.Message.DeleteAsync();
-            await context.Channel.SendMessageAsync($"{context.User.Mention}, don't post invite links {insult}");
+            try
+            {
+                var insult = await Insults.GetInsult();
+
+                await context.Message.DeleteAsync();
+                await context.Channel.SendMessageAsync($"{context.User.Mention}, don't post invite links {insult}");
+            }
+            catch (Exception ex)
+            {
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
+            }
         }
     }
 }

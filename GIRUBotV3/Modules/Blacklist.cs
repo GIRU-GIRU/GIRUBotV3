@@ -1,5 +1,6 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
+using GIRUBotV3.AdministrativeAttributes;
 using GIRUBotV3.Models;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace GIRUBotV3.Modules
     public class Blacklist : ModuleBase<SocketCommandContext>
     {
         [Command("blacklist")]
+        [IsModerator]
         public async Task GetBlacklistedUsers()
         {
             var BlacklistedUserList = String.Join(", ", Models.BlacklistUser.BlackListedUser);
@@ -19,9 +21,9 @@ namespace GIRUBotV3.Modules
         }
 
         [Command("blacklist")]
+        [IsModerator]
         public async Task BlacklistUser(SocketUser user)
         {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
             if (user.Id == Config.OwnerID)
             {
                 await Context.Channel.SendMessageAsync("i wont blacklist myself retard");

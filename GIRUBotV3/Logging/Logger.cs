@@ -18,6 +18,11 @@ namespace GIRUBotV3.Logging
                     {
                         await context.Channel.SendMessageAsync(await ErrorReturnStrings.GetNoPerm());
                     }
+                    if (result.ErrorReason != "Unauthorised")
+                    {
+                        // deprecated due to spam
+                        break;
+                    }
                     break;
 
                 //case CommandError.ParseFailed:

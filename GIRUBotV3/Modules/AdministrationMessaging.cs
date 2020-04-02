@@ -12,6 +12,7 @@ using Discord.Net;
 using System.Linq;
 using GIRUBotV3.Models;
 using GIRUBotV3.Data;
+using GIRUBotV3.AdministrativeAttributes;
 
 namespace GIRUBotV3.Modules
 {
@@ -19,25 +20,26 @@ namespace GIRUBotV3.Modules
     {
         [Command("bancleanse")]
         [RequireBotPermission(GuildPermission.KickMembers)]
+        [IsModerator]
         private async Task BanUserAndClean(SocketGuildUser user)
         {
-
-
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
-            await Context.Channel.SendMessageAsync("write more shit for the log retard");
+            string insult = await Personality.Insults.GetInsult();
+            await Context.Channel.SendMessageAsync($"write more shit for the log {insult}");
         }
 
         [Command("kick")]
         [RequireBotPermission(GuildPermission.KickMembers)]
+        [IsModerator]
         private async Task KickUser(SocketGuildUser user)
         {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
-            await Context.Channel.SendMessageAsync("write more shit for the log retard");
+            string insult = await Personality.Insults.GetInsult();
+            await Context.Channel.SendMessageAsync($"write more shit for the log {insult}");
         }
+
         [Command("searchban")]
+        [IsModerator]
         private async Task searchBan([Remainder]string input = null)
         {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
             if (input == null) return;
 
             var bans = await Context.Guild.GetBansAsync();
@@ -68,31 +70,31 @@ namespace GIRUBotV3.Modules
 
         [Command("ban")]
         [RequireBotPermission(GuildPermission.KickMembers)]
+        [IsModerator]
         private async Task BanUser(SocketGuildUser user)
         {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
-            await Context.Channel.SendMessageAsync("write more shit for the retard");
+            string insult = await Personality.Insults.GetInsult();
+            await Context.Channel.SendMessageAsync($"write more shit for the log {insult}");
         }
+
+
         [Command("warn")]
+        [IsModerator]
         private async Task WarnUserCustom(IGuildUser user, [Remainder]string warningMessage)
         {
-            if (Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)
-                || Helpers.IsSonya(Context.Message.Author as SocketGuildUser))
+            try
             {
-                try
-                {
-                    await user.SendMessageAsync("You have been warned in Melee Slasher for: " + warningMessage);
-                    await Context.Channel.SendMessageAsync($"⚠      *** {user.Username} has received a warning.      ⚠***");
-                }
-                catch (HttpException ex)
-                {
-                    await Context.Channel.SendMessageAsync($"{user.Mention}, {warningMessage}");
-                }
+                await user.SendMessageAsync("You have been warned in Melee Slasher for: " + warningMessage);
+                await Context.Channel.SendMessageAsync($"⚠      *** {user.Username} has received a warning.      ⚠***");
             }
-            return;
+            catch (HttpException ex)
+            {
+                await Context.Channel.SendMessageAsync($"{user.Mention}, {warningMessage}");
+            }
         }
 
         [Command("say")]
+        [IsModerator]
         private async Task SayCustomMessage([Remainder]string input)
         {
             try
@@ -117,30 +119,27 @@ namespace GIRUBotV3.Modules
 
 
         [Command("warn")]
+        [IsModerator]
         private async Task WarnUser(IGuildUser user)
         {
-            if (Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)
-                || Helpers.IsSonya(Context.Message.Author as SocketGuildUser))
+            string warningMessage = await Insults.GetWarning();
+            try
             {
-                string warningMessage = await Insults.GetWarning();
-                try
-                {
-                    await user.SendMessageAsync(warningMessage);
-                    await Context.Channel.SendMessageAsync($"⚠      *** {user.Username} has received a warning.      ⚠***");
-                }
-                catch (HttpException)
-                {
-                    await Context.Channel.SendMessageAsync(user.Mention + ", " + warningMessage);
-                }
+                await user.SendMessageAsync(warningMessage);
+                await Context.Channel.SendMessageAsync($"⚠      *** {user.Username} has received a warning.      ⚠***");
             }
-            return;
+            catch (HttpException)
+            {
+                await Context.Channel.SendMessageAsync(user.Mention + ", " + warningMessage);
+            }
         }
+
+
         [Command("bancleanse")]
         [RequireBotPermission(GuildPermission.BanMembers)]
+        [IsModerator]
         private async Task BanUserAndCleanse()
         {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
-
             var insult = await Insults.GetInsult();
             var embed = new EmbedBuilder();
             embed.WithTitle($"Bans & Cleanses a {insult} from this sacred place");
@@ -153,9 +152,10 @@ namespace GIRUBotV3.Modules
         }
         [Command("ban")]
         [RequireBotPermission(GuildPermission.BanMembers)]
+        [IsModerator]
         private async Task BanUser()
         {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+            
 
             var insult = await Insults.GetInsult();
             var embed = new EmbedBuilder();
@@ -167,15 +167,14 @@ namespace GIRUBotV3.Modules
             await Context.Channel.SendMessageAsync("", false, embed.Build());
         }
 
-        string currentName;
+        
         [Command("name")]
         [RequireBotPermission(GuildPermission.ChangeNickname)]
+        [IsModerator]
         private async Task SetNick(SocketGuildUser user, [Remainder]string newName)
         {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+            string currentName = user.Nickname;
 
-            var userSocket = user as SocketGuildUser;
-            currentName = user.Nickname;
             if (string.IsNullOrEmpty(user.Nickname)) currentName = user.Username;
 
             try
@@ -196,28 +195,25 @@ namespace GIRUBotV3.Modules
         }
         [Command("resetname")]
         [RequireBotPermission(GuildPermission.ChangeNickname)]
+        [IsModerator]
         private async Task SetNick(SocketGuildUser user)
         {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
-
             try
             {
                 await user.ModifyAsync(x => x.Nickname = user.Username);
                 await Context.Channel.SendMessageAsync("name reset 👍");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Context.Channel.SendMessageAsync("no");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
-
         }
 
         [Command("resetallname")]
         [RequireBotPermission(GuildPermission.ChangeNickname)]
+        [IsModerator]
         private async Task MassChangeNicknames([Remainder]string input)
         {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
-
             try
             {
                 await Context.Channel.SendMessageAsync($"Changing all names like {input}");

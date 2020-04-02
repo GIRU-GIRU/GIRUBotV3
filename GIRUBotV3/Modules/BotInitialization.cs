@@ -51,9 +51,6 @@ namespace GIRUBotV3.Modules
                 Console.WriteLine($"Failed to initialize GIRUBot {ex.Message}");
                 throw ex;
             }
-
         }
-
     }
-
 }

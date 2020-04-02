@@ -98,8 +98,10 @@ namespace GIRUBotV3
 
                     if (await WordFilter.CheckForNaughtyWords(message.Content)) await WordFilter.PunishNaughtyWord(context);
                     if (Models.BlacklistUser.BlackListedUser.Contains(context.Message.Author)) return;
+
                     var result = await _commands.ExecuteAsync(context, argPos, _services);
-                    await Logger.LogToConsole(result, context);
+
+                    if (!result.IsSuccess) await Logger.LogToConsole(result, context);
 
                 }
             }

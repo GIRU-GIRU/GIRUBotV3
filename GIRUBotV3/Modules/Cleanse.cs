@@ -7,6 +7,7 @@ using Discord.WebSocket;
 using GIRUBotV3.Personality;
 using System.Linq;
 using System.Threading.Tasks;
+using GIRUBotV3.AdministrativeAttributes;
 
 namespace GIRUBotV3.Modules
 {
@@ -16,78 +17,104 @@ namespace GIRUBotV3.Modules
         [Command("cleanse")]
         [Alias("purge", "prune")]
         [RequireBotPermission(GuildPermission.ManageMessages)]
+        [IsModerator]
         private async Task CleanChatAmount(int amount)
         {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
-
-            var messages = await Context.Channel.GetMessagesAsync(amount + 1).FlattenAsync();
-            var chnl = Context.Channel as ITextChannel;
-            await chnl.DeleteMessagesAsync(messages);
-            await Context.Channel.SendMessageAsync("wat ? 😃");
+            try
+            {
+                var messages = await Context.Channel.GetMessagesAsync(amount + 1).FlattenAsync();
+                var chnl = Context.Channel as ITextChannel;
+                await chnl.DeleteMessagesAsync(messages);
+                await Context.Channel.SendMessageAsync("wat ? 😃");
+            }
+            catch (Exception ex)
+            {
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
+            }
         }
 
         [Command("cleanse")]
         [Alias("purge", "prune")]
         [RequireBotPermission(GuildPermission.ManageMessages)]
+        [IsModerator]
         private async Task CleanChat()
         {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+            try
+            {
+                int amount = 2;
 
-            int amount = 2;
-
-            var messages = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
-            var chnl = Context.Channel as ITextChannel;
-            await chnl.DeleteMessagesAsync(messages);
-            await Context.Channel.SendMessageAsync("wat ? 😃");
+                var messages = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
+                var chnl = Context.Channel as ITextChannel;
+                await chnl.DeleteMessagesAsync(messages);
+                await Context.Channel.SendMessageAsync("wat ? 😃");
+            }
+            catch (Exception ex)
+            {
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
+            }
         }
 
         [Command("cleanse")]
         [Alias("purge", "prune")]
         [RequireBotPermission(GuildPermission.ManageMessages)]
+        [IsModerator]
         private async Task CleanChatUser(SocketGuildUser user)
         {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
-
-            var usersocket = user as SocketGuildUser;
-            int amount = 300;
-            var msgsCollection = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
+            try
+            {
+                var usersocket = user as SocketGuildUser;
+                int amount = 300;
+                var msgsCollection = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
                 var result = from m in msgsCollection
-                           where m.Author == user
-                           select m.Id;
+                             where m.Author == user
+                             select m.Id;
 
-            var  chnl = Context.Channel as ITextChannel;
-            int amountOfMessages = result.Count();
-            await chnl.DeleteMessagesAsync(result);
-            var cleanseUserEmbed = new EmbedBuilder();
-            cleanseUserEmbed.WithTitle($"✅   cleansed {amountOfMessages} messages from {user.Username}");
-            cleanseUserEmbed.WithColor(new Color(0, 255, 0));
-            await Context.Channel.SendMessageAsync("", false, cleanseUserEmbed.Build());
+                var chnl = Context.Channel as ITextChannel;
+                int amountOfMessages = result.Count();
+                await chnl.DeleteMessagesAsync(result);
+                var cleanseUserEmbed = new EmbedBuilder();
+                cleanseUserEmbed.WithTitle($"✅   cleansed {amountOfMessages} messages from {user.Username}");
+                cleanseUserEmbed.WithColor(new Color(0, 255, 0));
+                await Context.Channel.SendMessageAsync("", false, cleanseUserEmbed.Build());
+            }
+            catch (Exception ex)
+            {
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
+            }
         }
+
         [Command("cleanse")]
         [Alias("purge", "prune")]
         [RequireBotPermission(GuildPermission.ManageMessages)]
+        [IsModerator]
         private async Task CleanChatUserAmount(SocketGuildUser user, int amountToDelete)
         {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
+            try
+            {
+                var usersocket = user as SocketGuildUser;
+                int amount = 900;
+                var msgsCollection = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
+                var result = from m in msgsCollection
+                             where m.Author == user
+                             select m.Id;
 
-            var usersocket = user as SocketGuildUser;
-            int amount = 900;
-            var msgsCollection = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
-            var result = from m in msgsCollection
-                         where m.Author == user
-                         select m.Id;
+                var chnl = Context.Channel as ITextChannel;
 
-            var chnl = Context.Channel as ITextChannel;
-
-            var totalToDelete = result.Take(amountToDelete);
-            await chnl.DeleteMessagesAsync(totalToDelete);
-            var cleanseUserEmbed = new EmbedBuilder();
-            cleanseUserEmbed.WithTitle($"✅   cleansed {totalToDelete.Count()} messages from {user.Username}");
-            cleanseUserEmbed.WithColor(new Color(0, 255, 0));
-            await Context.Channel.SendMessageAsync("", false, cleanseUserEmbed.Build());
+                var totalToDelete = result.Take(amountToDelete);
+                await chnl.DeleteMessagesAsync(totalToDelete);
+                var cleanseUserEmbed = new EmbedBuilder();
+                cleanseUserEmbed.WithTitle($"✅   cleansed {totalToDelete.Count()} messages from {user.Username}");
+                cleanseUserEmbed.WithColor(new Color(0, 255, 0));
+                await Context.Channel.SendMessageAsync("", false, cleanseUserEmbed.Build());
+            }
+            catch (Exception ex)
+            {
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
+            }
         }
     }
 }
+
 
 
 

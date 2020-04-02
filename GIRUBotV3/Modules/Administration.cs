@@ -12,6 +12,8 @@ using Discord.Net;
 using System.Linq;
 using GIRUBotV3.Models;
 using GIRUBotV3.Data;
+using GIRUBotV3.AdministrativeAttributes;
+
 
 namespace GIRUBotV3.Modules
 {
@@ -20,18 +22,17 @@ namespace GIRUBotV3.Modules
 
         [Command("kick")]
         [RequireBotPermission(GuildPermission.KickMembers)]
+        [IsModerator]
         private async Task KickUser(SocketGuildUser user, [Remainder]string reason)
-        {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
-
-            if (reason.Length < 1) reason = "cya";
-            string kickTargetName = user.Username;
-
+        {   
             if (Helpers.IsRole(UtilityRoles.Moderator, (SocketGuildUser)user))
             {
                 await Context.Channel.SendMessageAsync("stop fighting urselves u retards");
                 return;
             }
+
+            if (reason.Length < 1) reason = "cya";
+            string kickTargetName = user.Username;
 
             try
             {
@@ -47,22 +48,23 @@ namespace GIRUBotV3.Modules
                 await ExceptionHandler.HandleExceptionPublically(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
 
+
             try
             {
                 var storeRoles = new StoreRoleMethods();
                 await storeRoles.StoreUserRoles(Context, user as SocketGuildUser);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Context.Channel.SendMessageAsync("couldn't be arsed storing their roles b4 i kicked");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
 
         [Command("ban")]
         [RequireBotPermission(GuildPermission.BanMembers)]
+        [IsModerator]
         private async Task BanUser(SocketGuildUser user, [Remainder]string reason)
         {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
 
             string kickTargetName = user.Username;
             if (Helpers.IsRole(UtilityRoles.Moderator, (SocketGuildUser)user))
@@ -91,19 +93,18 @@ namespace GIRUBotV3.Modules
                 var storeRoles = new StoreRoleMethods();
                 await storeRoles.StoreUserRoles(Context, user as SocketGuildUser);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Context.Channel.SendMessageAsync("couldn't be arsed storing their roles b4 i kicked");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
 
 
         [Command("bancleanse")]
         [RequireBotPermission(GuildPermission.BanMembers)]
+        [IsModerator]
         private async Task BanUserAndClean(SocketGuildUser user, [Remainder]string reason)
         {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
-
             string kickTargetName = user.Username;
             if (Helpers.IsRole(UtilityRoles.Moderator, (SocketGuildUser)user))
             {
@@ -131,19 +132,19 @@ namespace GIRUBotV3.Modules
                 var storeRoles = new StoreRoleMethods();
                 await storeRoles.StoreUserRoles(Context, user as SocketGuildUser);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await Context.Channel.SendMessageAsync("couldn't be arsed storing their roles b4 i kicked");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
 
         [Command("hackban")]
         [RequireBotPermission(GuildPermission.BanMembers)]
+        [IsModerator]
         private async Task HackBanUser([Remainder]string input)
         {
             try
             {
-                if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
                 if (!input.Contains(' '))
                 {
                     var insult = await Personality.Insults.GetInsult();
@@ -167,50 +168,55 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await Context.Channel.SendMessageAsync($"uhhh, somethign went wrong: {ex.Message}");
-                throw;
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
 
-        private bool existingBan;
-        private string bannedUserName;
+    
         [Command("unban")]
         [RequireBotPermission(GuildPermission.BanMembers)]
+        [IsModerator]
         private async Task UnbanUser(ulong userID)
         {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
-
-            var insult = await Insults.GetInsult();
-            var allBans = await Context.Guild.GetBansAsync();
-            foreach (var item in allBans)
+            try
             {
-                if (item.User.Id == userID)
+                var insult = await Insults.GetInsult();
+                var allBans = await Context.Guild.GetBansAsync();
+                bool existingBan = false;
+                string bannedUserName = string.Empty;
+
+                foreach (var item in allBans)
                 {
-                    existingBan = true;
-                    bannedUserName = item.User.Username;
-                    break;
+                    if (item.User.Id == userID)
+                    {
+                        existingBan = true;
+                        bannedUserName = item.User.Username;
+                        break;
+                    }
+                }
+
+                if (!existingBan)
+                {
+                    await Context.Channel.SendMessageAsync("that's not a valid ID " + insult);
                 }
                 else
                 {
-                    existingBan = false;
+                    await Context.Guild.RemoveBanAsync(userID);
+                    await Context.Channel.SendMessageAsync($"✅    *** {bannedUserName} has been unbanned ***");
                 }
             }
-
-            if (existingBan == false)
+            catch (Exception ex)
             {
-                await Context.Channel.SendMessageAsync("that's not a valid ID " + insult);
-            }
-            await Context.Guild.RemoveBanAsync(userID);
-            await Context.Channel.SendMessageAsync($"✅    *** {bannedUserName} has been unbanned ***");
+                await ExceptionHandler.HandleExceptionPublically(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
+            }           
         }
 
 
         [Command("off")]
         [RequireBotPermission(GuildPermission.ManageMessages)]
+        [IsModerator]
         private async Task TurnOffUser(SocketGuildUser user)
         {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
-
             OnOffUser.TurnedOffUsers.Add(user);
             await Context.Channel.SendMessageAsync($"*turned off {user.Mention}*");
             return;
@@ -218,10 +224,9 @@ namespace GIRUBotV3.Modules
 
         [Command("on")]
         [RequireBotPermission(GuildPermission.ManageMessages)]
+        [IsModerator]
         private async Task TurnOnUserAsync(SocketGuildUser user)
         {
-            if (!Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
-
             var userToRemove = OnOffUser.TurnedOffUsers.Find(x => x.Id == user.Id);
             OnOffUser.TurnedOffUsers.Remove(userToRemove);
             await Context.Channel.SendMessageAsync($"*{user.Mention} turned back on*");
@@ -259,19 +264,18 @@ namespace GIRUBotV3.Modules
             catch (Exception ex)
             {
                 await ExceptionHandler.HandleExceptionPublically(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
-                throw;
             }
         }
 
 
 
         [Command("vcmove")]
+        [IsModeratorOrVK]
         private async Task VCMove(SocketGuildUser user, [Remainder]string chnlName)
         {
             try
             {
-                if (!Helpers.IsVKOrModeratorOrOwner(Context.Message.Author as SocketGuildUser)) return;
-                if (Context.Message.Author.Id == 161176590028505089) return;
+                if (Context.Message.Author.Id == 161176590028505089) return; // ban bob
 
                 var insult = await Personality.Insults.GetInsult();
                 IVoiceChannel targetChannel = null;
@@ -329,13 +333,9 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                await Context.Channel.SendMessageAsync($"Move failed.. {ex.Message}");
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
-        }
-
-
-
-        
+        }      
     }
 }
 

@@ -55,7 +55,6 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-
                 await Context.Channel.SendMessageAsync("this bitch too afraid to dm me lmfao");
             }
 
