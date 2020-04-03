@@ -179,10 +179,14 @@ namespace GIRUBotV3.Modules
             {
                 if (!string.IsNullOrWhiteSpace(context.Message.Content))
                 {
-                    if (Nountest.CheckForNountest(context.Message.Content.Split(" ")[0]))
+                    if (!await WordFilter.CheckForNaughtyWords(context.Message.Content))
                     {
-                        await _nounTest.PostNounTest(context);
+                        if (Nountest.CheckForNountest(context.Message.Content.Split(" ")[0]))
+                        {
+                            await _nounTest.PostNounTest(context);
+                        }
                     }
+                    
                 }
 
             }
