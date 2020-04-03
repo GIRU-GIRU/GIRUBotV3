@@ -4,12 +4,13 @@ using Discord.WebSocket;
 using GIRUBotV3.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GIRUBotV3.Modules
 {
-    public  class MassMentionControl
+    public class MassMentionControl
     {
         public async Task MassMentionMute(SocketCommandContext context, SocketUserMessage message)
         {
@@ -26,9 +27,36 @@ namespace GIRUBotV3.Modules
             }
             catch (Exception ex)
             {
-                throw ex;
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
-            
-        }  
+
+        }
+
+        public async Task<bool> CheckForMentionSpam(SocketCommandContext context)
+        {
+            bool detectedMentionSpam = false;
+
+            try
+            {
+                if (context.Message.MentionedUsers.Count > 7)
+                {
+
+                    var mentionedUsers = context.Message.MentionedUsers;
+
+
+                    detectedMentionSpam = !mentionedUsers.GroupBy(x => x.Id)
+                                                              .Where(g => g.Count() > 7)
+                                                                  .Any();
+
+
+                }              
+            }
+            catch (Exception ex)
+            {
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
+            }
+
+            return detectedMentionSpam;
+        }
     }
 }

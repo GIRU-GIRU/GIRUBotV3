@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Net.Http;
 using GIRUBotV3.Logging;
+using GIRUBotV3.Models;
 
 namespace GIRUBotV3
 {
@@ -96,8 +97,12 @@ namespace GIRUBotV3
                 {
                     var context = new SocketCommandContext(_client, message);
 
-                    if (await WordFilter.CheckForNaughtyWords(message.Content)) await WordFilter.PunishNaughtyWord(context);
-                    if (Models.BlacklistUser.BlackListedUser.Contains(context.Message.Author)) return;
+                    if (await WordFilter.CheckForNaughtyWords(message.Content))
+                    {
+                        await WordFilter.PunishNaughtyWord(context);
+                        return;
+                    }
+                    if (await BlacklistUser.CheckBlacklist(context.Message.Author)) return;
 
                     var result = await _commands.ExecuteAsync(context, argPos, _services);
 

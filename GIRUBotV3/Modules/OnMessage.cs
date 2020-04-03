@@ -112,7 +112,11 @@ namespace GIRUBotV3.Modules
         {
             try
             {
-                if (context.Message.MentionedUsers.Count > 8) await _massMentionControl.MassMentionMute(context, context.Message);
+                if (await _massMentionControl.CheckForMentionSpam(context))
+                {
+                    await _massMentionControl.MassMentionMute(context, context.Message);
+                }
+        
             }
             catch (Exception ex)
             {
