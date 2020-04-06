@@ -7,6 +7,7 @@ using Discord.WebSocket;
 using GIRUBotV3.Personality;
 using System.Threading.Tasks;
 using GIRUBotV3.Models;
+using GIRUBotV3.AdministrativeAttributes;
 
 namespace GIRUBotV3.Modules
 {
@@ -14,6 +15,7 @@ namespace GIRUBotV3.Modules
     {
 
         [Command("emergency")]
+        [IsLastOasis]
         private async Task LastOasisEmergency()
         {
             try
@@ -29,6 +31,7 @@ namespace GIRUBotV3.Modules
         }
 
         [Command("emergency")]
+        [IsLastOasis]
         private async Task LastOasisEmergency([Remainder]string inputMessage)
         {
             try
