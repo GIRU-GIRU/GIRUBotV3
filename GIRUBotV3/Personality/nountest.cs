@@ -13,7 +13,6 @@ namespace GIRUBotV3.Personality
     {
         public static bool CheckForNountest(string messageContentStart)
         {
-            bool nounTestExists = false;
             return (messageContentStart[0] == '!' && messageContentStart.ToLower().EndsWith("test"));
         }
 
