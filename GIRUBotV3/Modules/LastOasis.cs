@@ -8,6 +8,7 @@ using GIRUBotV3.Personality;
 using System.Threading.Tasks;
 using GIRUBotV3.Models;
 using GIRUBotV3.AdministrativeAttributes;
+using System.Linq;
 
 namespace GIRUBotV3.Modules
 {
@@ -20,7 +21,7 @@ namespace GIRUBotV3.Modules
         {
             try
             {
-    
+
                 await Context.Channel.SendMessageAsync("Write a reason!");
 
             }
@@ -49,7 +50,69 @@ namespace GIRUBotV3.Modules
                     await Context.Channel.SendMessageAsync(LastOasisRole.Mention, false, embed.Build());
 
                     await LastOasisRole.ModifyAsync(x => x.Mentionable = false);
-                }                
+                }
+            }
+            catch (Exception ex)
+            {
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
+            }
+        }
+
+        [Command("lorecruit")]
+        [IsLastOasis]
+        private async Task LastOasisRecruitUser(SocketGuildUser targetUser)
+        {
+            try
+            {
+                var loLeaderRole = Helpers.ReturnRole(Context.Guild, "Last Oasis Leader");
+                var author = Context.Message.Author as SocketGuildUser;
+
+                if (author.Roles.Where(x => x.Id == loLeaderRole.Id).Any())
+                {
+                    var loRole = Helpers.ReturnRole(Context.Guild, "🌴 Last Oasis");
+
+                    if (targetUser.Roles.Where(x => x.Id == loRole.Id).Any())
+                    {
+                        await Context.Channel.SendMessageAsync("User already is part of the crew");
+                    }
+                    else
+                    {
+                        await targetUser.AddRoleAsync(loRole);
+                        await Context.Channel.SendMessageAsync($"{Context.Message.Author.Mention} recruited {targetUser.Mention} to the Last Oasis team");
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
+            }
+        }
+
+        [Command("loremove")]
+        [IsLastOasis]
+        private async Task LastOasisRemoveUser(SocketGuildUser targetUser)
+        {
+            try
+            {
+                var loLeaderRole = Helpers.ReturnRole(Context.Guild, "Last Oasis Leader");
+                var author = Context.Message.Author as SocketGuildUser;
+
+                if (author.Roles.Where(x => x.Id == loLeaderRole.Id).Any())
+                {
+                    var loRole = Helpers.ReturnRole(Context.Guild, "🌴 Last Oasis");
+
+                    if (!targetUser.Roles.Where(x => x.Id == loRole.Id).Any())
+                    {
+                        await Context.Channel.SendMessageAsync("User isn't part of the crew anyway m8");
+                    }
+                    else
+                    {
+                        await targetUser.RemoveRoleAsync(loRole);
+                        await Context.Channel.SendMessageAsync($"{Context.Message.Author.Mention} removed {targetUser.Mention} from the Last Oasis team");
+                    }
+
+                }
             }
             catch (Exception ex)
             {
@@ -58,3 +121,6 @@ namespace GIRUBotV3.Modules
         }
     }
 }
+
+
+
