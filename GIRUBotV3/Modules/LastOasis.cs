@@ -119,6 +119,72 @@ namespace GIRUBotV3.Modules
                 await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
+
+
+        [Command("loallyrecruit")]
+        [IsLastOasis]
+        private async Task LastOasisAllyRecruit(SocketGuildUser targetUser)
+        {
+            try
+            {
+                var loLeaderRole = Helpers.ReturnRole(Context.Guild, "Last Oasis Leader");
+                var author = Context.Message.Author as SocketGuildUser;
+
+                if (author.Roles.Where(x => x.Id == loLeaderRole.Id).Any())
+                {
+                    var loAllyRole = Helpers.ReturnRole(Context.Guild, "Last Oasis Ally");
+
+                    if (targetUser.Roles.Where(x => x.Id == loAllyRole.Id).Any())
+                    {
+                        await Context.Channel.SendMessageAsync("User already is already an ally");
+                    }
+                    else
+                    {
+                        await targetUser.AddRoleAsync(loAllyRole);
+                        await Context.Channel.SendMessageAsync($"{Context.Message.Author.Mention} recruited {targetUser.Mention} to the Last Oasis allies");
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
+            }
+        }
+
+        [Command("loallyremove")]
+        [IsLastOasis]
+        private async Task LastOasisAllyRemove(SocketGuildUser targetUser)
+        {
+            try
+            {
+                var loLeaderRole = Helpers.ReturnRole(Context.Guild, "Last Oasis Leader");
+                var author = Context.Message.Author as SocketGuildUser;
+
+                if (author.Roles.Where(x => x.Id == loLeaderRole.Id).Any())
+                {
+                    var loAllyRole = Helpers.ReturnRole(Context.Guild, "Last Oasis Ally");
+
+                    if (!targetUser.Roles.Where(x => x.Id == loAllyRole.Id).Any())
+                    {
+                        await Context.Channel.SendMessageAsync("User isn't an ally anyway m8");
+                    }
+                    else
+                    {
+                        await targetUser.RemoveRoleAsync(loAllyRole);
+                        await Context.Channel.SendMessageAsync($"{Context.Message.Author.Mention} removed {targetUser.Mention} from the Last Oasis allies");
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
+            }
+        }
+
+
+
     }
 }
 
