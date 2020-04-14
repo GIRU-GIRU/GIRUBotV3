@@ -37,6 +37,8 @@ namespace GIRUBotV3.Modules
         {
             try
             {
+                if (Context.Message.Author.Id == 185464319641649153 || Context.Message.Author.Id == 347462177017430017) return;
+
                 if (Context.Message.Channel.Id == 693097204675510333)
                 {
                     IRole LastOasisRole = Helpers.ReturnRole(Context.Guild, "🌴 Last Oasis");
