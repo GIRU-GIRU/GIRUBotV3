@@ -270,7 +270,7 @@ namespace GIRUBotV3.Modules
 
 
         [Command("vcmove")]
-        [IsModeratorOrVK]
+        [IsModeratorOrVKB]
         private async Task VCMove(SocketGuildUser user, [Remainder]string chnlName)
         {
             try
