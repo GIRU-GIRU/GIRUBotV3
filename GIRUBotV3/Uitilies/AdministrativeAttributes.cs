@@ -44,6 +44,25 @@ namespace GIRUBotV3.AdministrativeAttributes
     }
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    public sealed class IsModeratorOrVKB : PreconditionAttribute
+    {
+        public async override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
+        {
+
+            var user = context.Message.Author as SocketGuildUser;
+
+            bool isModerator = Helpers.IsRole("Moderator", user);
+            bool isVK = Helpers.IsRole("VK", user);
+            bool isVKB = Helpers.IsRole("VKB", user);
+
+            if (isModerator || isVK || isVKB || user.Id == Config.OwnerID)
+                return PreconditionResult.FromSuccess();
+            else
+                return PreconditionResult.FromError("Unauthorized");
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public sealed class IsLastOasis : PreconditionAttribute
     {
         public async override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)

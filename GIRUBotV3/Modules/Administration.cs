@@ -276,7 +276,6 @@ namespace GIRUBotV3.Modules
             try
             {
                 if (Context.Message.Author.Id == 161176590028505089) return; // no bob
-
                 var insult = await Insults.GetInsult();
                 
 
