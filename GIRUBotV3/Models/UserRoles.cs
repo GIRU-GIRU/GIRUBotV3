@@ -67,7 +67,12 @@ namespace GIRUBotV3.Models
             ["Oasis"] = "🌴 Last Oasis",
             ["Last"] = "🌴 Last Oasis",
             ["LastOasis"] = "🌴 Last Oasis",
-            ["Organizer"] = "Organizer"
+            ["Organizer"] = "Organizer",
+            ["fc"] = "👊 Fight Club",
+            ["fight"] = "👊 Fight Club",
+            ["fightclub"] = "👊 Fight Club",
+            ["fighter"] = "👊 Fight Club",
+
         };
 
         public static Dictionary<string, string> ExclusiveRolesDictionary { get; private set; } = new Dictionary<string, string>

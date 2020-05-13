@@ -153,6 +153,8 @@ namespace GIRUBotV3.Modules
             }
         }
 
+
+
         private async Task AdditionalChatSmileyCheck(SocketCommandContext context)
         {
             try

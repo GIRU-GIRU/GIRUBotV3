@@ -275,10 +275,10 @@ namespace GIRUBotV3.Modules
         {
             try
             {
-                if (Context.Message.Author.Id == 161176590028505089) return; // ban bob
+                if (Context.Message.Author.Id == 161176590028505089) return; // no bob
 
-                var insult = await Personality.Insults.GetInsult();
-                IVoiceChannel targetChannel = null;
+                var insult = await Insults.GetInsult();
+                
 
                 if (user.Id == Context.Message.Author.Id)
                 {
@@ -291,6 +291,7 @@ namespace GIRUBotV3.Modules
 
                     var sortedVoiceList = Context.Guild.VoiceChannels.OrderBy(x => x.Position).ToArray();
 
+                    IVoiceChannel targetChannel = null;
                     foreach (var vc in sortedVoiceList)
                     {
                         if (vc.Name.ToLower() == chnlName.ToLower()

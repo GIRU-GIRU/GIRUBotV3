@@ -90,6 +90,7 @@ namespace GIRUBotV3.Modules
             catch (HttpException ex)
             {
                 await Context.Channel.SendMessageAsync($"{user.Mention}, {warningMessage}");
+                
             }
         }
 
