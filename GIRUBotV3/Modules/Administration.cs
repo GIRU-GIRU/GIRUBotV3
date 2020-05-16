@@ -268,6 +268,50 @@ namespace GIRUBotV3.Modules
         }
 
 
+        [Command("vcmove")]
+        [IsModeratorOrVKB]
+        private async Task VCMove(SocketGuildUser user, SocketVoiceChannel chnl)
+        {
+            try
+            {
+                if (Context.Message.Author.Id == 161176590028505089) return; // no bob
+                var insult = await Insults.GetInsult();
+
+
+                if (user.Id == Context.Message.Author.Id || Helpers.IsVKOrModeratorOrOwner(user))
+                {
+                    await Context.Channel.SendMessageAsync($"yeah nice try retard {insult}");
+                    return;
+                }
+
+                if (user.VoiceChannel != null)
+                {           
+                    var oldChannel = user.VoiceChannel as IVoiceChannel;
+
+                    if (chnl.Id == oldChannel.Id)
+                    {
+                        await Context.Channel.SendMessageAsync($"why would i move him to the same channel you fucking {insult}");
+                        return;
+                    }
+
+                    await user.ModifyAsync(x =>
+                    {
+                        x.Channel = chnl;
+                    });
+
+                    await Context.Channel.SendMessageAsync($"{user.Mention} moved from {oldChannel} to voice channel {chnl}");
+                    return;
+
+                };
+
+                await Context.Channel.SendMessageAsync($"{user.Mention} needs to connect to a voice channel to be moved");
+
+            }
+            catch (Exception ex)
+            {
+                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
+            }
+        }
 
         [Command("vcmove")]
         [IsModeratorOrVKB]
@@ -323,7 +367,7 @@ namespace GIRUBotV3.Modules
                         x.Channel = channel;
                     });
 
-                    await Context.Channel.SendMessageAsync($"{user.Mention} moved from \"**{oldChannel.Name}\"** to voice channel \"**{newChannel.Name}\"***");
+                    await Context.Channel.SendMessageAsync($"{user.Mention} moved from {oldChannel} to voice channel {newChannel}");
                     return;
 
                 };
