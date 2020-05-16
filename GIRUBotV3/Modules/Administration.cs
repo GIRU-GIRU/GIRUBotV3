@@ -277,9 +277,9 @@ namespace GIRUBotV3.Modules
             {
                 if (Context.Message.Author.Id == 161176590028505089) return; // no bob
                 var insult = await Insults.GetInsult();
-                
 
-                if (user.Id == Context.Message.Author.Id)
+
+                if (user.Id == Context.Message.Author.Id || Helpers.IsVKOrModeratorOrOwner(user))
                 {
                     await Context.Channel.SendMessageAsync($"yeah nice try retard {insult}");
                     return;
