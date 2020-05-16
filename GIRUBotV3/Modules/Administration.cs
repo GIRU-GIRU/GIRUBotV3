@@ -270,6 +270,7 @@ namespace GIRUBotV3.Modules
 
         [Command("vcmove")]
         [IsModeratorOrVKB]
+        [Priority(1)]
         private async Task VCMove(SocketGuildUser user, SocketVoiceChannel chnl)
         {
             try
@@ -315,6 +316,7 @@ namespace GIRUBotV3.Modules
 
         [Command("vcmove")]
         [IsModeratorOrVKB]
+        [Priority(2)]
         private async Task VCMove(SocketGuildUser user, [Remainder]string chnlName)
         {
             try
