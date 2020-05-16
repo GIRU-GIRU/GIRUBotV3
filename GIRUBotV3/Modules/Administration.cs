@@ -323,7 +323,7 @@ namespace GIRUBotV3.Modules
                         x.Channel = channel;
                     });
 
-                    await Context.Channel.SendMessageAsync($"{user.Mention} moved from \"{oldChannel.Name}\" to \"{newChannel.Name}\"");
+                    await Context.Channel.SendMessageAsync($"{user.Mention} moved from \"**{oldChannel.Name}\"** to voice channel \"**{newChannel.Name}\"***");
                     return;
 
                 };

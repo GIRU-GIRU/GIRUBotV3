@@ -53,7 +53,7 @@ namespace GIRUBotV3.AdministrativeAttributes
 
             bool isModerator = Helpers.IsRole("Moderator", user);
             bool isVK = Helpers.IsRole("VK", user);
-            bool isVKB = Helpers.IsRole("VKB", user);
+            bool isVKB = Helpers.IsRole("VK-B", user);
 
             if (isModerator || isVK || isVKB || user.Id == Config.OwnerID)
                 return PreconditionResult.FromSuccess();
