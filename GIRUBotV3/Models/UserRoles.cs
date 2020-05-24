@@ -72,6 +72,9 @@ namespace GIRUBotV3.Models
             ["fight"] = "👊 Fight Club",
             ["fightclub"] = "👊 Fight Club",
             ["fighter"] = "👊 Fight Club",
+            ["captains"] = "Captains Mode Feedback",
+            ["captain"] = "Captains Mode Feedback",
+            ["cmf"] = "Captains Mode Feedback",
 
         };
 

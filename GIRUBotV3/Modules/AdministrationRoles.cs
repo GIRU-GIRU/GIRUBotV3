@@ -326,7 +326,7 @@ namespace GIRUBotV3.Modules
             catch (Exception ex)
             {
                 await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
-            }            
+            }
         }
 
 
@@ -388,6 +388,66 @@ namespace GIRUBotV3.Modules
                 await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
             }
         }
+
+
+        [Command("cmf")]
+        [RequireBotPermission(GuildPermission.ManageRoles)]
+        private async Task AddCaptainsModeRole(SocketGuildUser user)
+        {
+            try
+            {
+                var author = Context.Message.Author as SocketGuildUser;
+
+                if (Helpers.IsModeratorOrOwner(author) || author.Id == 199500733031120896)
+                {
+                    var role = Context.Guild.GetRole(714190662723043448);
+
+                    await user.AddRoleAsync(role);
+
+                    await Context.Channel.SendMessageAsync($"{user.Mention} was successfully added to the Captains Mode Feedback channel.");
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                await ExceptionHandler.HandleExceptionPublically(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
+            }
+            
+        }
+
+        [Command("rcmf")]
+        [RequireBotPermission(GuildPermission.ManageRoles)]
+        private async Task RemoveCaptainsModeRole(SocketGuildUser user)
+        {
+            try
+            {
+                var author = Context.Message.Author as SocketGuildUser;
+
+                if (Helpers.IsModeratorOrOwner(author) || author.Id == 199500733031120896)
+                {
+                    var role = Context.Guild.GetRole(714190662723043448);
+                    if (user.Roles.Contains(role))
+                    {
+                        await user.RemoveRoleAsync(role);
+
+                        await Context.Channel.SendMessageAsync($"{user.Mention} was removed from the Captains Mode Feedback channel.");
+                    }
+                    else
+                    {
+                        await Context.Channel.SendMessageAsync($"they dont have the role m8");
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                await ExceptionHandler.HandleExceptionPublically(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
+            }
+
+        }
+
+
     }
 }
 
