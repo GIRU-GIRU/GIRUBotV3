@@ -330,6 +330,7 @@ namespace GIRUBotV3.Modules
         }
 
 
+
         [Command("storeroles")]
         [IsModerator]
         private async Task StoreRoles(SocketGuildUser target)
@@ -389,6 +390,30 @@ namespace GIRUBotV3.Modules
             }
         }
 
+        [Command("vkb")]
+        [IsModeratorOrVKB]
+        private async Task MentionVKB()
+        {
+
+            IRole vkbRole = Helpers.ReturnRole(Context.Guild, "VK-B");
+            await vkbRole.ModifyAsync(x => x.Mentionable = true);
+
+            await Context.Channel.SendMessageAsync(vkbRole.Mention, false);
+
+            await vkbRole.ModifyAsync(x => x.Mentionable = false);
+        }
+
+        [Command("vk")]
+        [IsModeratorOrVKB]
+        private async Task MentionVK()
+        {
+            IRole vkRole = Helpers.ReturnRole(Context.Guild, "VK");
+            await vkRole.ModifyAsync(x => x.Mentionable = true);
+
+            await Context.Channel.SendMessageAsync(vkRole.Mention, false);
+
+            await vkRole.ModifyAsync(x => x.Mentionable = false);
+        }
 
         [Command("cmf")]
         [RequireBotPermission(GuildPermission.ManageRoles)]

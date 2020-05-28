@@ -271,7 +271,7 @@ namespace GIRUBotV3.Modules
         [Command("vcmove")]
         [IsModeratorOrVKB]
         [Priority(1)]
-        private async Task VCMove(SocketGuildUser user, SocketVoiceChannel chnl)
+        private async Task VCMove(SocketGuildUser user, IVoiceChannel chnl)
         {
             try
             {
@@ -295,9 +295,11 @@ namespace GIRUBotV3.Modules
                         return;
                     }
 
+
+                    var channel = Optional.Create<IVoiceChannel>(chnl);
                     await user.ModifyAsync(x =>
                     {
-                        x.Channel = chnl;
+                        x.Channel = channel;
                     });
 
                     await Context.Channel.SendMessageAsync($"{user.Mention} moved from {oldChannel} to voice channel {chnl}");
@@ -314,74 +316,74 @@ namespace GIRUBotV3.Modules
             }
         }
 
-        [Command("vcmove")]
-        [IsModeratorOrVKB]
-        [Priority(2)]
-        private async Task VCMove(SocketGuildUser user, [Remainder]string chnlName)
-        {
-            try
-            {
-                if (Context.Message.Author.Id == 161176590028505089) return; // no bob
-                var insult = await Insults.GetInsult();
+        //[Command("vcmove")]
+        //[IsModeratorOrVKB]
+        //[Priority(2)]
+        //private async Task VCMove(SocketGuildUser user, [Remainder]string chnlName)
+        //{
+        //    try
+        //    {
+        //        if (Context.Message.Author.Id == 161176590028505089) return; // no bob
+        //        var insult = await Insults.GetInsult();
 
 
-                if (user.Id == Context.Message.Author.Id || Helpers.IsVKOrModeratorOrOwner(user))
-                {
-                    await Context.Channel.SendMessageAsync($"yeah nice try retard {insult}");
-                    return;
-                }
+        //        if (user.Id == Context.Message.Author.Id || Helpers.IsVKOrModeratorOrOwner(user))
+        //        {
+        //            await Context.Channel.SendMessageAsync($"yeah nice try retard {insult}");
+        //            return;
+        //        }
 
-                if (user.VoiceChannel != null)
-                {
+        //        if (user.VoiceChannel != null)
+        //        {
 
-                    var sortedVoiceList = Context.Guild.VoiceChannels.OrderBy(x => x.Position).ToArray();
+        //            var sortedVoiceList = Context.Guild.VoiceChannels.OrderBy(x => x.Position).ToArray();
 
-                    IVoiceChannel targetChannel = null;
-                    foreach (var vc in sortedVoiceList)
-                    {
-                        if (vc.Name.ToLower() == chnlName.ToLower()
-                            || vc.Name.ToLower().Contains(chnlName.ToLower()))
-                        {
-                            targetChannel = vc as IVoiceChannel;
-                            break;
-                        }
-                    }
+        //            IVoiceChannel targetChannel = null;
+        //            foreach (var vc in sortedVoiceList)
+        //            {
+        //                if (vc.Name.ToLower() == chnlName.ToLower()
+        //                    || vc.Name.ToLower().Contains(chnlName.ToLower()))
+        //                {
+        //                    targetChannel = vc as IVoiceChannel;
+        //                    break;
+        //                }
+        //            }
 
-                    if (targetChannel == null)
-                    {
-                        await Context.Channel.SendMessageAsync($"thats not a real channel {insult}");
-                        return;
-                    }
+        //            if (targetChannel == null)
+        //            {
+        //                await Context.Channel.SendMessageAsync($"thats not a real channel {insult}");
+        //                return;
+        //            }
 
-                    var channel = Optional.Create<IVoiceChannel>(targetChannel);
+        //            var channel = Optional.Create<IVoiceChannel>(targetChannel);
 
-                    var newChannel = channel.Value as IVoiceChannel;
-                    var oldChannel = user.VoiceChannel as IVoiceChannel;
+        //            var newChannel = channel.Value as IVoiceChannel;
+        //            var oldChannel = user.VoiceChannel as IVoiceChannel;
 
-                    if (newChannel.Id == oldChannel.Id)
-                    {
-                        await Context.Channel.SendMessageAsync($"why would i move him to the same channel you fucking {insult}");
-                        return;
-                    }
+        //            if (newChannel.Id == oldChannel.Id)
+        //            {
+        //                await Context.Channel.SendMessageAsync($"why would i move him to the same channel you fucking {insult}");
+        //                return;
+        //            }
 
-                    await user.ModifyAsync(x =>
-                    {
-                        x.Channel = channel;
-                    });
+        //            await user.ModifyAsync(x =>
+        //            {
+        //                x.Channel = channel;
+        //            });
 
-                    await Context.Channel.SendMessageAsync($"{user.Mention} moved from {oldChannel} to voice channel {newChannel}");
-                    return;
+        //            await Context.Channel.SendMessageAsync($"{user.Mention} moved from {oldChannel} to voice channel {newChannel}");
+        //            return;
 
-                };
+        //        };
 
-                await Context.Channel.SendMessageAsync($"{user.Mention} needs to connect to a voice channel to be moved");
+        //        await Context.Channel.SendMessageAsync($"{user.Mention} needs to connect to a voice channel to be moved");
 
-            }
-            catch (Exception ex)
-            {
-                await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
-            }
-        }      
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await ExceptionHandler.HandleExceptionQuietly(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
+        //    }
+        //}      
     }
 }
 
