@@ -75,6 +75,7 @@ namespace GIRUBotV3.Models
             ["captains"] = "Captains Mode Feedback",
             ["captain"] = "Captains Mode Feedback",
             ["cmf"] = "Captains Mode Feedback",
+            ["7"] = "7 Days",
 
         };
 
