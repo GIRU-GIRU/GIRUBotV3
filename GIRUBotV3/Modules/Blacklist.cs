@@ -24,7 +24,7 @@ namespace GIRUBotV3.Modules
         [IsModerator]
         public async Task BlacklistUser(SocketUser user)
         {
-            if (user.Id == Config.OwnerID)
+            if (user.Id == Global.Config.OwnerID)
             {
                 await Context.Channel.SendMessageAsync("i wont blacklist myself retard");
                 return;

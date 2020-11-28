@@ -148,7 +148,7 @@ namespace GIRUBotV3.Modules
                 if (!input.Contains(' '))
                 {
                     var insult = await Personality.Insults.GetInsult();
-                    await Context.Channel.SendMessageAsync($"syntax is \"{Config.CommandPrefix}hackban uintID reason\" you fucking {insult}");
+                    await Context.Channel.SendMessageAsync($"syntax is \"{Global.Config.CommandPrefix}hackban uintID reason\" you fucking {insult}");
                     return;
                 }
 

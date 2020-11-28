@@ -18,7 +18,7 @@ namespace GIRUBotV3.AdministrativeAttributes
 
             bool isModerator = Helpers.IsRole("Moderator", user);
 
-            if (isModerator || user.Id == Config.OwnerID)
+            if (isModerator || user.Id == Global.Config.OwnerID)
                 return PreconditionResult.FromSuccess();
             else
                 return PreconditionResult.FromError("Unauthorized");
@@ -36,7 +36,7 @@ namespace GIRUBotV3.AdministrativeAttributes
             bool isModerator = Helpers.IsRole("Moderator", user);
             bool isVK = Helpers.IsRole("VK", user);
 
-            if (isModerator || isVK || user.Id == Config.OwnerID)
+            if (isModerator || isVK || user.Id == Global.Config.OwnerID)
                 return PreconditionResult.FromSuccess();
             else
                 return PreconditionResult.FromError("Unauthorized");
@@ -55,7 +55,7 @@ namespace GIRUBotV3.AdministrativeAttributes
             bool isVK = Helpers.IsRole("VK", user);
             bool isVKB = Helpers.IsRole("VK-B", user);
 
-            if (isModerator || isVK || isVKB || user.Id == Config.OwnerID)
+            if (isModerator || isVK || isVKB || user.Id == Global.Config.OwnerID)
                 return PreconditionResult.FromSuccess();
             else
                 return PreconditionResult.FromError("Unauthorized");
@@ -73,7 +73,7 @@ namespace GIRUBotV3.AdministrativeAttributes
             bool IsLastOasis = Helpers.IsRole("🌴 Last Oasis", user);
            
 
-            if (IsLastOasis || user.Id == Config.OwnerID)
+            if (IsLastOasis || user.Id == Global.Config.OwnerID)
                 return PreconditionResult.FromSuccess();
             else
                 return PreconditionResult.FromError("Unauthorized");

@@ -19,7 +19,7 @@ namespace GIRUBotV3.Modules
                 IGuildUser targetUser = context.Guild.GetUser(message.Author.Id) as IGuildUser;
                 IRole moderators = Helpers.ReturnRole(context.Guild, UtilityRoles.Moderator);
                 var mutedRole = Helpers.ReturnRole(context.Guild, "SuperMuted");
-                ITextChannel adminlogchannel = context.Guild.GetChannel(Config.AuditChannel) as ITextChannel;
+                ITextChannel adminlogchannel = context.Guild.GetChannel(Global.Config.AuditChannel) as ITextChannel;
 
                 await targetUser.AddRoleAsync(mutedRole);
                 await context.Channel.SendMessageAsync($"stay small {message.Author.Mention}, no spam in my server you little shitter");

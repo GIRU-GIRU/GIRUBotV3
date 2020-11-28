@@ -415,62 +415,49 @@ namespace GIRUBotV3.Modules
             await vkRole.ModifyAsync(x => x.Mentionable = false);
         }
 
-        [Command("cmf")]
+        [Command("updatenoobs")]
         [RequireBotPermission(GuildPermission.ManageRoles)]
-        private async Task AddCaptainsModeRole(SocketGuildUser user)
+        [IsModerator]
+        private async Task ApplyNoobRoleToWeirdos()
         {
-            try
+
+            for (int i = 0; i < 5; i++)
             {
-                var author = Context.Message.Author as SocketGuildUser;
-
-                if (Helpers.IsModeratorOrOwner(author) || author.Id == 199500733031120896)
+                if (!Context.Guild.HasAllMembers)
                 {
-                    var role = Context.Guild.GetRole(714190662723043448);
+                    await Context.Guild.DownloadUsersAsync();
+                }
 
-                    await user.AddRoleAsync(role);
 
-                    await Context.Channel.SendMessageAsync($"{user.Mention} was successfully added to the Captains Mode Feedback channel.");
-
+                if (!Context.Guild.HasAllMembers)
+                {
+                    await Context.Message.Channel.SendMessageAsync($"discord is being dogshit and wont download members sry");
+                    await Task.Delay(1000);
+                }
+                else
+                {
+                    break;
                 }
             }
-            catch (Exception ex)
+
+            int addedRolesCount = 0;
+
+            foreach (var weirdo in Context.Guild.Users)
             {
-
-                await ExceptionHandler.HandleExceptionPublically(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
-            }
-            
-        }
-
-        [Command("rcmf")]
-        [RequireBotPermission(GuildPermission.ManageRoles)]
-        private async Task RemoveCaptainsModeRole(SocketGuildUser user)
-        {
-            try
-            {
-                var author = Context.Message.Author as SocketGuildUser;
-
-                if (Helpers.IsModeratorOrOwner(author) || author.Id == 199500733031120896)
+                if (weirdo.Roles.Count < 2)
                 {
-                    var role = Context.Guild.GetRole(714190662723043448);
-                    if (user.Roles.Contains(role))
-                    {
-                        await user.RemoveRoleAsync(role);
+                    await weirdo.AddRoleAsync(Helpers.ReturnRole(Context.Guild, "noob"));
 
-                        await Context.Channel.SendMessageAsync($"{user.Mention} was removed from the Captains Mode Feedback channel.");
-                    }
-                    else
-                    {
-                        await Context.Channel.SendMessageAsync($"they dont have the role m8");
-                    }
-
+                    await Context.Message.Channel.SendMessageAsync($"{weirdo.Username} was given noob role");
+                    addedRolesCount++;
                 }
             }
-            catch (Exception ex)
-            {
-                await ExceptionHandler.HandleExceptionPublically(GetType().FullName, ExceptionHandler.GetAsyncMethodName(), ex);
-            }
 
+
+            await Context.Message.Channel.SendMessageAsync($"scanned through {Context.Guild.Users.Count} users, {addedRolesCount} noob roles were added - there are no longer any weirdos without roles");
         }
+
+
 
 
     }
