@@ -25,13 +25,13 @@ namespace GIRUBotV3.Modules
 
             _client = client;
 
-            _meleeSlasherGuild = _client.GetGuild(Config.MeleeSlasherGuild);
+            _meleeSlasherGuild = _client.GetGuild(Global.Config.MeleeSlasherGuild);
 
             if (_client != null && _meleeSlasherGuild != null)
             {
 
-                _logChannel = _meleeSlasherGuild.GetChannel(Config.AuditChannel) as ITextChannel;
-                _mainChannel = _meleeSlasherGuild.GetChannel(Config.MeleeSlasherMainChannel) as ITextChannel;
+                _logChannel = _meleeSlasherGuild.GetChannel(Global.Config.AuditChannel) as ITextChannel;
+                _mainChannel = _meleeSlasherGuild.GetChannel(Global.Config.MeleeSlasherMainChannel) as ITextChannel;
 
                 if (_logChannel != null && _mainChannel != null)
                 {

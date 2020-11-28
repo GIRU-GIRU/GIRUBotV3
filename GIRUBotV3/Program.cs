@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using GIRUBotV3.Logging;
 using GIRUBotV3.Models;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace GIRUBotV3
 {
@@ -33,17 +35,24 @@ namespace GIRUBotV3
         {
             try
             {
+                await InitializeConfig();
+
                 var _HttpClient = new HttpClient();
 
                 DiscordSocketConfig botConfig = new DiscordSocketConfig()
                 {
-                    MessageCacheSize = 5000
+                  MessageCacheSize = 5000,
+                  AlwaysDownloadUsers = true,
+                 
                 };
+
+
                 _client = new DiscordSocketClient(botConfig);
 
                 CommandServiceConfig CommandServiceConfig = new CommandServiceConfig()
                 {
                     DefaultRunMode = RunMode.Async
+
                 };
                 _commands = new CommandService(CommandServiceConfig);
 
@@ -61,7 +70,7 @@ namespace GIRUBotV3
                 _client.Log += Log;
 
                 await RegisterCommandAsync();
-                await _client.LoginAsync(TokenType.Bot, Config.BotToken);
+                await _client.LoginAsync(TokenType.Bot, Global.Config.BotToken);
                 await _client.StartAsync();
 
 
@@ -69,7 +78,7 @@ namespace GIRUBotV3
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error running bot.. ", ex.Message);
+                Console.WriteLine($"Error running bot..\n------- EXCEPTION -------\n {ex.Message}\n------- \\EXCEPTION -------");
             }
         }
 
@@ -82,7 +91,7 @@ namespace GIRUBotV3
         }
 
         private async Task HandleCommandAsync(SocketMessage arg)
-         {
+        {
             try
             {
                 var message = arg as SocketUserMessage;
@@ -90,7 +99,7 @@ namespace GIRUBotV3
 
                 _ = Task.Run(() => _onMessage.MessageContainsAsync(arg));
                 int argPos = 0;
-                if (message.HasStringPrefix(Config.CommandPrefix, ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
+                if (message.HasStringPrefix(Global.Config.CommandPrefix, ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
                 {
                     var context = new SocketCommandContext(_client, message);
 
@@ -109,14 +118,26 @@ namespace GIRUBotV3
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);              
-            }          
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private Task InitializeConfig()
+        {
+            using (StreamReader file = File.OpenText(@"config.json"))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+
+                Global.Config = (Config)serializer.Deserialize(file, typeof(Config));
+
+                return Task.CompletedTask;
+            }
         }
         private Task Log(LogMessage arg)
         {
-             Console.WriteLine(arg);
-             return Task.CompletedTask;
-         }
+            Console.WriteLine(arg);
+            return Task.CompletedTask;
+        }
 
     }
 }

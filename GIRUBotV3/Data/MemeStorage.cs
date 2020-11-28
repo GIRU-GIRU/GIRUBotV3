@@ -11,7 +11,7 @@ namespace GIRUBotV3.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
       
-            optionsBuilder.UseSqlite("Data Source=MeleeSlasher.db");
+            optionsBuilder.UseSqlite($"Data Source={Global.Config.DBLocation}MeleeSlasher.db");
         }
     }
 

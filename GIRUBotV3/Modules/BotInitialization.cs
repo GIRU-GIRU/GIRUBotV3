@@ -27,7 +27,7 @@ namespace GIRUBotV3.Modules
 
                 while (chnl == null)
                 {
-                    chnl = _client.GetChannel(Config.MeleeSlasherMainChannel) as ITextChannel;
+                    chnl = _client.GetChannel(Global.Config.MeleeSlasherMainChannel) as ITextChannel;
                     if (chnl != null)
                     {
                         await chnl.SendMessageAsync("GIRUBotV3 starting...");
