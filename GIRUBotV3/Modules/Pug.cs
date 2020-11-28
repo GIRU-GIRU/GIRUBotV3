@@ -19,7 +19,7 @@ namespace GIRUBotV3.Modules
         private async Task PugAnnounceEU([Remainder]string pugMessage)
         {
 
-            IRole puggersEU = Helpers.ReturnRole(Context.Guild, AllowedRoles.AllowedRolesDictionary.GetValueOrDefault("PugEU"));
+            IRole puggersEU = Helpers.ReturnRole(Context.Guild, UserRoles.AllowedRolesDictionary.GetValueOrDefault("PugEU"));
             await puggersEU.ModifyAsync(x => x.Mentionable = true);
 
             var embed = new EmbedBuilder();
@@ -37,7 +37,7 @@ namespace GIRUBotV3.Modules
         [RequireUserPermission(GuildPermission.MoveMembers)]
         private async Task PugAnnounceNA([Remainder]string pugMessage)
         {
-            IRole puggersNA = Helpers.ReturnRole(Context.Guild, AllowedRoles.AllowedRolesDictionary.GetValueOrDefault("PugNA"));
+            IRole puggersNA = Helpers.ReturnRole(Context.Guild, UserRoles.AllowedRolesDictionary.GetValueOrDefault("PugNA"));
             await puggersNA.ModifyAsync(x => x.Mentionable = true);
 
             var embed = new EmbedBuilder();

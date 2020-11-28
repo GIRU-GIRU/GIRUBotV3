@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace GIRUBotV3.Modules
 {
-  public class BotInitialization : ModuleBase<SocketCommandContext>
+    public class BotInitialization : ModuleBase<SocketCommandContext>
     {
         private static DiscordSocketClient _client;
 
@@ -19,24 +19,38 @@ namespace GIRUBotV3.Modules
             _client = client;
         }
 
-        public static async Task StartUpMessages()
+        public static async Task GIRUBotInitializationTasks()
         {
-           var chnl = _client.GetChannel(Config.MeleeSlasherMainChannel) as ITextChannel;
-            await chnl.SendMessageAsync("GIRUBotV3 starting...");
-            Task.Delay(500).Wait();
-
-            if (CommandToggles.WelcomeMessages)
+            try
             {
-                await chnl.SendMessageAsync("Welcome messages are currently on");
+                ITextChannel chnl = null;
+
+                while (chnl == null)
+                {
+                    chnl = _client.GetChannel(Config.MeleeSlasherMainChannel) as ITextChannel;
+                    if (chnl != null)
+                    {
+                        await chnl.SendMessageAsync("GIRUBotV3 starting...");
+
+
+                        var exceptionHandlerReady = ExceptionHandler.InitContext(_client);
+                        if (exceptionHandlerReady)
+                        {
+                            await chnl.SendMessageAsync("Reporting systems online");
+                        }
+
+                        await chnl.SendMessageAsync("Ready");
+                    }
+
+                    Task.Delay(1000).Wait();
+                }
+
             }
-            else
+            catch (Exception ex)
             {
-                await chnl.SendMessageAsync("Welcome messages are currently off");
+                Console.WriteLine($"Failed to initialize GIRUBot {ex.Message}");
+                throw ex;
             }
-
-            await chnl.SendMessageAsync("Online");
-
-        }      
+        }
     }
-    
 }

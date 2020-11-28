@@ -7,11 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using FaceApp;
 using System.Net.Http;
-using TwitchLib.Api.Services;
-using TwitchLib.Api.Interfaces;
-using TwitchLib.Api;
+using GIRUBotV3.Logging;
+using GIRUBotV3.Models;
 
 namespace GIRUBotV3
 {
@@ -21,104 +19,104 @@ namespace GIRUBotV3
         {
             var program = new Program();
             var bot = program.RunBotAsync();
-            bot.Wait();   
+            bot.Wait();
         }
 
         public DiscordSocketClient _client;
         private CommandService _commands;
-        private OnMessage _onMessage;
-        private OnExecutedCommand _onExecutedCommand;
         private IServiceProvider _services;
+        private OnMessage _onMessage;
         private BotInitialization _botInitialization;
-        private DownloadDM _experiment;
-        public static TwitchAPI api;
-        private TwitchBot _twitchBot;
-        private LiveStreamMonitor _liveStreamMonitor;
 
-        private FaceAppClient _FaceAppClient;
+
         public async Task RunBotAsync()
         {
+            try
+            {
+                var _HttpClient = new HttpClient();
+
+                DiscordSocketConfig botConfig = new DiscordSocketConfig()
+                {
+                    MessageCacheSize = 5000
+                };
+                _client = new DiscordSocketClient(botConfig);
+
+                CommandServiceConfig CommandServiceConfig = new CommandServiceConfig()
+                {
+                    DefaultRunMode = RunMode.Async
+                };
+                _commands = new CommandService(CommandServiceConfig);
+
+                _botInitialization = new BotInitialization(_client);
+                _onMessage = new OnMessage(_client);
+
+                _services = new ServiceCollection()
+                     .AddSingleton(_commands)
+                     .AddSingleton(_client)
+                     .BuildServiceProvider();
+
+                _client.MessageUpdated += _onMessage.UpdatedMessageContainsAsync;
+                _client.Ready += BotInitialization.GIRUBotInitializationTasks;
+
+                _client.Log += Log;
+
+                await RegisterCommandAsync();
+                await _client.LoginAsync(TokenType.Bot, Config.BotToken);
+                await _client.StartAsync();
 
 
-            api = new TwitchAPI();
-            api.Settings.ClientId = Config.TwitchClientId;
-            api.Settings.AccessToken = Config.TwitchAccessToken;
-            _liveStreamMonitor = new LiveStreamMonitor(api, 60, true, false);
-
-            var _HttpClient = new HttpClient();
-
-            _twitchBot = new TwitchBot(api);
-            
-            _FaceAppClient = new FaceAppClient(_HttpClient);
-            _client = new DiscordSocketClient();
-            _commands = new CommandService();
-            _onMessage = new OnMessage(_client, _FaceAppClient);
-            _onExecutedCommand = new OnExecutedCommand(_client);          
-            _botInitialization = new BotInitialization(_client);
-            
-            _services = new ServiceCollection()
-                 .AddSingleton(_commands)
-                 .AddSingleton(_FaceAppClient)
-                 .AddSingleton(_twitchBot)
-                 .AddSingleton(_client)
-                 .BuildServiceProvider();
-
-            _client.MessageUpdated += _onMessage.UpdatedMessageContainsAsync;         
-            _client.UserJoined += UserHelp.UserJoined;
-            _client.Ready += BotInitialization.StartUpMessages;
-
-            _client.MessageReceived += _onMessage.MessageContainsAsync;
-            _liveStreamMonitor.OnStreamOnline += _twitchBot.NotifyMainOnStreamStart;
-
-             _commands.CommandExecuted += _onExecutedCommand.AdminLog;
-            _client.Log += Log;
-            
-            await RegisterCommandAsync();
-            await _client.LoginAsync(TokenType.Bot, Config.BotToken);
-           
-            await _client.StartAsync();
-            _experiment = new DownloadDM(_client);
-            await Task.Delay(-1);
+                await Task.Delay(-1);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error running bot.. ", ex.Message);
+            }
         }
+
 
         public async Task RegisterCommandAsync()
         {
             _client.MessageReceived += HandleCommandAsync;
-            await _commands.AddModulesAsync(Assembly.GetEntryAssembly());
+
+            await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
         }
 
         private async Task HandleCommandAsync(SocketMessage arg)
-        {
-            var message = arg as SocketUserMessage;
-            if (message.Author.IsBot) return;
-
-            int argPos = 0;
-            if (message.HasStringPrefix(Config.CommandPrefix, ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
+         {
+            try
             {
-                var context = new SocketCommandContext(_client, message);
-                var result = await _commands.ExecuteAsync(context, argPos, _services);
-                switch (result.Error)
+                var message = arg as SocketUserMessage;
+                if (message.Author.IsBot) return;
+
+                _ = Task.Run(() => _onMessage.MessageContainsAsync(arg));
+                int argPos = 0;
+                if (message.HasStringPrefix(Config.CommandPrefix, ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
                 {
-                    case CommandError.UnmetPrecondition:
-                        if (result.ErrorReason != "DisableMessage")
-                        {
-                            await context.Channel.SendMessageAsync(await ErrorReturnStrings.GetNoPerm());
-                        }
-                        break;
-                    case CommandError.ParseFailed:
-                        await context.Channel.SendMessageAsync(await ErrorReturnStrings.GetParseFailed());
-                        break;
-                    default:
-                       Console.WriteLine(result.ErrorReason);
-                        break;
-                }                   
-            }   
+                    var context = new SocketCommandContext(_client, message);
+
+                    if (await WordFilter.CheckForNaughtyWords(message.Content))
+                    {
+                        await WordFilter.PunishNaughtyWord(context);
+                        return;
+                    }
+                    if (await BlacklistUser.CheckBlacklist(context.Message.Author)) return;
+
+                    var result = await _commands.ExecuteAsync(context, argPos, _services);
+
+                    if (!result.IsSuccess) await Logger.LogToConsole(result, context);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);              
+            }          
         }
         private Task Log(LogMessage arg)
         {
-            Console.WriteLine(arg);
-            return Task.CompletedTask;
-        }
-  
+             Console.WriteLine(arg);
+             return Task.CompletedTask;
+         }
+
     }
 }

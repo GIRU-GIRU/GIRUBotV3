@@ -44,7 +44,6 @@ namespace GIRUBotV3.Modules
             string avatarURL = Context.User.GetAvatarUrl();
             var user = Context.User as IGuildUser;
             var callerSocketGuild = Context.User as SocketGuildUser;
-            // string userGame = callerSocketGuild.Game.ToString();
             var userSocketGuild = user as SocketGuildUser;
             string userAvatarURL = user.GetAvatarUrl(png, 1024);
             string userStatus = user.Status.ToString();
@@ -91,11 +90,12 @@ namespace GIRUBotV3.Modules
             await Context.Channel.SendMessageAsync("", false, embed.Build());
         }
 
+
         [Command("stream")]
         [RequireUserPermission(GuildPermission.MoveMembers)]
         private async Task StreamAnnounce()
         {
-
+            if (!Helpers.IsSonya(Context.Message.Author as SocketGuildUser)) return;
             IRole viewerRole = Helpers.ReturnRole(Context.Guild, UtilityRoles.Viewers);
             await viewerRole.ModifyAsync(x => x.Mentionable = true);
             await Context.Channel.SendMessageAsync(viewerRole.Mention + ", Stream is now live! https://www.twitch.tv/giru");
