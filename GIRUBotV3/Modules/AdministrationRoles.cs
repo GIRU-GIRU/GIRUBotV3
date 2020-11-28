@@ -63,8 +63,14 @@ namespace GIRUBotV3.Modules
                 embed.AddField($"Replaced: ", roleToRemove.Name, true);
             }
             embed.WithColor(new Color(0, 255, 0));
+            
+
+            foreach (var item in iroleCollection)
+            {
+                await user.AddRoleAsync(item);
+            }
+
             await Context.Channel.SendMessageAsync("", false, embed.Build());
-            await user.AddRolesAsync(iroleCollection);
         }
 
         private bool CheckIfMultipleExclusiveRoles(string[] rolesArray, SocketGuildUser user)
