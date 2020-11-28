@@ -48,13 +48,13 @@ namespace GIRUBotV3.Modules
 
                 using (var db = new Memestorage())
                 {
-                    if (db.Memestore.Where(x => x.AuthorID == Context.Message.Author.Id).Count() >= 25)
+                    if (db.Memestore.AsQueryable().Where(x => x.AuthorID == Context.Message.Author.Id).Count() >= 25)
                     {
                         await Context.Channel.SendMessageAsync($"fucking greedy fuck {insult} bastard u cannot make over 25 memes");
                         return;
                     }
 
-                    if (db.Memestore.Where(x => x.Title.ToLower() == title.ToLower()).Any())
+                    if (db.Memestore.AsQueryable().Where(x => x.Title.ToLower() == title.ToLower()).Any())
                     {
                         await Context.Channel.SendMessageAsync($"that alrdy exists u {insult}");
                         return;
@@ -99,12 +99,12 @@ namespace GIRUBotV3.Modules
 
                 using (var db = new Memestorage())
                 {
-                    if (!db.Memestore.Where(x => x.Title.ToLower() == title.ToLower()).Any())
+                    if (!db.Memestore.AsQueryable().Where(x => x.Title.ToLower() == title.ToLower()).Any())
                     {
                         await Context.Channel.SendMessageAsync($"there's no {title} {insult}");
                         return;
                     }
-                    var rowToRemove = db.Memestore.Where(x => x.Title.ToLower() == title.ToLower()).SingleOrDefault();
+                    var rowToRemove = db.Memestore.AsQueryable().Where(x => x.Title.ToLower() == title.ToLower()).SingleOrDefault();
                     //needs to be original author or moderator
                     if (Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser) || rowToRemove.AuthorID == Context.Message.Author.Id)
 
@@ -133,7 +133,7 @@ namespace GIRUBotV3.Modules
             {
                 using (var db = new Memestorage())
                 {
-                    var meme = db.Memestore.Where(x => x.Title.ToLower() == input.ToLower()).FirstOrDefault();
+                    var meme = db.Memestore.AsQueryable().Where(x => x.Title.ToLower() == input.ToLower()).FirstOrDefault();
                     if (meme != null)
                     {
                         if (!string.IsNullOrEmpty(meme.Content))
@@ -147,7 +147,7 @@ namespace GIRUBotV3.Modules
                             }
                             else
                             {
-                                meme.MemeUses += meme.MemeUses++;
+                                meme.MemeUses = meme.MemeUses + 1;
 
                                 await Context.Channel.SendMessageAsync($"{meme.Content}");
                             }
@@ -174,7 +174,7 @@ namespace GIRUBotV3.Modules
             {
                 try
                 {
-                    var meme = db.Memestore.Where(x => x.MemeId == id).FirstOrDefault();
+                    var meme = db.Memestore.AsQueryable().Where(x => x.MemeId == id).FirstOrDefault();
                     if (meme != null)
                     {
                         if (!string.IsNullOrEmpty(meme.Content))
@@ -188,7 +188,7 @@ namespace GIRUBotV3.Modules
                             }
                             else
                             {
-                                meme.MemeUses += meme.MemeUses++;
+                                meme.MemeUses = meme.MemeUses + 1;
 
                                 await Context.Channel.SendMessageAsync($"{meme.Content}");
                             }
@@ -219,7 +219,7 @@ namespace GIRUBotV3.Modules
                     while (success == false)
                     {
                         var maxID = db.Memestore.Max(x => x.MemeId);
-                        var meme = db.Memestore.Where(x => x.MemeId == rnd.Next(0, maxID)).FirstOrDefault();
+                        var meme = db.Memestore.AsQueryable().Where(x => x.MemeId == rnd.Next(0, maxID)).FirstOrDefault();
 
                         if (meme != null && !string.IsNullOrEmpty(meme.Content))
                         {
@@ -244,7 +244,7 @@ namespace GIRUBotV3.Modules
             {
                 try
                 {
-                    var meme = db.Memestore.Where(x => x.Title.ToLower() == title.ToLower()).FirstOrDefault();
+                    var meme = db.Memestore.AsQueryable().Where(x => x.Title.ToLower() == title.ToLower()).FirstOrDefault();
 
                     var embed = new EmbedBuilder();
                     embed.WithTitle($"{title}#{meme.MemeId}");
@@ -272,7 +272,7 @@ namespace GIRUBotV3.Modules
             {
                 try
                 {
-                    var meme = db.Memestore.Where(x => x.MemeId == id).FirstOrDefault();
+                    var meme = db.Memestore.AsQueryable().Where(x => x.MemeId == id).FirstOrDefault();
 
                     if (meme != null)
                     {
@@ -311,9 +311,9 @@ namespace GIRUBotV3.Modules
 
                 using (var db = new Memestorage())
                 {
-                    if (db.Memestore.Where(x => x.Title.ToLower() == title.ToLower()).Any())
+                    if (db.Memestore.AsQueryable().Where(x => x.Title.ToLower() == title.ToLower()).Any())
                     {
-                        var meme = db.Memestore.Where(x => x.Title.ToLower() == title.ToLower()).FirstOrDefault();
+                        var meme = db.Memestore.AsQueryable().Where(x => x.Title.ToLower() == title.ToLower()).FirstOrDefault();
 
                         //is it a valid user ? (mod/original author)
                         if (Helpers.IsModeratorOrOwner(Context.Message.Author as SocketGuildUser) || meme.AuthorID == Context.Message.Author.Id)
@@ -344,7 +344,7 @@ namespace GIRUBotV3.Modules
             {
                 try
                 {
-                    var memestoreArray = db.Memestore.Where(x => x.AuthorID == Context.Message.Author.Id).ToArray();
+                    var memestoreArray = db.Memestore.AsQueryable().Where(x => x.AuthorID == Context.Message.Author.Id).ToArray();
 
 
                     var listOfMemes = new List<string>();
@@ -379,14 +379,14 @@ namespace GIRUBotV3.Modules
             {
                 try
                 {
-                    var collectionTopMemes = db.Memestore.OrderByDescending(x => x.MemeUses).Take(10);
+                    var collectionTopMemes = db.Memestore.AsQueryable().OrderByDescending(x => x.MemeUses).Take(10);
                     List<string> topMemeAuthors = new List<string>();
                     topMemeAuthors.AddRange(collectionTopMemes.Select(x => x.Author));
 
                     List<string> topMemetitles = new List<string>();
                     topMemetitles.AddRange(collectionTopMemes.Select(x => x.MemeId + "#" + x.Title.Substring(0, 15)));
 
-                    List<int> topMemeUses = new List<int>();
+                    List<ulong> topMemeUses = new List<ulong>();
                     topMemeUses.AddRange(collectionTopMemes.Select(x => x.MemeUses));
 
                     var embed = new EmbedBuilder();
@@ -411,7 +411,7 @@ namespace GIRUBotV3.Modules
             {
                 try
                 {
-                    var memestoreCount = db.Memestore.Where(x => x.Content != null).Count();
+                    var memestoreCount = db.Memestore.AsQueryable().Where(x => x.Content != null).Count();
                     await Context.Channel.SendMessageAsync($"there are currently {memestoreCount} active memes in the database.");
                 }
                 catch (Exception ex)

@@ -10,6 +10,7 @@ namespace GIRUBotV3.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+      
             optionsBuilder.UseSqlite("Data Source=MeleeSlasher.db");
         }
     }
@@ -24,7 +25,7 @@ namespace GIRUBotV3.Data
         public ulong AuthorID { get; set; }
         public string Date { get; set; }
         public string Time { get; set; }
-        public int MemeUses { get; set; }
+        public ulong MemeUses { get; set; }
     }
 }
 

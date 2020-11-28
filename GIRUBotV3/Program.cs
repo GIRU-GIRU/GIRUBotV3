@@ -26,9 +26,8 @@ namespace GIRUBotV3
         private CommandService _commands;
         private IServiceProvider _services;
         private OnMessage _onMessage;
-        private OnExecutedCommand _onExecutedCommand;
         private BotInitialization _botInitialization;
-        private DownloadDM _DownloadDM;
+
 
         public async Task RunBotAsync()
         {
@@ -48,7 +47,6 @@ namespace GIRUBotV3
                 };
                 _commands = new CommandService(CommandServiceConfig);
 
-                _onExecutedCommand = new OnExecutedCommand(_client);
                 _botInitialization = new BotInitialization(_client);
                 _onMessage = new OnMessage(_client);
 
@@ -60,13 +58,11 @@ namespace GIRUBotV3
                 _client.MessageUpdated += _onMessage.UpdatedMessageContainsAsync;
                 _client.Ready += BotInitialization.GIRUBotInitializationTasks;
 
-                _commands.CommandExecuted += _onExecutedCommand.AdminLog;
                 _client.Log += Log;
 
                 await RegisterCommandAsync();
                 await _client.LoginAsync(TokenType.Bot, Config.BotToken);
                 await _client.StartAsync();
-                _DownloadDM = new DownloadDM(_client);
 
 
                 await Task.Delay(-1);
@@ -81,7 +77,8 @@ namespace GIRUBotV3
         public async Task RegisterCommandAsync()
         {
             _client.MessageReceived += HandleCommandAsync;
-            await _commands.AddModulesAsync(Assembly.GetEntryAssembly());
+
+            await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
         }
 
         private async Task HandleCommandAsync(SocketMessage arg)

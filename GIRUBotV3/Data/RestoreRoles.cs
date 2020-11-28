@@ -15,7 +15,6 @@ namespace GIRUBotV3.Data
     {
         public DbSet<RestoreRoleModel> RestoreRoles { get; set; }
         public DbSet<RestoreRoleModelRoles> RoleModelRolesStore { get; set; }
-        //public DbSet<Post> Posts { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -86,7 +85,7 @@ namespace GIRUBotV3.Data
         }
         private void RestoreRoleModelRemoveExisting(SocketCommandContext context, SocketGuildUser target, Restoreroles db)
         {
-            var existingUser = db.RoleModelRolesStore.Where(x => x.UserID == target.Id);
+            var existingUser = db.RoleModelRolesStore.AsQueryable().Where(x => x.UserID == target.Id);
             if (existingUser.Any())
             {
                 foreach (var item in existingUser)
@@ -120,7 +119,7 @@ namespace GIRUBotV3.Data
                     
 
                     var IRoleCollection = new List<IRole>();
-                    foreach (var item in db.RoleModelRolesStore.Where(x => x.UserID == target.Id))
+                    foreach (var item in db.RoleModelRolesStore.AsQueryable().Where(x => x.UserID == target.Id))
                     {
                         IRoleCollection.Add(context.Guild.GetRole(item.RoleID));
                     }
@@ -134,7 +133,7 @@ namespace GIRUBotV3.Data
         }
         private void RestoreRolesRemoveExisting(SocketCommandContext context, SocketGuildUser target, Restoreroles db)
         {
-            var existingUser = db.RestoreRoles.Where(x => x.UserID == target.Id);
+            var existingUser = db.RestoreRoles.AsQueryable().Where(x => x.UserID == target.Id);
             if (existingUser.Any())
             {
                 foreach (var item in existingUser)

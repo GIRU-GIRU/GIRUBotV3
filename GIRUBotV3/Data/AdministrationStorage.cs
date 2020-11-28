@@ -61,7 +61,7 @@ namespace GIRUBotV3.Data
                     await db.SaveChangesAsync();
 
       
-                    db.TimerStore.Where(x => x.TimeRemoval > DateTime.Now)
+                    db.TimerStore.AsQueryable().Where(x => x.TimeRemoval > DateTime.Now)
                                                 .OrderBy(x => x.TimeRemoval)
                                                    .First();
                 }
